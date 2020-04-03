@@ -1,0 +1,24 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <ul class="navbar-nav flex-grow-1">
+        <li class="nav-item">
+            <a class="nav-link text-light" asp-area="" asp-controller="Accounts" asp-action="Index">
+                    <i class="fas fa-wallet"></i>
+                    Accounts
+                    <span class="badge badge-pill badge-danger"> 10 </span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-light" asp-area="" asp-controller="Payments" asp-action="Index">
+                <i class="fas fa-file-invoice-dollar"></i>
+                Payments
+            </a>
+        </li>
+    </ul>
+}
+  
