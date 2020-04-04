@@ -7,46 +7,61 @@
 
 @foreach (var account in Model.BankAccounts)
 {
-    <p ><b>Account</b></p>
+    <p><b>Account</b></p>
     <p><b>IBAN</b> @account.IBAN</p>
     <p><b>Name</b> @Model.CustomerName</p>
     <p><b>Contact</b> @Model.PhoneNo</p>
     <h1>Received Transactions</h1>
-
     <p><b>Balance:</b> @account.Balance</p>
 }
 @{
     int i = 0;
 }
+<style>
+    table {
+        border-collapse: collapse;
+        border-spacing: 0;
+        width: 100%;
+        border: 1px solid #ddd;
+    }
 
-<div class="card" style="width: 18rem;">
+    th, td {
+        text-align: left;
+        padding: 16px;
+    }
 
-    <table class="table table-striped">
-        <thead>
+    tr:nth-child(even) {
+        background: rgba(0, 138, 0, 0.6)
+    }
+</style>
+<table>
+
+    <thead>
+        <tr style="background-color:rgba(0, 138, 0, 0.6) ">
+            <th scope="col">#</th>
+            <th scope="col">Ammount</th>
+            <th scope="col">Date</th>
+            <th scope="col">Balance</th>
+            <th scope="col">Details</th>
+            <th scope="col">Name</th>
+            <th scope="col">External Account</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var transaction in Model.BankAccounts[i].Transactions)
+        {
             <tr>
-                <th scope="col">#</th>
-                <th scope="col">Ammount</th>
-                <th scope="col">Date</th>
-                <th scope="col">Balance</th>
-                <th scope="col">Details</th>
-                <th scope="col">Name</th>
-                <th scope="col">External Account</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var transaction in Model.Transactions)
-            {
-                <tr>
-                    <th scope="row">@i@{i++;}</th>
-                    <td>@transaction.Amount</td>
-                    <td>@transaction.Time</td>
-                    <td>@transaction</td>
-                    <td>@transaction.Details</td>
-                    <td>@transaction.ExternalName</td>
-                    <td>@transaction.ExternalIBAN</td>
+                <th scope="row">@i@{i++;}</th>
+                <td>@transaction.Amount</td>
+                <td>@transaction.Time</td>
+                <td>@transaction</td>
+                <td>@transaction.Details</td>
+                <td>@transaction.ExternalName</td>
+                <td>@transaction.ExternalIBAN</td>
 
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
+            </tr>
+        }
+    </tbody>
+</table>
+

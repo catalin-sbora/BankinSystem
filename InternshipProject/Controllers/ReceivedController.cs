@@ -23,15 +23,16 @@ namespace InternshipProject.Controllers
                 PhoneNo = "0281726472",
                 
                 BankAccounts = new List<BankAccount> {
-
-                    new BankAccount{ IBAN = "ROSDasdasd", Balance =0}
-
-                },
-                Transactions = new List<Transaction> {
+                    new BankAccount{
+                        IBAN = "ROSDasdasd", Balance =0,Transactions = new List<Transaction> 
+                        {
                    new Transaction{ExternalIBAN = "asd",Amount =123 },
-                   new Transaction{ExternalIBAN = "qwer" },
+                   new Transaction{ExternalIBAN = "qwer",Amount=324 },
                    new Transaction{ExternalIBAN = "agd" }
                 }
+                } 
+                }
+                
             };
             return View(viewModel);
         }
