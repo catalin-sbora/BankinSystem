@@ -4,14 +4,16 @@ using InternshipProject.EFDataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace InternshipProject.EFDataAccess.Migrations
 {
     [DbContext(typeof(BankingDbContext))]
-    partial class BankingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200406143355_UpdateDataModel")]
+    partial class UpdateDataModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -26,7 +28,7 @@ namespace InternshipProject.EFDataAccess.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("Balance")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<Guid?>("CustomerId")
                         .HasColumnType("uniqueidentifier");
@@ -136,7 +138,7 @@ namespace InternshipProject.EFDataAccess.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<Guid?>("BankAccountId")
                         .HasColumnType("uniqueidentifier");
@@ -172,8 +174,8 @@ namespace InternshipProject.EFDataAccess.Migrations
 
             modelBuilder.Entity("InternshipProject.ApplicationLogic.Model.Card", b =>
                 {
-                    b.HasOne("InternshipProject.ApplicationLogic.Model.BankAccount", "BankAccount")
-                        .WithMany()
+                    b.HasOne("InternshipProject.ApplicationLogic.Model.BankAccount", null)
+                        .WithMany("Cards")
                         .HasForeignKey("BankAccountId");
                 });
 

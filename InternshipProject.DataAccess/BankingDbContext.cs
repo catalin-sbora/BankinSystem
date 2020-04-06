@@ -17,6 +17,18 @@ namespace InternshipProject.EFDataAccess
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<ContactDetails> ContactDetails { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<BankAccount>()
+                    .Property(ba => ba.Balance)
+                    .HasColumnType("decimal(18, 4)");
+
+            builder.Entity<Transaction>()
+                    .Property(transaction => transaction.Amount)
+                    .HasColumnType("decimal(18, 4)");
+        }
+
+
             
     }
 }

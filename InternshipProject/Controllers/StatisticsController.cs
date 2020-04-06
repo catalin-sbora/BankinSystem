@@ -23,9 +23,9 @@ namespace InternshipProject.Controllers
                 PhoneNo = "07288377349",
 
                 BankAccounts = new List<BankAccount> {
-                    new BankAccount{ IBAN = "RO511452423", Balance = 134},
+                    /*new BankAccount{ IBAN = "RO511452423", Balance = 134},
                     new BankAccount{ IBAN = "RO122451243", Balance = 200},
-                    new BankAccount{ IBAN = "RO778452423", Balance = 621}
+                    new BankAccount{ IBAN = "RO778452423", Balance = 621}*/
                 }
             };
 

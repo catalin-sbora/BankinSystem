@@ -1,4 +1,5 @@
 ﻿using InternshipProject.ApplicationLogic.Abstractions;
+using InternshipProject.ApplicationLogic.Exceptions;
 using InternshipProject.ApplicationLogic.Model;
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,7 @@ namespace InternshipProject.ApplicationLogic.Services
             var foundCustomer =  customerRepository?.GetCustomerByUserId(idToSearch);
             if (foundCustomer == null)
             {
-                throw new Exception();
+                throw new CustomerNotFoundException(userId);
             }
             return foundCustomer.Id;
 
@@ -31,7 +32,7 @@ namespace InternshipProject.ApplicationLogic.Services
             var customer = customerRepository?.GetCustomerById(customerId);
             if (customer == null)
             {
-                throw new Exception("Customer not found");
+                throw new CustomerNotFoundException(customerId);
             }
             
             return customer.BankAccounts

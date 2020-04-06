@@ -17,9 +17,9 @@ namespace InternshipProject.Controllers
             AccountsListViewModel viewModel = new AccountsListViewModel()
             { 
                 BankAccounts = new List<BankAccount> {
-                    new BankAccount{ IBAN = "ROSDasdasd" },
+                   /* new BankAccount{ IBAN = "ROSDasdasd" },
                     new BankAccount{ IBAN = "ROUUYIYIY"},
-                    new BankAccount{ IBAN = "DEFgfgfgfg"}
+                    new BankAccount{ IBAN = "DEFgfgfgfg"}*/
                 }
             };
             

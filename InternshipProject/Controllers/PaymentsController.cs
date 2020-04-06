@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using InternshipProject.ApplicationLogic.Exceptions;
 using InternshipProject.ApplicationLogic.Model;
 using InternshipProject.ViewModels.Payments;
 using Microsoft.AspNetCore.Authorization;
@@ -14,13 +15,15 @@ namespace InternshipProject.Controllers
     {
         public IActionResult Index()
         {
+
+            
             PaymentsViewModel viewModel = new PaymentsViewModel()
             {
                 CustomerName = "John Doe",
                 CustomerPhoneNo = "0723 972 110",
                 BanksAccounts = new List<BankAccount>
                 {
-                    new BankAccount
+                   /* new BankAccount
                     {
                         IBAN = "ROSDasdasd",
                         Transactions = new List<Transaction>
@@ -46,7 +49,7 @@ namespace InternshipProject.Controllers
                             new Transaction{Amount = 20, ExternalIBAN = "ROgdfgdfgd", Time = new DateTime(2020,11,23)},
                             new Transaction{Amount = 20, ExternalIBAN = "ROreterter", Time = new DateTime(2002,09,12)}
                         }
-                    }
+                    }*/
                 }
             };
             return View(viewModel);
