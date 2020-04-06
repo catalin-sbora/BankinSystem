@@ -81,3 +81,36 @@ color: #FFFFFF !important;
 font-weight: bold;
 }
 
+
+/*Grid for Accout's Name/Contact information used in Statistics*/
+
+.account-grid {
+    justify-content: end;
+    display: grid;
+    grid-template-columns: 100px 100px;
+}
+
+.account-grid-main-component {
+    text-align: left;
+    font-weight: bold;
+}
+
+.account-grid-data-component {
+    text-align: right;
+}
+
+/*Statistic Buttons*/
+
+.statistics-button {
+    height: 55px;
+    width: 120px;
+    font-size: 25px;
+    font-weight: bold;
+    border-color: #005700;
+    border-width: 1.5px;
+    background-color: #60A917;
+    color: #FFFFFF;
+    border-radius: 8px;
+}
+
+/*Statistics table*/
