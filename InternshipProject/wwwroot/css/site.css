@@ -1,10 +1,10 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
-
+cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css
 a.navbar-brand {
-  white-space: normal;
-  text-align: center;
-  word-break: break-all;
+    white-space: normal;
+    text-align: center;
+    word-break: break-all;
 }
 
 /* Provide sufficient contrast against white background */
@@ -81,6 +81,7 @@ color: #FFFFFF !important;
 font-weight: bold;
 }
 
+ 
 .colorContainer{
     color: #046504;
 }
@@ -91,3 +92,69 @@ font-weight: bold;
     font-weight: bold;
     
 }
+
+form.searchButtonPayments input[type=text] {
+    padding: 10px;
+    font-size: 17px;
+    border: 1px solid grey;
+    float: left;
+    width: 200px;
+    position: relative;
+    left: 148%;
+    background: #f1f1f1;
+}
+
+form.searchButtonPayments button {
+    position: relative;
+    left: 148%;
+    float: left;
+    width: 20%;
+    padding: 10px;
+    background: #60A917;
+    color: white;
+    font-size: 17px;
+    border: 1px solid grey;
+    border-left: none;
+    cursor: pointer;
+}
+
+form.searchButtonPayments::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+
+/*Grid for Accout's Name/Contact information used in Statistics*/
+
+.account-grid {
+    justify-content: end;
+    display: grid;
+    grid-template-columns: 100px 100px;
+}
+
+.account-grid-main-component {
+    text-align: left;
+    font-weight: bold;
+}
+
+.account-grid-data-component {
+    text-align: right;
+}
+
+/*Statistic Buttons*/
+
+.statistics-button {
+    height: 55px;
+    width: 120px;
+    font-size: 25px;
+    font-weight: bold;
+    border-color: #005700;
+    border-width: 1.5px;
+    background-color: #60A917;
+    color: #FFFFFF;
+    border-radius: 8px;
+}
+
+
+

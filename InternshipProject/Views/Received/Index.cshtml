@@ -1,0 +1,82 @@
+﻿
+@model InternshipProject.ViewModels.Received.ReceivedListViewModel
+
+@{
+    ViewData["Title"] = "ReceivedTransactions";
+}
+
+@foreach (var account in Model.BankAccounts)
+{
+    <p><b>Account</b></p>
+    <p><b>IBAN</b> @account.IBAN</p>
+    <p><b>Name</b> @Model.CustomerName</p>
+    <p><b>Contact</b> @Model.PhoneNo</p>
+    <h1>Received Transactions</h1>
+    <p><b>Balance:</b> @account.Balance</p>
+}
+@{
+    int i = 0;
+}
+
+<style>
+    .button {
+        float: right;
+        background-color: #4CAF50;
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+    }
+    table {
+        border-collapse: collapse;
+        border-spacing: 0;
+        width: 100%;
+        border: 1px solid #ddd;
+    }
+
+    th, td {
+        text-align: left;
+        padding: 16px;
+    }
+
+    tr:nth-child(even) {
+        background: #f2f2f2
+    }
+</style>
+<table>
+
+    <thead>
+        <tr style="background-color:rgba(0, 138, 0, 0.6) ">
+            <th scope="col">#</th>
+            <th scope="col">Ammount</th>
+            <th scope="col">Date</th>
+            <th scope="col">Balance</th>
+            <th scope="col">Details</th>
+            <th scope="col">Name</th>
+            <th scope="col">External Account</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var transaction in Model.BankAccounts[i].Transactions)
+        {
+            <tr>
+                <th scope="row">@i@{i++;}</th>
+                <td>@transaction.Amount</td>
+                <td>@transaction.Time</td>
+                <td>@transaction</td>
+                <td>@transaction.Details</td>
+                <td>@transaction.ExternalName</td>
+                <td>@transaction.ExternalIBAN</td>
+
+            </tr>
+        }
+    </tbody>
+</table>
+<button class="button">Export</button>
+
