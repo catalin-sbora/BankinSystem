@@ -7,7 +7,6 @@ using InternshipProject.ViewModels.Accounts;
 using InternshipProject.ViewModels.Received;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
 namespace InternshipProject.Controllers
 {
     [Authorize]
@@ -19,6 +18,7 @@ namespace InternshipProject.Controllers
             // get the proper bank account for this but idk how
             ReceivedListViewModel viewModel = new ReceivedListViewModel()
             {
+
                 CustomerName = "Alex",
                 PhoneNo = "0281726472",
                 
