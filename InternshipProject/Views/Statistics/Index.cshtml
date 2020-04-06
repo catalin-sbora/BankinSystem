@@ -1,0 +1,109 @@
+﻿@model InternshipProject.ViewModels.Statistics.StatisticsViewModel;
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    <title>Statistics</title>
+</head>
+
+<body>
+    <div class="account-grid">
+        <div class="account-grid-main-component">Name:</div>
+        <div class="account-grid-data-component">@Model.CustomerName</div>
+        <div class="account-grid-main-component">Customer:</div>
+        <div class="account-grid-data-component">@Model.PhoneNo</div>
+    </div>
+
+    <hr style="height:2px;border:none;background-color:#D4D4D4;" />
+
+    <div align="center">
+        <button class="statistics-button">All-time</button>
+        <button class="statistics-button">Year</button>
+        <button class="statistics-button">Month</button>
+        <button class="statistics-button">Week</button>
+        <button class="statistics-button">Day</button>
+    </div>
+
+    <div>
+        <br /><br />
+        <div style="width: 200px;" align="left">
+            <div id="chartContainer"></div>
+            <script type="text/javascript">
+
+                window.onload = function () {
+                    var chart = new CanvasJS.Chart("chartContainer", {
+                        theme: "light1",
+                        title: {
+                            text: "Accounts' Balance"
+                        },
+
+                        data: [
+                            {
+                                type: "pie",
+                                showInLegend: true,
+                                dataPoints: []
+                            }
+                        ]
+                    });
+
+                    @*
+                    var IBANList = [];
+                    var balanceList = [];
+
+                    for (int i = 0; i < Model.BankAccounts.Count(); i++)
+                    {
+                        var account = Model.BankAccounts.ElementAt(i);
+                        <!--
+                        IBANList[i] = @account.IBAN;
+                        balanceList[i] = @account.Balance;
+                        -->
+                    };
+
+
+                    @{ int index = 0; }
+                    var i;
+                    for (i = 0; i < @Model.BankAccounts.Count(); i++) {
+                        IBANList.push(@Model.BankAccounts.ElementAt(index).IBAN);
+                        balanceList.push(@Model.BankAccounts.ElementAt(index).Balance);
+                        @index++;
+                    }
+
+                    for (i = 0; i < @Model.BankAccounts.Count(); i++) {
+                        chart.options.data[0].dataPoints.push({label: IBANList[i], y: balanceList[i] });
+                    }
+                    *@
+
+                    chart.options.data[0].dataPoints.push({ name: "RO423452423", y: 234 });
+                    chart.options.data[0].dataPoints.push({ name: "RO663424234", y: 117 });
+                    chart.options.data[0].dataPoints.push({ name: "RO123311444", y: 58 });
+
+                    chart.render();
+                };
+            </script>
+        </div>
+
+        <table style="width:70%; font:large" align="right" border="1">
+            <tr style="text-align: center; background-color: #60A917; color: white; border-right:none;">
+                <th>Account IBAN</th>
+                <th>Current Balance</th>
+                <th>Credit</th>
+                <th>Debit</th>
+                <th>Last Transaction</th>
+            </tr>
+            @foreach (var account in Model.BankAccounts)
+            {
+            <tr style="text-align:center; border-right:none;">
+                <td>@account.IBAN</td>
+                <td>@account.Balance</td>
+                <td>+@account.Balance</td>
+                <td>-@account.Balance</td>
+                <td>21/04/2020</td>
+            </tr>
+            }
+        </table>
+    </div>
+</body>
