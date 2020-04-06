@@ -1,7 +1,95 @@
-﻿
+﻿@model InternshipProject.ViewModels.Payments.PaymentsViewModel
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index2435</h1>
+
+</br>
+<table class="table table-striped" style="width: 500px;">
+    <thead>
+        <tr>
+            <th style="color: white; background-color: #60A917;">
+                Select accounts
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var account in Model.BanksAccounts)
+        {
+            <tr>
+                <td>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="defaultCheck1">
+                        <label class="form-check-label" for="defaultCheck1">
+                            @account.IBAN
+                        </label>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<div style="position:absolute; top: 13.5%; left: 78%;">
+    <strong>
+        Name:
+    </strong>
+    @Model.CustomerName
+</div>
+
+
+<div style="position: absolute; top: 17.5%; left: 78%;">
+    <strong>
+        Contact:
+    </strong>
+    @Model.CustomerPhoneNo
+</div>
+
+
+<button class="btn btn-success" style="position: absolute; top: 23.5%; left: 78%; background-color: #60A917;">
+    New Payment
+</button>
+
+
+</br>
+<form class="searchButtonPayments" action="" style="margin: auto; max-width: 300px">
+    <input type="text" placeholder="Search.." name="search2">
+    <button type="submit">
+        <i class="fa fa-search"></i>
+    </button>
+</form>
+
+
+<table class="table table-striped">
+    <thead>
+        <tr style="color: white; background-color: #60A917;">
+            <th style="width: 150px;"> Amount </th>
+            <th style="width: 230px;"> Date </th>
+            <th> Internal Account </th>
+            <th> External Account </th>
+            <th style="width: 120px;"> Details </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var account in Model.BanksAccounts)
+        {
+            @foreach (var transaction in account.Transactions)
+            {
+            <tr>
+                <td> @transaction.Amount </td>
+                <td> @transaction.Time </td>
+                <td> @account.IBAN </td>
+                <td> @transaction.ExternalIBAN </td>
+                <td> @Html.ActionLink("Details", "Action", "Controller", new { Id = transaction.Id }, null) </td>
+            </tr>
+                }
+            }
+    </tbody>
+</table>
+
+<button class="btn btn-success" style="position: relative; left: 92%; background-color: #60A917;">
+    Export
+</button>
+
 

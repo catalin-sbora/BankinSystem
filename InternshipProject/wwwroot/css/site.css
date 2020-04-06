@@ -81,6 +81,37 @@ color: #FFFFFF !important;
 font-weight: bold;
 }
 
+form.searchButtonPayments input[type=text] {
+    padding: 10px;
+    font-size: 17px;
+    border: 1px solid grey;
+    float: left;
+    width: 200px;
+    position: relative;
+    left: 148%;
+    background: #f1f1f1;
+}
+
+form.searchButtonPayments button {
+    position: relative;
+    left: 148%;
+    float: left;
+    width: 20%;
+    padding: 10px;
+    background: #60A917;
+    color: white;
+    font-size: 17px;
+    border: 1px solid grey;
+    border-left: none;
+    cursor: pointer;
+}
+
+form.searchButtonPayments::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
 
 /*Grid for Accout's Name/Contact information used in Statistics*/
 
@@ -113,4 +144,4 @@ font-weight: bold;
     border-radius: 8px;
 }
 
-/*Statistics table*/
+
