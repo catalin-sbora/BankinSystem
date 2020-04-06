@@ -81,3 +81,13 @@ color: #FFFFFF !important;
 font-weight: bold;
 }
 
+.colorContainer{
+    color: #046504;
+}
+.square {
+    width: 20px;
+    height: 20px;
+    color: #FFFFFF !important;
+    font-weight: bold;
+    
+}

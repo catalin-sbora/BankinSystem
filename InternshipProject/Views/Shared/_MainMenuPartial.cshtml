@@ -3,8 +3,8 @@
 @inject UserManager<IdentityUser> UserManager
 
 
-@if (SignInManager.IsSignedIn(User))
-{
+
+
     <ul class="navbar-nav flex-grow-1">
         <li class="nav-item">
             <a class="nav-link text-light" asp-area="" asp-controller="Accounts" asp-action="Index">
@@ -19,6 +19,12 @@
                 Payments
             </a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link text-light" asp-area="" asp-controller="Cards" asp-action="Index">
+                <i class="fa fa-credit-card" aria-hidden="true"></i>
+                Cards
+                </a>
+        </li>
     </ul>
-}
+
   
