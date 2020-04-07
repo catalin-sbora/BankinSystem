@@ -16,6 +16,7 @@ namespace InternshipProject.EFDataAccess
         public DbSet<Card> Cards { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<ContactDetails> ContactDetails { get; set; }
+        public DbSet<CardTransaction> CardTransactions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

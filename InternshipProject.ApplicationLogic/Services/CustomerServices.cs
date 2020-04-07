@@ -38,5 +38,32 @@ namespace InternshipProject.ApplicationLogic.Services
             return customer.BankAccounts
                             .AsEnumerable();           
         }
+        public IEnumerable<BankAccount> GetCustomerBankAccounts(string userId)
+        {
+            Guid idToSearch = Guid.Empty;            
+            Guid.TryParse(userId, out idToSearch);
+            var customer = customerRepository?.GetCustomerByUserId(idToSearch);
+            
+            if (customer == null)
+            {
+                throw new CustomerNotFoundException(userId);
+            }
+
+            return customer.BankAccounts
+                            .AsEnumerable();
+        }
+
+        public Customer GetCustomer(string userId)
+        {
+            Guid idToSearch = Guid.Empty;
+            Guid.TryParse(userId, out idToSearch);
+            var customer = customerRepository?.GetCustomerByUserId(idToSearch);
+            if (customer == null)
+            {
+                throw new CustomerNotFoundException(userId);
+            }
+
+            return customer;
+        }
     }
 }

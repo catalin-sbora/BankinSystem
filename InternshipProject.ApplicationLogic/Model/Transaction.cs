@@ -21,7 +21,7 @@ namespace InternshipProject.ApplicationLogic.Model
         public string Details { get; private set; }        
         public TransactionStatus Status { get; private set; }
 
-        private Transaction()
+        protected Transaction()
         { 
         }
         public static Transaction Create(decimal amount, string externalName, string externalIBAN, string details)

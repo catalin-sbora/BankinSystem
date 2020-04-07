@@ -1,5 +1,6 @@
 ﻿using InternshipProject.ApplicationLogic.Abstractions;
 using InternshipProject.ApplicationLogic.Model;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,7 +50,10 @@ namespace InternshipProject.EFDataAccess
 
         public Customer GetCustomerByUserId(Guid userId)
         {
-            var foundCustomer = dbContext.Customers
+            var foundCustomer = dbContext.Customers  
+                               /* .Include(c => c.ContactDetails)
+                                .Include(c => c.BankAccounts)
+                                .Include(c => c.BankAccounts.Select(ba => ba.Transactions))*/
                                 .Where(customer => customer.UserId == userId)
                                 .FirstOrDefault();
             return foundCustomer;

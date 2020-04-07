@@ -18,7 +18,8 @@ namespace InternshipProject.ApplicationLogic.Model
         public string IBAN { get; set; }
         public decimal Balance { get; set; }
 
-        public IReadOnlyCollection<Transaction> Transactions
+        public string Currency { get; set; }
+        public virtual IReadOnlyCollection<Transaction> Transactions
         {
             get
             {
@@ -30,7 +31,7 @@ namespace InternshipProject.ApplicationLogic.Model
             }
         }              
 
-        private BankAccount()
+        protected BankAccount()
         { 
             
         }
@@ -57,7 +58,7 @@ namespace InternshipProject.ApplicationLogic.Model
                         IBAN = accountIBAN                        
                     };
         }
-        public void CreatePayment(decimal amount, string destinationName, string destinationIBAN, string description)
+        public Transaction CreatePayment(decimal amount, string destinationName, string destinationIBAN, string description)
         {
             if (amount <= 0)
                 throw new Exception("");
@@ -67,7 +68,9 @@ namespace InternshipProject.ApplicationLogic.Model
 
 
             var transaction = Transaction.Create(-amount, destinationName, destinationIBAN, description);
-            transactions.Add(transaction); 
+            transactions.Add(transaction);
+
+            return transaction;
         }   
 
         public void CreateReceive(decimal amount, string sourceName, string sourceIBAN, string description)
@@ -82,11 +85,11 @@ namespace InternshipProject.ApplicationLogic.Model
             transactions.Add(transaction);
         }
 
-        public Card AttachNewCard(string serialNumber, string cvv, string ownerName)
+        /*public Card AttachNewCard(string serialNumber, string cvv, string ownerName)
         {
             var card = Card.Create(serialNumber, cvv, ownerName, this);                        
             return card;
-        }
+        }*/
 
         /*public void DetachCard(Card cardToRemove)
         {

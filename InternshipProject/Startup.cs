@@ -37,7 +37,8 @@ namespace InternshipProject
                     Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddDbContext<BankingDbContext>(options =>
-                options.UseSqlServer(
+                options.UseLazyLoadingProxies()
+                .UseSqlServer(
                     Configuration.GetConnectionString("BankingConnection")));
 
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
