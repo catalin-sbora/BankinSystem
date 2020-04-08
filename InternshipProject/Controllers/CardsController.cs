@@ -14,10 +14,12 @@ namespace InternshipProject.Controllers
         {
             CardListViewModel bankAccount = new CardListViewModel()
             {
-                Cards = new List<Card> {
+                Cards = new List<Card> {/*
                 new Card() {SerialNumber = "1111-1111-1111-111" , OwnerName= "Mihnea" , ExpiryDate= new DateTime(2024 , 11 , 5)},
                 new Card() {SerialNumber = "2222-2222-2222-2222", OwnerName= "Mihnea " , ExpiryDate= new DateTime(2025,11,24) },
-                new Card() {SerialNumber = "3333-3333-3333-3333", OwnerName= "Mihnea" , ExpiryDate= new DateTime(2023,9,20)}}
+                new Card() {SerialNumber = "3333-3333-3333-3333", OwnerName= "Mihnea" , ExpiryDate= new DateTime(2023,9,20)}
+                
+                    */}
             };
              return View(bankAccount );
             

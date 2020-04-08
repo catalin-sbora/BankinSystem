@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InternshipProject.EFDataAccess.Migrations
 {
     [DbContext(typeof(BankingDbContext))]
-    [Migration("20200331134501_InitialDataModel")]
-    partial class InitialDataModel
+    [Migration("20200406172222_ChangeCardAccountRelation")]
+    partial class ChangeCardAccountRelation
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -28,7 +28,7 @@ namespace InternshipProject.EFDataAccess.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("Balance")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18, 4)");
 
                     b.Property<Guid?>("CustomerId")
                         .HasColumnType("uniqueidentifier");
@@ -138,7 +138,7 @@ namespace InternshipProject.EFDataAccess.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18, 4)");
 
                     b.Property<Guid?>("BankAccountId")
                         .HasColumnType("uniqueidentifier");
@@ -174,8 +174,8 @@ namespace InternshipProject.EFDataAccess.Migrations
 
             modelBuilder.Entity("InternshipProject.ApplicationLogic.Model.Card", b =>
                 {
-                    b.HasOne("InternshipProject.ApplicationLogic.Model.BankAccount", null)
-                        .WithMany("Cards")
+                    b.HasOne("InternshipProject.ApplicationLogic.Model.BankAccount", "BankAccount")
+                        .WithMany()
                         .HasForeignKey("BankAccountId");
                 });
 

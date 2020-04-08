@@ -4,17 +4,16 @@ using System.Text;
 
 namespace InternshipProject.ApplicationLogic.Model
 {
-    public class Customer
-    {
-        public Guid Id { get; set; }
+    public class Customer:DataEntity
+    {         
         public Guid UserId { get; private set; }
         public string FirstName { get; private set; }
         public string LastName { get; private set; }
         public string SocialId { get; private set; }
-        public ContactDetails ContactDetails { get; private set; }
-        public ICollection<BankAccount> BankAccounts { get; private set; }
+        public virtual ContactDetails ContactDetails { get; private set; }
+        public virtual ICollection<BankAccount> BankAccounts { get; private set; }
 
-        private Customer()
+        protected Customer()
         { 
         }
         public static Customer Create(Guid userId, string firstName, string lastName, string socialId)

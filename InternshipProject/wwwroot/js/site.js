@@ -2,4 +2,4 @@
 // for details on configuring this project to bundle and minify static web assets.
 
 // Write your JavaScript code.
-cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js
+//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js

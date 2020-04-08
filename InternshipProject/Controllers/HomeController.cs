@@ -13,14 +13,15 @@ namespace InternshipProject.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly CustomerServices customerServices;
-
-        public HomeController(ILogger<HomeController> logger, CustomerServices customerServices)
+        private readonly CustomerService customerServices;
+        private readonly StatisticsServices statisticsServices;
+        public HomeController(ILogger<HomeController> logger, CustomerService customerServices, StatisticsServices statisticsServices)
         {
             _logger = logger;
             this.customerServices = customerServices;
+            this.statisticsServices = statisticsServices;
         }
-       
+        
         public IActionResult Index()
         {
            

@@ -14,10 +14,10 @@ namespace InternshipProject.Controllers
     [Authorize]
     public class OnlineBankingController : Controller
     {
-        private readonly CustomerServices customerServices;
+        private readonly CustomerService customerServices;
         private readonly UserManager<IdentityUser> userManager;
 
-        public OnlineBankingController(CustomerServices customerServices, UserManager<IdentityUser> userManager)
+        public OnlineBankingController(CustomerService customerServices, UserManager<IdentityUser> userManager)
         {
 
             this.userManager = userManager;
