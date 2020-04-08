@@ -4,14 +4,16 @@ using InternshipProject.EFDataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace InternshipProject.EFDataAccess.Migrations
 {
     [DbContext(typeof(BankingDbContext))]
-    partial class BankingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200408121741_AddBankAccountMetaData")]
+    partial class AddBankAccountMetaData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,9 +38,6 @@ namespace InternshipProject.EFDataAccess.Migrations
 
                     b.Property<string>("IBAN")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("LastTransactionDate")
-                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 

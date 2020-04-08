@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace InternshipProject.ViewModels.Accounts
 {
-    public class AccountsListViewModel
+    public class BankAccountViewModel
     {
-        public IEnumerable<BankAccountViewModel> BankAccounts { get; set; }
-        public string CustomerName { get; set; }
-        public string PhoneNo { get; set; }
+        public BankAccount BankAccount { get; set; }
+        public BankAccountMetaData MetaData { get; set; }
     }
 }

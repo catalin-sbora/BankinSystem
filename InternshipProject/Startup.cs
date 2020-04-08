@@ -37,14 +37,19 @@ namespace InternshipProject
                     Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddDbContext<BankingDbContext>(options =>
-                options.UseSqlServer(
+                options.UseLazyLoadingProxies()
+                .UseSqlServer(
                     Configuration.GetConnectionString("BankingConnection")));
 
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             
             services.AddScoped<ICustomerRepository, EFCustomerRepository>();
-            services.AddScoped<CustomerServices>();
+            services.AddScoped<IBankAccountMetaDataRepository, EFBankAccountMetaDataRepository>();
+
+            services.AddScoped<CustomerService>();
+            services.AddScoped<MetaDataService>();
+            services.AddScoped<StatisticsServices>();
 
             services.AddControllersWithViews();
             services.AddRazorPages()

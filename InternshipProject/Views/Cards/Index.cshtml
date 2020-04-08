@@ -1,0 +1,29 @@
+﻿@model InternshipProject.ViewModels.Cards.CardListViewModel
+@{
+    ViewData["Title"] = "Index";
+}
+
+<p class="text-right font-weight-bold">Name: John Doe</p>
+<p class="text-right font-weight-bold">Contact: 0773820330</p>
+    </br>
+    </br>
+    </br>
+<div class="container ">
+    <div class="card-deck">
+        @foreach (var card in Model.Cards)
+        {
+            <div class="card text-black border-success mb-3" style="width: 16rem; height: 280px">
+
+                <div class="card-body bg-light">
+                    <div class=" bg-menu square " style="width:50px;height:50px;margin:auto;margin-bottom:20px"></div>
+                   
+                    <h5 class="card-title">@card.OwnerName</h5>
+                    <p class="card-text">@card.SerialNumber</p>
+                    <p class="card-text">@card.ExpiryDate.ToShortDateString()</p>
+                    <a href="#" class="btn" style="background-color:#04B431">See Payments</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
