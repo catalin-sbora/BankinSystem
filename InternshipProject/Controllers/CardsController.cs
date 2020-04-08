@@ -18,6 +18,7 @@ namespace InternshipProject.Controllers
         public CardsController(CustomerServices customerServices, UserManager<IdentityUser> userManager)
         {
             this.userManager = userManager;
+            
             this.customerServices = customerServices;
         }
         public IActionResult Index(string ID)
