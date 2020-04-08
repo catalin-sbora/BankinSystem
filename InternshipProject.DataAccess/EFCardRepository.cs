@@ -7,12 +7,12 @@ using System.Text;
 
 namespace InternshipProject.EFDataAccess
 {
-    class EFCardRepository : ICardRepository
+    class EFCardRepository :BaseRepository<Card>, ICardRepository
     {
-        private readonly BankingDbContext dbContext;
-        public EFCardRepository(BankingDbContext dbContext)
+      
+        public EFCardRepository(BankingDbContext dbContext):base(dbContext)
         {
-            this.dbContext = dbContext;
+           
         }
         public Card Add(Card card)
         {

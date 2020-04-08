@@ -13,9 +13,9 @@ namespace InternshipProject.Controllers
     public class CardsController : Controller
     {
         private UserManager<IdentityUser> userManager;
-        private CustomerServices customerServices;
+        private CustomerService customerServices;
 
-        public CardsController(CustomerServices customerServices, UserManager<IdentityUser> userManager)
+        public CardsController(CustomerService customerServices, UserManager<IdentityUser> userManager)
         {
             this.userManager = userManager;
             
@@ -25,7 +25,7 @@ namespace InternshipProject.Controllers
         {
             //string userId = userManager.GetUserId(User);
            // var customer = customerServices.GetCustomer(userId);
-            var cardsList = customerServices.GetCardsByBankAccountID(ID);
+            //var cardsList = customerServices.GetCardsByBankAccountID(ID);
            
            /* CardListViewModel cards = new CardListViewModel()
             {
@@ -36,7 +36,7 @@ namespace InternshipProject.Controllers
                 
                     }
             }; */
-             return View(cardsList );
+             return View( );
             
         }
         public ActionResult CardPayments()
