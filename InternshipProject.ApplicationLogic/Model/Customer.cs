@@ -4,9 +4,8 @@ using System.Text;
 
 namespace InternshipProject.ApplicationLogic.Model
 {
-    public class Customer
-    {        
-        public Guid Id { get; set; }
+    public class Customer:DataEntity
+    {         
         public Guid UserId { get; private set; }
         public string FirstName { get; private set; }
         public string LastName { get; private set; }

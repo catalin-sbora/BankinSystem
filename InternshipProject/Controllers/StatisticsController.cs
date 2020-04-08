@@ -16,10 +16,10 @@ namespace InternshipProject.Controllers
     public class StatisticsController : Controller
     {
         private readonly StatisticsServices statisticServices;
-        private readonly CustomerServices customerServices;
+        private readonly CustomerService customerServices;
         private readonly UserManager<IdentityUser> userManager;
 
-        public StatisticsController(StatisticsServices statisticServices, CustomerServices customerServices, UserManager<IdentityUser> userManager)
+        public StatisticsController(StatisticsServices statisticServices, CustomerService customerServices, UserManager<IdentityUser> userManager)
         {
             this.statisticServices = statisticServices;
             this.customerServices = customerServices;

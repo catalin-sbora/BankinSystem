@@ -10,11 +10,9 @@ namespace InternshipProject.ApplicationLogic.Model
      
          WARNING: Exceptions are not fully implemented yet
     */
-    public class BankAccount
+    public class BankAccount: DataEntity
     {
-        private List<Transaction> transactions = new List<Transaction>();
-        //private List<Card> cards = new List<Card>();
-        public Guid Id { get; set; }
+        private List<Transaction> transactions = new List<Transaction>();              
         public string IBAN { get; set; }
         public decimal Balance { get; set; }
         public string Currency { get; set; }
@@ -29,7 +27,8 @@ namespace InternshipProject.ApplicationLogic.Model
                 transactions = new List<Transaction>(value);
             }
         }              
-
+        public DateTime LastTransactionDate { get; private set; }
+        
         protected BankAccount()
         { 
             
@@ -57,6 +56,14 @@ namespace InternshipProject.ApplicationLogic.Model
                         IBAN = accountIBAN                        
                     };
         }
+
+        private void AddTransaction(Transaction transaction)
+        {
+            Transactions.Count();
+            transactions.Add(transaction);
+            LastTransactionDate = DateTime.UtcNow;
+        }
+
         public Transaction CreatePayment(decimal amount, string destinationName, string destinationIBAN, string description)
         {
             if (amount <= 0)
@@ -64,10 +71,10 @@ namespace InternshipProject.ApplicationLogic.Model
 
             if (string.IsNullOrEmpty(destinationName))
                 throw new Exception("");
-
-
+            
+            Transactions.Count();
             var transaction = Transaction.Create(-amount, destinationName, destinationIBAN, description);
-            transactions.Add(transaction);
+            AddTransaction(transaction);
 
             return transaction;
         }   
@@ -81,24 +88,21 @@ namespace InternshipProject.ApplicationLogic.Model
                 throw new Exception("");
 
             var transaction = Transaction.Create(amount, sourceName, sourceIBAN, description);
-            transactions.Add(transaction);
+            AddTransaction(transaction);
         }
 
-        /*public Card AttachNewCard(string serialNumber, string cvv, string ownerName)
+        public decimal GetAmountPaidInCurrentMonth()
         {
-            var card = Card.Create(serialNumber, cvv, ownerName, this);                        
-            return card;
-        }*/
+            var paidThisMonth = Transactions.Where(transaction =>
+                                                            transaction.Time.Month == DateTime.UtcNow.Month &&
+                                                            transaction.Amount < 0
+                                                            )
+                                                    .Sum(transaction => transaction.Amount);
+            return paidThisMonth;
 
-        /*public void DetachCard(Card cardToRemove)
-        {
-            var selectedCard = cards.Where(card => card.Id == cardToRemove.Id)
-                  .SingleOrDefault();
-            if (selectedCard == null)
-                throw new Exception("NotFound");
+        }
 
-            cards.RemoveAll(card => card.Id == selectedCard.Id);
-        }*/
+        
 
     }
 }

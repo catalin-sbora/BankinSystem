@@ -17,6 +17,7 @@ namespace InternshipProject.EFDataAccess
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<ContactDetails> ContactDetails { get; set; }
         public DbSet<CardTransaction> CardTransactions { get; set; }
+        public DbSet<BankAccountMetaData> BankAccountMetaDatas { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -27,6 +28,10 @@ namespace InternshipProject.EFDataAccess
             builder.Entity<Transaction>()
                     .Property(transaction => transaction.Amount)
                     .HasColumnType("decimal(18, 4)");
+
+            builder.Entity<BankAccountMetaData>()
+                    .HasOne<BankAccount>();
+                    
         }
 
 
