@@ -5,15 +5,14 @@
     ViewData["Title"] = "ReceivedTransactions";
 }
 
-@foreach (var account in Model.BankAccounts)
-{
+
     <p><b>Account</b></p>
-    <p><b>IBAN</b> @account.IBAN</p>
+    <p><b>IBAN</b> @Model.BankAccounts.ElementAt(0).IBAN</p>
     <p><b>Name</b> @Model.CustomerName</p>
     <p><b>Contact</b> @Model.PhoneNo</p>
     <h1>Received Transactions</h1>
-    <p><b>Balance:</b> @account.Balance</p>
-}
+    <p><b>Balance:</b> @Model.BankAccounts.ElementAt(0).Balance</p>
+
 @{
     int i = 0;
 }
@@ -48,7 +47,7 @@
         background: #f2f2f2
     }
 </style>
-<table>
+<table class="table table-striped">
 
     <thead>
         <tr style="background-color:rgba(0, 138, 0, 0.6) ">
@@ -63,13 +62,13 @@
     </thead>
 
     <tbody>
-        @foreach (var transaction in Model.BankAccounts[i].Transactions)
+        @foreach (var transaction in Model.BankAccounts.ElementAt(0).Transactions)
         {
             <tr>
                 <th scope="row">@i@{i++;}</th>
                 <td>@transaction.Amount</td>
                 <td>@transaction.Time</td>
-                <td>@transaction</td>
+                <td>@transaction.Status</td>
                 <td>@transaction.Details</td>
                 <td>@transaction.ExternalName</td>
                 <td>@transaction.ExternalIBAN</td>
