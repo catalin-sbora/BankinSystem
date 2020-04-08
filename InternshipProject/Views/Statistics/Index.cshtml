@@ -4,56 +4,55 @@
     ViewData["Title"] = "Statistics";
 }
 
-<head>
-    <meta name="viewport" content="width=device-width" />
+@section Scripts{
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.min.js"></script>
-</head>
 
-<body>
-    <div class="account-grid">
-        <div class="account-grid-main-component">Name:</div>
-        <div class="account-grid-data-component">@Model.CustomerName</div>
-        <div class="account-grid-main-component">Customer:</div>
-        <div class="account-grid-data-component">@Model.PhoneNo</div>
-    </div>
+    }
+    
+        <div class="account-grid">
+            <div class="account-grid-main-component">Name:</div>
+            <div class="account-grid-data-component">@Model.CustomerName</div>
+            <div class="account-grid-main-component">Customer:</div>
+            <div class="account-grid-data-component">@Model.PhoneNo</div>
+        </div>
 
-    <hr style="height:2px;border:none;background-color:#D4D4D4;" />
+        <hr style="height:2px;border:none;background-color:#D4D4D4;" />
 
-    <div align="center">
-        <button class="statistics-button">All-time</button>
-        <button class="statistics-button">Year</button>
-        <button class="statistics-button">Month</button>
-        <button class="statistics-button">Week</button>
-        <button class="statistics-button">Day</button>
-    </div>
-    <br /><br />
+        <div align="center">
+            <button class="statistics-button">All-time</button>
+            <button class="statistics-button">Year</button>
+            <button class="statistics-button">Month</button>
+            <button class="statistics-button">Week</button>
+            <button class="statistics-button">Day</button>
+        </div>
+        <br /><br />
 
-    <div>
-        <table style="width:70%; font:large" align="right" border="1">
-            <tr style="text-align: center; background-color: #60A917; color: white; border-right:none;">
-                <th>Account IBAN</th>
-                <th>Current Balance</th>
-                <th>Credit</th>
-                <th>Debit</th>
-                <th>Last Transaction</th>
-            </tr>
-            @foreach (var account in Model.BankAccounts)
-            {
-                <tr style="text-align:center; border-right:none;">
-                    <td>@account.IBAN</td>
-                    <td>@account.Balance</td>
-                    <td>+@account.Balance</td>
-                    <td>-@account.Balance</td>
-                    <td>21/04/2020</td>
+        <div>
+            <table style="width:70%; font:large" align="right" border="1">
+                <tr style="text-align: center; background-color: #60A917; color: white; border-right:none;">
+                    <th>Account IBAN</th>
+                    <th>Current Balance</th>
+                    <th>Credit</th>
+                    <th>Debit</th>
+                    <th>Last Transaction</th>
                 </tr>
-            }
-        </table>
-    </div>
+                @foreach (var account in Model.BankAccounts)
+                {
+                    <tr style="text-align:center; border-right:none;">
+                        <td>@account.IBAN</td>
+                        <td>@account.Balance</td>
+                        <td>+@account.Balance</td>
+                        <td>-@account.Balance</td>
+                        <td>21/04/2020</td>
+                    </tr>
+                }
+            </table>
+        </div>
 
-    <div style="width:700px; height:700px;">
-        <canvas id="lineChart"></canvas>
-        <canvas id="pieChart"></canvas>
-        <script>
+        <div style="width:700px; height:700px;">
+            <canvas id="lineChart"></canvas>
+            <canvas id="pieChart"></canvas>
+            <script>
             window.onload = function () {
                 var ctx = document.getElementById('lineChart').getContext('2d');
                 var lineChart = new Chart(ctx, {
@@ -110,23 +109,23 @@
                         }]
                     },
                 });
-
-                @foreach(var account in Model.BankAccounts)
-                {
-                    <!--addData(pieChart, @account.IBAN, @account.Balance)-->
-                    <!--addData(lineChart, @account.IBAN, @account.Balance)-->
-                }
-
-                function addData(chart, label, data) {
+                 function addData(chart, label, data) {
                     chart.data.labels.push(label);
                     chart.data.datasets.forEach((dataset) => {
                         dataset.data.push(data);
                     });
                     chart.update();
                 }
-            });
-        </script>
-    </div>
-    <br />
+                @foreach(var account in Model.BankAccounts)
+                {
+                     @Html.Raw($"addData(pieChart, '{account.IBAN}', {account.Balance});");
+                     @Html.Raw($"addData(lineChart, '{account.IBAN}', {account.Balance});");
+                }
 
-</body>
+
+            };
+            </script>
+        </div>
+        <br />
+
+    
