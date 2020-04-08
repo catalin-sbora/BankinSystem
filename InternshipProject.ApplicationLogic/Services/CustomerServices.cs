@@ -25,8 +25,8 @@ namespace InternshipProject.ApplicationLogic.Services
                 throw new CustomerNotFoundException(userId);
             }
             return foundCustomer.Id;
-
         }
+
         public IEnumerable<BankAccount> GetCustomerBankAccounts(Guid customerId)
         {
             var customer = customerRepository?.GetCustomerById(customerId);

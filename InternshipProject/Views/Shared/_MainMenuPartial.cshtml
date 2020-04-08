@@ -3,10 +3,8 @@
 @inject UserManager<IdentityUser> UserManager
 
 
- @if (SignInManager.IsSignedIn(User))
- {
-
-
+@if (SignInManager.IsSignedIn(User))
+{ 
     <ul class="navbar-nav flex-grow-1">
         <li class="nav-item">
             <a class="nav-link text-light" asp-area="" asp-controller="Accounts" asp-action="Index">
@@ -39,14 +37,13 @@
 
         <li class="nav-item">
             <a class="nav-link text-light" asp-area="" asp-controller="Statistics" asp-action="Index">
-                <i class="fas fa-calendar-check"></i> @*bars*@
+                <i class="fas fa-calendar-check"></i> 
                 Statistics
 
             </a>
         </li>
     </ul>
 
- }
-
+}
 
 
