@@ -5,31 +5,50 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using InternshipProject.ViewModels.Accounts;
+using Microsoft.AspNetCore.Identity;
 using InternshipProject.ApplicationLogic.Model;
 using InternshipProject.ViewModels.Statistics;
+using InternshipProject.ApplicationLogic.Services;
 
 namespace InternshipProject.Controllers
 {
     [Authorize]
     public class StatisticsController : Controller
     {
+        private readonly StatisticsServices statisticServices;
+        private readonly CustomerServices customerServices;
+        private readonly UserManager<IdentityUser> userManager;
+
+        public StatisticsController(StatisticsServices statisticServices, CustomerServices customerServices, UserManager<IdentityUser> userManager)
+        {
+            this.statisticServices = statisticServices;
+            this.customerServices = customerServices;
+            this.userManager = userManager;
+        }
         public IActionResult Index()
         {
-            StatisticsViewModel viewModel = new StatisticsViewModel()
+
+            string userId = userManager.GetUserId(User);
+            try
             {
+                var customer = customerServices.GetCustomer(userId);
+                StatisticsViewModel viewModel = new StatisticsViewModel()
+                {
+                    BalanceList = statisticServices.GetTotalBankAccountBalance(userId),
+                    BankAccounts = customer.BankAccounts,
+                    YearlyBalance = statisticServices.BankAccountBalanceYear(customer.BankAccounts.ElementAt(0)),
+                    AllTimeBalance = statisticServices.BankAccountBalanceYear(customer.BankAccounts.ElementAt(0)),
+                    CustomerName = $"{customer.FirstName} {customer.LastName}",
+                    PhoneNo = customer.ContactDetails?.PhoneNo
+                };
 
-                CustomerName = "John Doe",
-
-                PhoneNo = "07288377349",
-
-                BankAccounts = new List<BankAccount> {
-                    /*new BankAccount{ IBAN = "RO511452423", Balance = 134},
-                    new BankAccount{ IBAN = "RO122451243", Balance = 200},
-                    new BankAccount{ IBAN = "RO778452423", Balance = 621}*/
-                }
-            };
-
-            return View(viewModel);
+                return View(viewModel);
+            }
+            catch (Exception e)
+            {
+                //log exception
+                return BadRequest("Unable retrieve data for the current user");
+            }
         }
     }
 }

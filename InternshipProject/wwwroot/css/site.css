@@ -100,17 +100,12 @@ form.searchButtonPayments input[type=text] {
     padding: 10px;
     font-size: 17px;
     border: 1px solid grey;
-    float: left;
     width: 200px;
-    position: relative;
-    left: 148%;
     background: #f1f1f1;
+    float: right;
 }
 
 form.searchButtonPayments button {
-    position: relative;
-    left: 148%;
-    float: left;
     width: 20%;
     padding: 10px;
     background: #60A917;
@@ -119,6 +114,7 @@ form.searchButtonPayments button {
     border: 1px solid grey;
     border-left: none;
     cursor: pointer;
+    float: right;
 }
 
 form.searchButtonPayments::after {
@@ -169,7 +165,7 @@ form.searchButtonPayments::after {
 .customer-details-value {
     width: 140px;
     font-weight: normal;
-    text-align:right;
+    text-align: left;
 }
 
 .details-card-colorbox {

@@ -4,55 +4,44 @@ using System.Linq;
 using System.Threading.Tasks;
 using InternshipProject.ApplicationLogic.Exceptions;
 using InternshipProject.ApplicationLogic.Model;
+using InternshipProject.ApplicationLogic.Services;
 using InternshipProject.ViewModels.Payments;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InternshipProject.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class PaymentsController : Controller
     {
-        public IActionResult Index()
-        {
+        private readonly UserManager<IdentityUser> userManager;
+        private readonly CustomerServices customerServices;
 
-            
-            PaymentsViewModel viewModel = new PaymentsViewModel()
+        public PaymentsController(UserManager<IdentityUser> userManager, CustomerServices customerServices)
+        {
+            this.userManager = userManager;
+            this.customerServices = customerServices;
+        }
+
+        public IActionResult IndexAsync()
+        {
+            var userId = userManager.GetUserId(User);
+            try
             {
-                CustomerName = "John Doe",
-                CustomerPhoneNo = "0723 972 110",
-                BanksAccounts = new List<BankAccount>
+                var customer = customerServices.GetCustomer(userId);
+                var viewModel = new PaymentsViewModel()
                 {
-                   /* new BankAccount
-                    {
-                        IBAN = "ROSDasdasd",
-                        Transactions = new List<Transaction>
-                        {
-                            new Transaction{Amount = 20, ExternalIBAN = "ROSDasdasd", Time = new DateTime(2019,04,03)},
-                            new Transaction{Amount = 20, ExternalIBAN = "ROgdfgdfgd", Time = new DateTime(2020,11,23)},
-                            new Transaction{Amount = 20, ExternalIBAN = "ROreterter", Time = new DateTime(2002,09,12)}
-                        }
-                    },
-                    new BankAccount
-                    {
-                        IBAN = "ROSDvbcvb",
-                        Transactions = new List<Transaction>
-                        {
-                            new Transaction{Amount = 3, ExternalIBAN = "ROrfeter", Time = new DateTime(2002,09,12)}
-                        }
-                    },
-                    new BankAccount
-                    {
-                        IBAN = "ROSgfhfgh",
-                        Transactions = new List<Transaction>
-                        {
-                            new Transaction{Amount = 20, ExternalIBAN = "ROgdfgdfgd", Time = new DateTime(2020,11,23)},
-                            new Transaction{Amount = 20, ExternalIBAN = "ROreterter", Time = new DateTime(2002,09,12)}
-                        }
-                    }*/
-                }
-            };
-            return View(viewModel);
+                    CustomerName = $"{customer.FirstName} {customer.LastName}",
+                    CustomerPhoneNo = customer.ContactDetails?.PhoneNo,
+                    BanksAccounts = customer.BankAccounts
+                };
+                return View(viewModel);
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Unable to retrieve data");
+            }
         }
     }
 }
