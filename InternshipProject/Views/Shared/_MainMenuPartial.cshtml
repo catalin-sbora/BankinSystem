@@ -4,7 +4,7 @@
 
 
 @if (SignInManager.IsSignedIn(User))
-{
+{ 
     <ul class="navbar-nav flex-grow-1">
         <li class="nav-item">
             <a class="nav-link text-light" asp-area="" asp-controller="Accounts" asp-action="Index">
@@ -19,7 +19,7 @@
                 Payments
             </a>
         </li>
-
+      
         <li class="nav-item">
             <a class="nav-link text-light" asp-area="" asp-controller="Received" asp-action="Index">
                 <i class="fas fa-dollar-sign"></i>
@@ -27,13 +27,23 @@
                 <span class="badge badge-pill badge-danger"> 2 </span>
             </a>
         </li>
+      
+        <li class="nav-item">
+            <a class="nav-link text-light" asp-area="" asp-controller="Cards" asp-action="Index">
+                <i class="fa fa-credit-card" aria-hidden="true"></i>
+                Cards
+                </a>
+        </li>
 
         <li class="nav-item">
             <a class="nav-link text-light" asp-area="" asp-controller="Statistics" asp-action="Index">
-                <i class="fas fa-calendar-check"></i> @*bars*@
+                <i class="fas fa-calendar-check"></i> 
                 Statistics
 
             </a>
         </li>
     </ul>
+
 }
+
+

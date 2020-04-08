@@ -1,6 +1,6 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-for details on configuring this project to bundle and minify static web assets. */
-cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css
+for details on configuring this project to bundle and minify static web assets. 
+cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css*/
 a.navbar-brand {
     white-space: normal;
     text-align: center;
@@ -76,9 +76,51 @@ body {
     border-bottom: 1px solid #046504 !important;
 }
 
+.hamburger-menu {
+    color: white !important;
+    border: 0px solid white !important;
+}
 .navbar-brand {
 color: #FFFFFF !important;
 font-weight: bold;
+}
+
+.colorContainer {
+    color: #046504;
+}
+.square {
+    width: 20px;
+    height: 20px;
+    color: #FFFFFF !important;
+    font-weight: bold;
+    
+}
+
+form.searchButtonPayments input[type=text] {
+    padding: 10px;
+    font-size: 17px;
+    border: 1px solid grey;
+    width: 200px;
+    background: #f1f1f1;
+    float: right;
+}
+
+form.searchButtonPayments button {
+    width: 20%;
+    padding: 10px;
+    background: #60A917;
+    color: white;
+    font-size: 17px;
+    border: 1px solid grey;
+    border-left: none;
+    cursor: pointer;
+    float: right;
+}
+
+form.searchButtonPayments::after {
+    content: "";
+    clear: both;
+    display: table;
 }
 
 
@@ -113,4 +155,63 @@ font-weight: bold;
     border-radius: 8px;
 }
 
-/*Statistics table*/
+
+.customer-details-label {
+    
+    font-weight: bold;
+    margin-right: 10px;
+    text-align: left;
+}
+.customer-details-value {
+    width: 140px;
+    font-weight: normal;
+    text-align: left;
+}
+
+.details-card-colorbox {
+    width: 40px;
+    height: 40px;
+    margin: 40px;
+    border-radius: 5px;
+    border: 0px solid white;
+}
+
+
+.details-card-amount {
+    font-size: 42px;
+    font-weight: bold;
+    color: #000000;
+    text-align:center;
+}
+
+
+.details-card-currency {
+    font-size: 42px;
+    font-weight: lighter;
+    color: #000000;
+    text-align: center;
+}
+
+.details-card-name {
+    font-size: 24px;
+    font-weight: bold;
+    color: #000000;
+    text-align: left;
+    margin-left: 20px;
+}
+.details-card-property-name {
+    font-size: 14px;
+    font-weight: bold;
+    color: #000000;
+    text-align: left;
+    margin-right: 10px;
+    margin-left: 20px;
+}
+
+.details-card-property-value {
+    font-size: 14px;
+    font-weight: lighter;
+    color: #000000;
+    text-align: left;
+    margin-right: 10px;
+}

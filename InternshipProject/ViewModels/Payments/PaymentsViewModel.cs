@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace InternshipProject.ViewModels.Accounts
+namespace InternshipProject.ViewModels.Payments
 {
-    public class AccountsListViewModel
+    public class PaymentsViewModel
     {
-        public IEnumerable<BankAccountViewModel> BankAccounts { get; set; }
+        public IEnumerable<BankAccount> BanksAccounts { get; set; }
         public string CustomerName { get; set; }
-        public string PhoneNo { get; set; }
+        public string CustomerPhoneNo { get; set; }
+
     }
 }
