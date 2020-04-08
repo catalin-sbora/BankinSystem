@@ -58,7 +58,6 @@ namespace InternshipProject.EFDataAccess
                                 .FirstOrDefault();
             return foundCustomer;
         }
-
         public bool Remove(Guid customerId)
         {
             var customer = GetCustomerById(customerId);
@@ -78,5 +77,6 @@ namespace InternshipProject.EFDataAccess
             dbContext.SaveChanges();
             return customerEntity.Entity;
         }
+        
     }
 }

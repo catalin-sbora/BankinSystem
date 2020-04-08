@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace InternshipProject.Controllers
 {
-    [Authorize]
+  //  [Authorize]
     public class AccountsController : Controller
     {
         private readonly CustomerServices customerServices;

@@ -11,6 +11,7 @@ namespace InternshipProject.ApplicationLogic.Services
     public class CustomerServices
     {
         private readonly ICustomerRepository customerRepository;
+        private readonly ICardRepository cardRepository;
         public CustomerServices(ICustomerRepository customerRepository)
         {
             this.customerRepository = customerRepository;
@@ -64,6 +65,13 @@ namespace InternshipProject.ApplicationLogic.Services
             }
 
             return customer;
+        }
+        public IEnumerable<Card> GetCardsByBankAccountID(string bankAccountId)
+        {
+            Guid idToSearch = Guid.Empty;
+            Guid.TryParse(bankAccountId , out idToSearch);
+            var cardsList = cardRepository?.GetByAccount(idToSearch);
+            return cardsList;
         }
     }
 }
