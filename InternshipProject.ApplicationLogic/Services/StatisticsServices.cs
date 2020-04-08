@@ -78,5 +78,7 @@ namespace InternshipProject.ApplicationLogic.Services
 
             return balanceOverTime.AsEnumerable();
         }
+
+        
     }
 }

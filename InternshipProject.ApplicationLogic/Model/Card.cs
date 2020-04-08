@@ -5,10 +5,10 @@ using System.Text;
 
 namespace InternshipProject.ApplicationLogic.Model
 {
-    public class Card
+    public class Card: DataEntity
     {
         private List<CardTransaction> cardTransactions = new List<CardTransaction>();
-        public Guid Id { get; private set; }
+        
         public string SerialNumber { get; private set; }
         public string CVV { get; private set; }
         public DateTime CreateDate { get; private set; }

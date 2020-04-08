@@ -10,9 +10,9 @@ namespace InternshipProject.ApplicationLogic.Model
         ATM,
         Online
     }
-    public class CardTransaction
+    public class CardTransaction:DataEntity
     {
-        public Guid Id { get; private set; }
+       
         public virtual Transaction Transaction{ get; private set; }
         public CardTransactionType TransactionType { get; private set; }
 

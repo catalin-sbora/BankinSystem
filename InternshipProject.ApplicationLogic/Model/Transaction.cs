@@ -11,9 +11,8 @@ namespace InternshipProject.ApplicationLogic.Model
         Accepted,
         Rejected
     }
-    public class Transaction
-    {
-        public Guid Id { get; private set; }
+    public class Transaction: DataEntity
+    {        
         public string ExternalIBAN { get; private set; }
         public string ExternalName { get; private set; }
         public decimal Amount { get; private set; }

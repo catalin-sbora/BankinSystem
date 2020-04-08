@@ -45,7 +45,10 @@ namespace InternshipProject
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             
             services.AddScoped<ICustomerRepository, EFCustomerRepository>();
-            services.AddScoped<CustomerServices>();
+            services.AddScoped<IBankAccountMetaDataRepository, EFBankAccountMetaDataRepository>();
+
+            services.AddScoped<CustomerService>();
+            services.AddScoped<MetaDataService>();
             services.AddScoped<StatisticsServices>();
 
             services.AddControllersWithViews();
