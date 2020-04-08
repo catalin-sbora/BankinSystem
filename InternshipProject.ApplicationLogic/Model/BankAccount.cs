@@ -17,7 +17,6 @@ namespace InternshipProject.ApplicationLogic.Model
         public Guid Id { get; set; }
         public string IBAN { get; set; }
         public decimal Balance { get; set; }
-
         public string Currency { get; set; }
         public virtual IReadOnlyCollection<Transaction> Transactions
         {

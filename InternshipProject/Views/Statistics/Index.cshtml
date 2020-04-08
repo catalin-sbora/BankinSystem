@@ -6,7 +6,7 @@
 
 <head>
     <meta name="viewport" content="width=device-width" />
-    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.min.js"></script>
 </head>
 
 <body>
@@ -26,65 +26,9 @@
         <button class="statistics-button">Week</button>
         <button class="statistics-button">Day</button>
     </div>
+    <br /><br />
 
     <div>
-        <br /><br />
-        <div style="width: 200px;" align="left">
-            <div id="chartContainer"></div>
-            <script type="text/javascript">
-
-                window.onload = function () {
-                    var chart = new CanvasJS.Chart("chartContainer", {
-                        theme: "light1",
-                        title: {
-                            text: "Accounts' Balance"
-                        },
-
-                        data: [
-                            {
-                                type: "pie",
-                                showInLegend: true,
-                                dataPoints: []
-                            }
-                        ]
-                    });
-
-                    @*
-                    var IBANList = [];
-                    var balanceList = [];
-
-                    for (int i = 0; i < Model.BankAccounts.Count(); i++)
-                    {
-                        var account = Model.BankAccounts.ElementAt(i);
-                        <!--
-                        IBANList[i] = @account.IBAN;
-                        balanceList[i] = @account.Balance;
-                        -->
-                    };
-
-
-                    @{ int index = 0; }
-                    var i;
-                    for (i = 0; i < @Model.BankAccounts.Count(); i++) {
-                        IBANList.push(@Model.BankAccounts.ElementAt(index).IBAN);
-                        balanceList.push(@Model.BankAccounts.ElementAt(index).Balance);
-                        @index++;
-                    }
-
-                    for (i = 0; i < @Model.BankAccounts.Count(); i++) {
-                        chart.options.data[0].dataPoints.push({label: IBANList[i], y: balanceList[i] });
-                    }
-                    *@
-
-                    chart.options.data[0].dataPoints.push({ name: "RO423452423", y: 234 });
-                    chart.options.data[0].dataPoints.push({ name: "RO663424234", y: 117 });
-                    chart.options.data[0].dataPoints.push({ name: "RO123311444", y: 58 });
-
-                    chart.render();
-                };
-            </script>
-        </div>
-
         <table style="width:70%; font:large" align="right" border="1">
             <tr style="text-align: center; background-color: #60A917; color: white; border-right:none;">
                 <th>Account IBAN</th>
@@ -95,14 +39,94 @@
             </tr>
             @foreach (var account in Model.BankAccounts)
             {
-            <tr style="text-align:center; border-right:none;">
-                <td>@account.IBAN</td>
-                <td>@account.Balance</td>
-                <td>+@account.Balance</td>
-                <td>-@account.Balance</td>
-                <td>21/04/2020</td>
-            </tr>
+                <tr style="text-align:center; border-right:none;">
+                    <td>@account.IBAN</td>
+                    <td>@account.Balance</td>
+                    <td>+@account.Balance</td>
+                    <td>-@account.Balance</td>
+                    <td>21/04/2020</td>
+                </tr>
             }
         </table>
     </div>
+
+    <div style="width:700px; height:700px;">
+        <canvas id="lineChart"></canvas>
+        <canvas id="pieChart"></canvas>
+        <script>
+            window.onload = function () {
+                var ctx = document.getElementById('lineChart').getContext('2d');
+                var lineChart = new Chart(ctx, {
+
+                    type: 'line',
+                    data: {
+                        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                        datasets: [{
+                            label: 'Balance over time',
+                            data: [12, 19, 3, 5, 2, 3],
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(255, 159, 64, 0.2)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        }
+                    }
+                });
+
+                var ctx = document.getElementById('pieChart').getContext('2d');
+                var pieChart = new Chart(ctx, {
+
+                    type: 'pie',
+                    data: {
+                        labels: ["Tet"],
+                        datasets: [{
+                            label: 'Balance of your accounts',
+                            data: [1],
+                            backgroundColor: ['rgba(255, 99, 132, 0.2)'],
+                            borderColor: ['rgba(255, 99, 132, 1)'],
+                            borderWidth: 1
+                        }]
+                    },
+                });
+
+                @foreach(var account in Model.BankAccounts)
+                {
+                    <!--addData(pieChart, @account.IBAN, @account.Balance)-->
+                    <!--addData(lineChart, @account.IBAN, @account.Balance)-->
+                }
+
+                function addData(chart, label, data) {
+                    chart.data.labels.push(label);
+                    chart.data.datasets.forEach((dataset) => {
+                        dataset.data.push(data);
+                    });
+                    chart.update();
+                }
+            });
+        </script>
+    </div>
+    <br />
+
 </body>

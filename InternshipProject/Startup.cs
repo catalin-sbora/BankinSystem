@@ -46,6 +46,7 @@ namespace InternshipProject
             
             services.AddScoped<ICustomerRepository, EFCustomerRepository>();
             services.AddScoped<CustomerServices>();
+            services.AddScoped<StatisticsServices>();
 
             services.AddControllersWithViews();
             services.AddRazorPages()
