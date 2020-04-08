@@ -16,9 +16,9 @@ namespace InternshipProject.Controllers
     public class PaymentsController : Controller
     {
         private readonly UserManager<IdentityUser> userManager;
-        private readonly CustomerServices customerServices;
+        private readonly CustomerService customerServices;
 
-        public PaymentsController(UserManager<IdentityUser> userManager, CustomerServices customerServices)
+        public PaymentsController(UserManager<IdentityUser> userManager, CustomerService customerServices)
         {
             this.userManager = userManager;
             this.customerServices = customerServices;

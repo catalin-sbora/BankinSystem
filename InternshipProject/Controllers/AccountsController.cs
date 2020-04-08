@@ -14,13 +14,15 @@ namespace InternshipProject.Controllers
   //  [Authorize]
     public class AccountsController : Controller
     {
-        private readonly CustomerServices customerServices;
+        private readonly CustomerService customerServices;
         private readonly UserManager<IdentityUser> userManager;
+        private readonly MetaDataService metaDataService;
 
-        public AccountsController(CustomerServices customerServices, UserManager<IdentityUser> userManager)
+        public AccountsController(CustomerService customerServices, MetaDataService metaDataService, UserManager<IdentityUser> userManager)
         {
             this.customerServices = customerServices;
             this.userManager = userManager;
+            this.metaDataService = metaDataService;
         }
         public IActionResult Index()
         {
@@ -29,9 +31,21 @@ namespace InternshipProject.Controllers
             try
             {
                 var customer = customerServices.GetCustomer(userId);
+                List<BankAccountViewModel> accountViewModels = new List<BankAccountViewModel>();
+
+                foreach (var bankAccount in customer.BankAccounts)
+                {
+                    accountViewModels.Add(new BankAccountViewModel
+                    {
+                        BankAccount = bankAccount,
+                        MetaData = metaDataService.GetMetaDataForBankAccount(bankAccount.Id)
+                    });
+                }
+
+
                 AccountsListViewModel viewModel = new AccountsListViewModel()
                 {
-                    BankAccounts = customer.BankAccounts,
+                    BankAccounts = accountViewModels,
                     CustomerName = $"{customer.FirstName} {customer.LastName}",
                     PhoneNo = customer.ContactDetails?.PhoneNo
                 };

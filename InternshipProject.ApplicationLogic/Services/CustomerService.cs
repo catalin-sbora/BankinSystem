@@ -8,11 +8,10 @@ using System.Text;
 
 namespace InternshipProject.ApplicationLogic.Services
 {
-    public class CustomerServices
+    public class CustomerService
     {
         private readonly ICustomerRepository customerRepository;
-        private readonly ICardRepository cardRepository;
-        public CustomerServices(ICustomerRepository customerRepository)
+        public CustomerService(ICustomerRepository customerRepository)
         {
             this.customerRepository = customerRepository;
         }
@@ -30,7 +29,7 @@ namespace InternshipProject.ApplicationLogic.Services
 
         public IEnumerable<BankAccount> GetCustomerBankAccounts(Guid customerId)
         {
-            var customer = customerRepository?.GetCustomerById(customerId);
+            var customer = customerRepository?.GetById(customerId);
             if (customer == null)
             {
                 throw new CustomerNotFoundException(customerId);
@@ -65,13 +64,6 @@ namespace InternshipProject.ApplicationLogic.Services
             }
 
             return customer;
-        }
-        public IEnumerable<Card> GetCardsByBankAccountID(string bankAccountId)
-        {
-            Guid idToSearch = Guid.Empty;
-            Guid.TryParse(bankAccountId , out idToSearch);
-            var cardsList = cardRepository?.GetByAccount(idToSearch);
-            return cardsList;
         }
     }
 }
