@@ -14,29 +14,41 @@ namespace InternshipProject.Controllers
     {
         private UserManager<IdentityUser> userManager;
         private CustomerService customerServices;
-
         public CardsController(CustomerService customerServices, UserManager<IdentityUser> userManager)
+       
         {
             this.userManager = userManager;
             
             this.customerServices = customerServices;
         }
-        public IActionResult Index(string ID)
+        public IActionResult Index()
         {
-            //string userId = userManager.GetUserId(User);
-           // var customer = customerServices.GetCustomer(userId);
-            //var cardsList = customerServices.GetCardsByBankAccountID(ID);
-           
-           /* CardListViewModel cards = new CardListViewModel()
+            string userId = userManager.GetUserId(User);
+            var customer = customerServices.GetCustomer(userId);
+            var bankAccounts = customerServices.GetCustomerBankAccounts(userId);
+            
+            List<Card> cards = new List<Card>();
+            CompleteCardsViewModel cardList = new CompleteCardsViewModel();
+            cardList.Cards = new List<CardWithColorViewModel>();
+            foreach(var bankAccount in bankAccounts)
             {
-                Cards = new List<Card> {
-                new Card() {SerialNumber = "1111-1111-1111-1111" , OwnerName= "Mihnea" , ExpiryDate= new DateTime(2024 , 11 , 5)},
-                new Card() {SerialNumber = "2222-2222-2222-2222", OwnerName= "Mihnea " , ExpiryDate= new DateTime(2025,11,24) },
-                new Card() {SerialNumber = "3333-3333-3333-3333", OwnerName= "Mihnea" , ExpiryDate= new DateTime(2023,9,20)}
-                
-                    }
-            }; */
-             return View( );
+                cards.AddRange( customerServices.GetCardsByUserID(bankAccount.Id.ToString()));
+               
+            }
+            
+          
+            foreach(var card in cards)
+            {
+              
+                CardWithColorViewModel temp = new CardWithColorViewModel();
+                temp.Card = card;
+                temp.CardColor = customerServices.GetCardColor(card.Id);
+                cardList.Cards.Add(temp);
+            }
+            
+        
+
+             return View( cardList);
             
         }
         public ActionResult CardPayments()

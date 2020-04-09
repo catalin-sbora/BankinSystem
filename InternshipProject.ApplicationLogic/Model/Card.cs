@@ -15,6 +15,7 @@ namespace InternshipProject.ApplicationLogic.Model
         public DateTime ExpiryDate { get; private set; }
         public string OwnerName { get; private set; }
         public virtual BankAccount BankAccount { get; private set; }
+       
         public virtual IReadOnlyCollection<CardTransaction> CardTransactions
         {
             get 
