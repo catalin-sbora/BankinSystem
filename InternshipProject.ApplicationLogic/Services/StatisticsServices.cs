@@ -32,22 +32,7 @@ namespace InternshipProject.ApplicationLogic.Services
                             .AsEnumerable();
         }
 
-
-        public IEnumerable<decimal> GetTotalBankAccountBalance(string userId)
-        {
-            var accounts = GetCustomerBankAccounts(userId);
-
-            List<decimal> accountBalance = new List<decimal>();
-
-            foreach(BankAccount account in accounts)
-            {
-                accountBalance.Add(account.Balance);
-            }
-
-            return accountBalance.AsEnumerable();
-        }
-
-        public IEnumerable<decimal> BankAccountBalanceAllTime(BankAccount bankAccount)
+        public IEnumerable<decimal> BankAccountHistoryAllTime(BankAccount bankAccount)
         {
             List<decimal> balanceOverTime = new List<decimal>();
             var currentBalance = bankAccount.Balance;
@@ -62,13 +47,13 @@ namespace InternshipProject.ApplicationLogic.Services
             return balanceOverTime.AsEnumerable();
         }
 
-        public IEnumerable<decimal> BankAccountBalanceYear(BankAccount bankAccount)
+        public IEnumerable<decimal> BankAccountHistoryYear(BankAccount bankAccount)
         {
             List<decimal> balanceOverTime = new List<decimal>();
             var currentBalance = bankAccount.Balance;
-            var sortedTransactions = bankAccount.Transactions
-                .Where(p => p.Time >= DateTime.UtcNow.AddYears(-1))
-                .OrderByDescending(param => param.Time);
+            var sortedTransactions = bankAccount.Transactions.Where(transaction => 
+                                                                transaction.Time.Year >= DateTime.UtcNow.Year - 1)
+                                                                .OrderByDescending(param => param.Time);
 
             foreach (Transaction transaction in sortedTransactions)
             {
@@ -78,7 +63,5 @@ namespace InternshipProject.ApplicationLogic.Services
 
             return balanceOverTime.AsEnumerable();
         }
-
-        
     }
 }

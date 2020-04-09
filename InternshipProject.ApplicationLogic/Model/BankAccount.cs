@@ -94,6 +94,7 @@ namespace InternshipProject.ApplicationLogic.Model
         public decimal GetAmountPaidInCurrentMonth()
         {
             var paidThisMonth = Transactions.Where(transaction =>
+                                                            transaction.Time.Year == DateTime.UtcNow.Year &&
                                                             transaction.Time.Month == DateTime.UtcNow.Month &&
                                                             transaction.Amount < 0
                                                             )
@@ -101,8 +102,5 @@ namespace InternshipProject.ApplicationLogic.Model
             return paidThisMonth;
 
         }
-
-        
-
     }
 }
