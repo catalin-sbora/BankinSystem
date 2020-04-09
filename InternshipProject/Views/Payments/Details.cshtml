@@ -1,0 +1,35 @@
+﻿@model InternshipProject.ApplicationLogic.Model.Transaction
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Transaction details</h2>
+
+<div style="padding-left: 25px;">
+    <div>
+        <strong>
+            Amount :
+        </strong>
+        @Model.Amount.ToString("N")
+    </div>
+    <div>
+        <strong>
+            Date :
+        </strong>
+        @Model.Time.ToString("dd/MM/yyyy")
+    </div>  
+
+    <div>
+        <strong>
+            External IBAn :
+        </strong>
+        @Model.ExternalIBAN
+    </div>
+
+    <div>
+        <strong>
+            External IBAn :
+        </strong>
+        @Model.ExternalName
+    </div>
+</div>

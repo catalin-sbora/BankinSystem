@@ -12,9 +12,7 @@ namespace InternshipProject.EFDataAccess
     {
        
         public EFCustomerRepository(BankingDbContext dbContext):base(dbContext)
-        {            
-        }
-   
+        { }
 
         public IEnumerable<Customer> FindByLastName(string lastName)
         {
@@ -44,5 +42,7 @@ namespace InternshipProject.EFDataAccess
             dbContext.SaveChanges();
             return customerEntity.Entity;
         }
+
+       
     }
 }

@@ -1,0 +1,11 @@
+﻿@model IEnumerable<InternshipProject.ApplicationLogic.Model.Transaction>
+@{
+    ViewData["Title"] = "SearchPayments";
+}
+
+<h1>SearchPayments</h1>
+
+@foreach(var transaction in Model)
+{
+    @transaction.Amount
+}

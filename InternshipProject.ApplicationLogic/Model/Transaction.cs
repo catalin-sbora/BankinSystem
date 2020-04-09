@@ -19,10 +19,12 @@ namespace InternshipProject.ApplicationLogic.Model
         public DateTime Time { get; private set; }
         public string Details { get; private set; }        
         public TransactionStatus Status { get; private set; }
+        public Guid BankAccountId { get; set; }
 
-        protected Transaction()
+        public Transaction()
         { 
         }
+
         public static Transaction Create(decimal amount, string externalName, string externalIBAN, string details)
         {
             //validare iban - throw exception

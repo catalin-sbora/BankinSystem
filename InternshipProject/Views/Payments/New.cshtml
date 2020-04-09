@@ -1,0 +1,42 @@
+﻿@model InternshipProject.ViewModels.Payments.NewPaymentViewModel
+@{
+    ViewData["Title"] = "NewPayment";
+}
+
+<h2>New Payment</h2>
+
+<br />
+@using (Html.BeginForm("Create", "Payments"))
+{
+<div style="width: 270px; padding-left: 25px;">
+    <div class="form-group">
+        <strong>
+            @Html.Label("External IBAN")
+        </strong>
+        @Html.TextBoxFor(payment => payment.ExternalIBAN, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        <strong>
+            @Html.Label("External Name")
+        </strong>
+        @Html.TextBoxFor(payment => payment.ExternalName, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        <strong>
+            @Html.Label("Amount")
+        </strong>
+        @Html.TextBoxFor(payment => payment.Amount, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        <strong>
+            @Html.Label("Select Account")
+        </strong>
+        @Html.DropDownListFor(payment => payment.BankAccountId, new SelectList(Model.BanksAccount, "Id", "IBAN"), "", new { @class = "form-control" })
+    </div>
+
+    <button class="btn btn-success" type="submit">Create</button>
+</div>
+}
