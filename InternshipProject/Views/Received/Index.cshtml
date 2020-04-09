@@ -54,9 +54,10 @@
             {
                 <tr>
                     <td>
-                        <div class="form-check">
-                            <label class="form-check-label">
-                                @*Html.RadioButtonFor(model => model.IsSelected)*@
+                        <div class="form-check"  >
+                            <label class="form-check-label" >
+                                
+                                @Html.RadioButtonFor(model => model.IsSelected,true)
                                 @account.IBAN
 
                             </label>
