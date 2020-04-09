@@ -14,24 +14,10 @@ namespace InternshipProject.EFDataAccess
         {
            
         }
-
-        public Card Add(Card card)
-        {
-            var addedEntity = dbContext.Add(card);
-            dbContext.SaveChanges();
-            return addedEntity.Entity;
-        }
-
         public IEnumerable<Card> GetByUserId(Guid userId)
         {
             var cardList = dbContext.Cards.Where(user => user.BankAccount.Id == userId);
             return cardList;
-        }
-
-        public Card GetById(Guid cardId)
-        {
-            var card = dbContext.Cards.Where(Card => Card.Id == cardId).FirstOrDefault();
-            return card;
-        }
+        }    
     }
 }

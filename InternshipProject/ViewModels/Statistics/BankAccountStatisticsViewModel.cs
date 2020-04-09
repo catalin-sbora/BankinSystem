@@ -10,7 +10,7 @@ namespace InternshipProject.ViewModels.Statistics
     {
         public BankAccount BankAccount { get; set; }
         public BankAccountMetaData MetaData { get; set; }
-        public IEnumerable<decimal> AllTimeBalanceHistory { get; set; }
+        public IEnumerable<decimal> BalanceHistory { get; set; }
         public IEnumerable<decimal> YearlyBalanceHistory { get; set; }
         //public IEnumerable<decimal> MonthlyBalanceHistory { get; set; }
         //public IEnumerable<decimal> WeeklyBalanceHistory { get; set; }
