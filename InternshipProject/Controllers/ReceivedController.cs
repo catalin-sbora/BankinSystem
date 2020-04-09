@@ -17,11 +17,12 @@ namespace InternshipProject.Controllers
     {
         private readonly UserManager<IdentityUser> userManager;
         private readonly CustomerService customerServices;
-
-        public ReceivedController(UserManager<IdentityUser> userManager, CustomerService customerServices)
+        private readonly TransactionService transactionService;
+        public ReceivedController(UserManager<IdentityUser> userManager, CustomerService customerServices, TransactionService transactionService)
         {
             this.userManager = userManager;
             this.customerServices = customerServices;
+            this.transactionService = transactionService;
         }
         //[HttpPost]
      
@@ -53,6 +54,32 @@ namespace InternshipProject.Controllers
                 return BadRequest("Unable to retrieve data");
             }
         }
-   
+
+        public IActionResult New()
+        {
+            var userId = userManager.GetUserId(User);
+            try
+            {
+                var customer = customerServices.GetCustomer(userId);
+                var viewModel = new AddReceivedViewModel()
+                {
+                    BankAccount = customer.BankAccounts
+                };
+
+                return View(viewModel);
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Bad Input");
+            }
+        }
+
+        [HttpPost]
+        public IActionResult Create(AddReceivedViewModel viewModel)
+        {
+            transactionService.Add(viewModel.Amount, viewModel.ExternalName, viewModel.ExternalIBAN, viewModel.BankAccountId);
+            return RedirectToAction("Index");
+        }
+
     }
 }

@@ -46,24 +46,35 @@
                 <td><label>@Html.RadioButtonFor(i => i.IsSelected, 1)IBAN2</label></td>
             </tr>
             @*
-                    @foreach (var account in Model.BankAccounts)
-                    {
-                        <tr>
-                            <td>
-                                <div>
-                                    <input type="radio" id="@account.Transactions.GetEnumerator()" name="account" value="@account.Transactions.GetEnumerator()">
-                                    <label for="@account.Transactions.GetEnumerator()">@account.IBAN</label><br>
+                            @foreach (var account in Model.BankAccounts)
+                            {
+                                <tr>
+                                    <td>
+                                        <div>
+                                            <input type="radio" id="@account.Transactions.GetEnumerator()" name="account" value="@account.Transactions.GetEnumerator()">
+                                            <label for="@account.Transactions.GetEnumerator()">@account.IBAN</label><br>
 
-                  </div>
+                          </div>
 
-          </td>
+                  </td>
 
-        </tr>
-                    }*@
+                </tr>
+                            }*@
         </tbody>
     </table>
 </div>
-
+@*
+    <div class="d-flex flex-row-reverse bd-highlight">
+        <div class="p-2 bd-highlight">
+            @using (Html.BeginForm("AddReceived", "Received"))
+            {
+                <button class="btn btn-success" type="submit">
+                    New Payment
+                </button>
+            }
+        </div>
+    </div>
+*@
 <form class="searchButtonPayments " action="" style="margin: auto; width: 300px; margin-right: 0px;  color: #008A00 !important">
     <input id="myInput" type="text" placeholder="Search" name="search">
 
@@ -85,8 +96,7 @@
     </thead>
 
     <tbody>
-        @foreach(var account in Model.BankAccounts)
-            
+
         @foreach (var transaction in Model.Transactions)
         {
             <tr>
@@ -96,7 +106,7 @@
                 <td>@transaction.Status</td>
                 <td>@transaction.ExternalName</td>
                 <td>@transaction.ExternalIBAN</td>
-                <td class="button" href="">Details</td>
+                <td> @Html.ActionLink("Details", "Details", "Payments", new { Id = transaction.Id }, null) </td>
             </tr>
         }
     </tbody>
