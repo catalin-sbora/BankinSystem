@@ -10,8 +10,9 @@ namespace InternshipProject.ViewModels.Received
     {
         public IEnumerable<BankAccount> BankAccounts { get; set; }
         public IEnumerable<Transaction> Transactions { get; set; }
+       //public IEnumerable<Transaction> Received { get; set; }
         public string CustomerName { get; set; }
         public string PhoneNo { get; set; }
-        public bool IsSelected { get; set; }
+       // public int IsSelected { get; set; }
     }
 }

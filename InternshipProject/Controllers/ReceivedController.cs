@@ -24,22 +24,27 @@ namespace InternshipProject.Controllers
             this.customerServices = customerServices;
         }
         //[HttpPost]
-       
+     
         public IActionResult IndexAsync()
         {
             var userId = userManager.GetUserId(User);
             try
             {
                 var customer = customerServices.GetCustomer(userId);
+                List<Transaction> received = new List<Transaction>() ;
+                for (var i = 0; i < customer.BankAccounts.ElementAt(0).Transactions.Count(); i++)
+                {
+                    if (customer.BankAccounts.ElementAt(0).Transactions.ElementAt(i).Amount > 0)
+                        received.Add(customer.BankAccounts.ElementAt(0).Transactions.ElementAt(i));
+                }
                 var viewModel = new ReceivedListViewModel()
                 {
                     //IsSelected = viewModel.IsSelected,
                     CustomerName = $"{customer.FirstName} {customer.LastName}",
                     PhoneNo = customer.ContactDetails?.PhoneNo,
                     BankAccounts = customer.BankAccounts,
-                    Transactions= customer.BankAccounts.ElementAt(0).Transactions,
-                    
 
+                    Transactions = received
             };
                 return View(viewModel);
             }

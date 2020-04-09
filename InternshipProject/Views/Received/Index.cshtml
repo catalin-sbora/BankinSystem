@@ -25,15 +25,7 @@
 </div>
 
 <h1>Received Transactions</h1>
-<div class="d-flex justify-content-start">
 
-    <div class="customer-details-label">
-        Balance:
-    </div>
-    <div class="customer-details-value">
-        @Model.BankAccounts.ElementAt(0).Balance
-    </div>
-</div>
 
 @{
     int i = 0;
@@ -54,16 +46,15 @@
             {
                 <tr>
                     <td>
-                        <div class="form-check"  >
-                            <label class="form-check-label" >
-                                
-                                @Html.RadioButtonFor(model => model.IsSelected,true)
-                                @account.IBAN
+                        <div>
+                            <input type="radio" id="@account.Transactions.GetEnumerator()" name="account" value="@account.Transactions.GetEnumerator()">
+                            <label for="@account.Transactions.GetEnumerator()">@account.IBAN</label><br>
 
-                            </label>
-                        </div>
-                    </td>
-                </tr>
+          </div>
+
+  </td>
+
+</tr>
             }
         </tbody>
     </table>
@@ -90,7 +81,7 @@
     </thead>
 
     <tbody>
-        @foreach (var transaction in Model.BankAccounts.ElementAt(0).Transactions)
+        @foreach (var transaction in Model.Transactions)
         {
             <tr>
                 <th scope="row">@i@{i++;}</th>
