@@ -12,6 +12,6 @@ namespace InternshipProject.ViewModels.Received
         public IEnumerable<Transaction> Transactions { get; set; }
         public string CustomerName { get; set; }
         public string PhoneNo { get; set; }
-        public int IsSelected { get; set; }
+        public bool IsSelected { get; set; }
     }
 }
