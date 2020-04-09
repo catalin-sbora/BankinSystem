@@ -6,7 +6,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using InternshipProject.ViewModels.Accounts;
 using Microsoft.AspNetCore.Identity;
-using InternshipProject.ApplicationLogic.Model;
 using InternshipProject.ViewModels.Statistics;
 using InternshipProject.ApplicationLogic.Services;
 
@@ -15,14 +14,17 @@ namespace InternshipProject.Controllers
     [Authorize]
     public class StatisticsController : Controller
     {
-        private readonly StatisticsServices statisticServices;
-        private readonly CustomerService customerServices;
+        private readonly StatisticsServices statisticsService;
+        private readonly CustomerService customerService;
+        private readonly MetaDataService metaDataService;
         private readonly UserManager<IdentityUser> userManager;
 
-        public StatisticsController(StatisticsServices statisticServices, CustomerService customerServices, UserManager<IdentityUser> userManager)
+        public StatisticsController(StatisticsServices statisticsServices, CustomerService customerServices, 
+            MetaDataService metaDataServices, UserManager<IdentityUser> userManager)
         {
-            this.statisticServices = statisticServices;
-            this.customerServices = customerServices;
+            this.statisticsService = statisticsServices;
+            this.customerService = customerServices;
+            this.metaDataService = metaDataServices;
             this.userManager = userManager;
         }
         public IActionResult Index()
@@ -31,13 +33,28 @@ namespace InternshipProject.Controllers
             string userId = userManager.GetUserId(User);
             try
             {
-                var customer = customerServices.GetCustomer(userId);
+                var customer = customerService.GetCustomer(userId);
+                List<BankAccountStatisticsViewModel> statisticsViewModels = new List<BankAccountStatisticsViewModel>();
+
+                foreach (var bankAccount in customer.BankAccounts)
+                {
+                    statisticsViewModels.Add(new BankAccountStatisticsViewModel
+                    {
+                        BankAccount = bankAccount,
+                        MetaData = metaDataService.GetMetaDataForBankAccount(bankAccount.Id),
+                        AllTimeBalanceHistory = statisticsService.BankAccountHistoryAllTime(bankAccount),
+                        YearlyBalanceHistory = statisticsService.BankAccountHistoryYear(bankAccount),
+
+
+                        //MonthlyBalanceHistory = statisticsService.BankAccountHistoryMonth(bankAccount),
+                        //WeeklyBalanceHistory = statisticsService.BankAccountHistoryWeek(bankAccount),
+                        //DailyBalanceHistory = statisticsService.BankAccountHistoryDay(bankAccount),
+                    });
+                }
+
                 StatisticsViewModel viewModel = new StatisticsViewModel()
                 {
-                    BalanceList = statisticServices.GetTotalBankAccountBalance(userId),
-                    BankAccounts = customer.BankAccounts,
-                    YearlyBalance = statisticServices.BankAccountBalanceYear(customer.BankAccounts.ElementAt(0)),
-                    AllTimeBalance = statisticServices.BankAccountBalanceYear(customer.BankAccounts.ElementAt(0)),
+                    BankAccounts = statisticsViewModels,
                     CustomerName = $"{customer.FirstName} {customer.LastName}",
                     PhoneNo = customer.ContactDetails?.PhoneNo
                 };

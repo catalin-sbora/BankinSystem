@@ -6,79 +6,79 @@
 
 @section Scripts{
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.min.js"></script>
+    @*DOWNLOAD AND PUT IN WWWROOT BELOW LIB*@
+}
 
-    }
-    
-        <div class="account-grid">
-            <div class="account-grid-main-component">Name:</div>
-            <div class="account-grid-data-component">@Model.CustomerName</div>
-            <div class="account-grid-main-component">Customer:</div>
-            <div class="account-grid-data-component">@Model.PhoneNo</div>
-        </div>
+<div class="d-flex justify-content-end">
 
-        <hr style="height:2px;border:none;background-color:#D4D4D4;" />
+    <div class="customer-details-label">
+        Name
+    </div>
+    <div class="customer-details-value">
+        @Model.CustomerName
+    </div>
+</div>
+<div class="d-flex justify-content-end">
 
-        <div align="center">
-            <button class="statistics-button">All-time</button>
-            <button class="statistics-button">Year</button>
-            <button class="statistics-button">Month</button>
-            <button class="statistics-button">Week</button>
-            <button class="statistics-button">Day</button>
-        </div>
-        <br /><br />
+    <div class="customer-details-label">
+        Contact
+    </div>
+    <div class="customer-details-value">
+        @Model.PhoneNo
+    </div>
+</div>
 
-        <div>
-            <table style="width:70%; font:large" align="right" border="1">
-                <tr style="text-align: center; background-color: #60A917; color: white; border-right:none;">
-                    <th>Account IBAN</th>
-                    <th>Current Balance</th>
-                    <th>Credit</th>
-                    <th>Debit</th>
-                    <th>Last Transaction</th>
+<hr style="height:2px;border:none;background-color:#D4D4D4;" />
+
+<div align="center">
+    <button class="statistics-button">All-time</button>
+    <button class="statistics-button">Year</button>
+    <button class="statistics-button">Month</button>
+    <button class="statistics-button">Week</button>
+    <button class="statistics-button">Day</button>
+</div>
+<br />
+<br />
+
+<div>
+    @*
+        <table style="width:70%; font:large" align="right" border="1">
+            <tr style="text-align: center; background-color: #60A917; color: white; border-right:none;">
+                <th>Account IBAN</th>
+                <th>Current Balance</th>
+                <th>Credit</th>
+                <th>Debit</th>
+                <th>Last Transaction</th>
+            </tr>
+            @foreach (var account in Model.BankAccounts)
+            {
+                <tr style="text-align:center; border-right:none;">
+                    <td>@account.IBAN</td>
+                    <td>@account.Balance</td>
+                    <td>+@account.Balance</td>
+                    <td>-@account.Balance</td>
+                    <td>21/04/2020</td>
                 </tr>
-                @foreach (var account in Model.BankAccounts)
-                {
-                    <tr style="text-align:center; border-right:none;">
-                        <td>@account.IBAN</td>
-                        <td>@account.Balance</td>
-                        <td>+@account.Balance</td>
-                        <td>-@account.Balance</td>
-                        <td>21/04/2020</td>
-                    </tr>
-                }
-            </table>
-        </div>
+            }
+        </table>
+    *@
+</div>
 
-        <div style="width:700px; height:700px;">
-            <canvas id="lineChart"></canvas>
-            <canvas id="pieChart"></canvas>
-            <script>
+<div style="width:70%; height:70%;margin:auto;">
+    <canvas id="lineChart"></canvas>
+    <canvas id="pieChart"></canvas>
+    <script>
             window.onload = function () {
                 var ctx = document.getElementById('lineChart').getContext('2d');
                 var lineChart = new Chart(ctx, {
 
                     type: 'line',
                     data: {
-                        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                        labels: [],
                         datasets: [{
-                            label: 'Balance over time',
-                            data: [12, 19, 3, 5, 2, 3],
-                            backgroundColor: [
-                                'rgba(255, 99, 132, 0.2)',
-                                'rgba(54, 162, 235, 0.2)',
-                                'rgba(255, 206, 86, 0.2)',
-                                'rgba(75, 192, 192, 0.2)',
-                                'rgba(153, 102, 255, 0.2)',
-                                'rgba(255, 159, 64, 0.2)'
-                            ],
-                            borderColor: [
-                                'rgba(255, 99, 132, 1)',
-                                'rgba(54, 162, 235, 1)',
-                                'rgba(255, 206, 86, 1)',
-                                'rgba(75, 192, 192, 1)',
-                                'rgba(153, 102, 255, 1)',
-                                'rgba(255, 159, 64, 1)'
-                            ],
+                            data: [],
+                            backgroundColor: [],
+                            borderColor: [],
                             borderWidth: 1
                         }]
                     },
@@ -90,6 +90,11 @@
                                     beginAtZero: true
                                 }
                             }]
+                        },
+
+                        title: {
+                            display: true,
+                            text: 'Balance over time'
                         }
                     }
                 });
@@ -97,35 +102,53 @@
                 var ctx = document.getElementById('pieChart').getContext('2d');
                 var pieChart = new Chart(ctx, {
 
-                    type: 'pie',
+                    type: 'pie' ,
+
                     data: {
-                        labels: ["Tet"],
+                        labels: [],
                         datasets: [{
-                            label: 'Balance of your accounts',
-                            data: [1],
-                            backgroundColor: ['rgba(255, 99, 132, 0.2)'],
-                            borderColor: ['rgba(255, 99, 132, 1)'],
+                            data: [],
+                            backgroundColor: [],
+                            borderColor: [],
                             borderWidth: 1
                         }]
                     },
+
+                     options: {
+                        title: {
+                            display: true,
+                            text: 'Balance of your accounts'
+                        }
+                    }
                 });
-                 function addData(chart, label, data) {
-                    chart.data.labels.push(label);
-                    chart.data.datasets.forEach((dataset) => {
-                        dataset.data.push(data);
+
+                @*
+                function addLineData(chart, label, data, color) {
+                    chart.data.datasets.push({
+                        label: label,
+                        backgroundColor: color,
+                        data: data
                     });
                     chart.update();
                 }
-                @foreach(var account in Model.BankAccounts)
-                {
-                     @Html.Raw($"addData(pieChart, '{account.IBAN}', {account.Balance});");
-                     @Html.Raw($"addData(lineChart, '{account.IBAN}', {account.Balance});");
+                *@
+
+               @* JSON.parse('@Html.Raw(Json.Encode(@Model.DuplicateIds))') *@
+
+                function addPieData(chart, label, data, color) {
+                    chart.data.labels.push(label);
+                    chart.data.datasets.forEach((dataset) => {
+                        dataset.data.push(data);
+                        dataset.backgroundColor.push(color);
+                    });
+                    chart.update();
                 }
 
-
+                @foreach (var account in Model.BankAccounts)
+                {
+                    @Html.Raw($"addPieData(pieChart, '{account.MetaData.Name}', {account.BankAccount.Balance}, '#'+'{account.MetaData.Color.ToString("X6")}');");
+                    @Html.Raw($"addPieData(lineChart, '{account.MetaData.Name}', {account.BankAccount.Balance}, '#'+'{account.MetaData.Color.ToString("X6")}');");
+                }
             };
-            </script>
-        </div>
-        <br />
-
-    
+    </script>
+</div>
