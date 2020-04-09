@@ -1,76 +1,102 @@
-﻿
-@model InternshipProject.ViewModels.Received.ReceivedListViewModel
+﻿@model InternshipProject.ViewModels.Received.ReceivedListViewModel
 
 @{
     ViewData["Title"] = "ReceivedTransactions";
 }
 
-@foreach (var account in Model.BankAccounts)
-{
-    <p><b>Account</b></p>
-    <p><b>IBAN</b> @account.IBAN</p>
-    <p><b>Name</b> @Model.CustomerName</p>
-    <p><b>Contact</b> @Model.PhoneNo</p>
-    <h1>Received Transactions</h1>
-    <p><b>Balance:</b> @account.Balance</p>
-}
+<div class="d-flex justify-content-end">
+
+    <div class="customer-details-label">
+        Name:
+    </div>
+    <div class="customer-details-value">
+        @Model.CustomerName
+    </div>
+</div>
+
+<div class="d-flex justify-content-end">
+
+    <div class="customer-details-label">
+        Contact:
+    </div>
+    <div class="customer-details-value">
+        @Model.PhoneNo
+    </div>
+</div>
+
+<h1>Received Transactions</h1>
+<div class="d-flex justify-content-start">
+
+    <div class="customer-details-label">
+        Balance:
+    </div>
+    <div class="customer-details-value">
+        @Model.BankAccounts.ElementAt(0).Balance
+    </div>
+</div>
+
 @{
     int i = 0;
 }
 
-<style>
-    .button {
-        float: right;
-        background-color: #4CAF50;
-        border: none;
-        color: white;
-        padding: 15px 32px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        margin: 4px 2px;
-        cursor: pointer;
-    }
-    table {
-        border-collapse: collapse;
-        border-spacing: 0;
-        width: 100%;
-        border: 1px solid #ddd;
-    }
+<div class="table-responsive">
+    <table class="table table-striped" style="width: 300px;">
+        <thead>
+            <tr>
+                <th style="color: white; background-color: #008A00;">
+                    Select account
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            
+            @foreach (var account in Model.BankAccounts)
+            {
+                <tr>
+                    <td>
+                        <div class="form-check"  >
+                            <label class="form-check-label" >
+                                
+                                @Html.RadioButtonFor(model => model.IsSelected,true)
+                                @account.IBAN
 
-    th, td {
-        text-align: left;
-        padding: 16px;
-    }
+                            </label>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
-    tr:nth-child(even) {
-        background: #f2f2f2
-    }
-</style>
-<table>
+<form class="searchButtonPayments " action="" style="margin: auto; width: 300px; margin-right: 0px;  color: #008A00 !important">
+    <input id="myInput" type="text" placeholder="Search" name="search">
 
+</form>
+
+
+
+<table class="table table-striped" id="exportTable">
     <thead>
-        <tr style="background-color:rgba(0, 138, 0, 0.6) ">
+        <tr style="background-color:#008A00 ;color: white">
             <th scope="col">#</th>
-            <th scope="col">Ammount</th>
+            <th scope="col">Amount</th>
             <th scope="col">Date</th>
-            <th scope="col">Balance</th>
-            <th scope="col">Details</th>
-            <th scope="col">Name</th>
+            <th scope="col">Status</th>
+            <th scope="col">External Name</th>
             <th scope="col">External Account</th>
+            <th scope="col">Details</th>
         </tr>
     </thead>
 
     <tbody>
-        @foreach (var transaction in Model.BankAccounts[i].Transactions)
+        @foreach (var transaction in Model.BankAccounts.ElementAt(0).Transactions)
         {
             <tr>
                 <th scope="row">@i@{i++;}</th>
                 <td>@transaction.Amount</td>
                 <td>@transaction.Time</td>
-                <td>@transaction</td>
-                <td>@transaction.Details</td>
+                <td>@transaction.Status</td>
                 <td>@transaction.ExternalName</td>
                 <td>@transaction.ExternalIBAN</td>
 
@@ -78,5 +104,4 @@
         }
     </tbody>
 </table>
-<button class="button">Export</button>
-
+<button id="exportButton" class="btn btn-lg btn-success clearfix"><span class="fa fa-file-excel-o"></span> Export to Excel</button>
