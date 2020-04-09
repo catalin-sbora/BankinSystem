@@ -41,21 +41,25 @@
             </tr>
         </thead>
         <tbody>
-            
-            @foreach (var account in Model.BankAccounts)
-            {
-                <tr>
-                    <td>
-                        <div>
-                            <input type="radio" id="@account.Transactions.GetEnumerator()" name="account" value="@account.Transactions.GetEnumerator()">
-                            <label for="@account.Transactions.GetEnumerator()">@account.IBAN</label><br>
+            <tr>
+                <td><label>@Html.RadioButtonFor(i => i.IsSelected, 0)IBAN1</label></td>
+                <td><label>@Html.RadioButtonFor(i => i.IsSelected, 1)IBAN2</label></td>
+            </tr>
+            @*
+                    @foreach (var account in Model.BankAccounts)
+                    {
+                        <tr>
+                            <td>
+                                <div>
+                                    <input type="radio" id="@account.Transactions.GetEnumerator()" name="account" value="@account.Transactions.GetEnumerator()">
+                                    <label for="@account.Transactions.GetEnumerator()">@account.IBAN</label><br>
 
-          </div>
+                  </div>
 
-  </td>
+          </td>
 
-</tr>
-            }
+        </tr>
+                    }*@
         </tbody>
     </table>
 </div>
@@ -81,6 +85,8 @@
     </thead>
 
     <tbody>
+        @foreach(var account in Model.BankAccounts)
+            
         @foreach (var transaction in Model.Transactions)
         {
             <tr>
@@ -90,7 +96,7 @@
                 <td>@transaction.Status</td>
                 <td>@transaction.ExternalName</td>
                 <td>@transaction.ExternalIBAN</td>
-
+                <td class="button" href="">Details</td>
             </tr>
         }
     </tbody>

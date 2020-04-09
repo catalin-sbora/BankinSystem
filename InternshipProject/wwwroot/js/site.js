@@ -28,6 +28,8 @@ function filterTable(event) {
 
 document.querySelector('#myInput').addEventListener('keyup', filterTable, false);
 
+
+
 $(function () {
     $("#exporttable").click(function (e) {
         var table = $("#exportTable");
