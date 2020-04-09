@@ -7,13 +7,14 @@ using System.Text;
 
 namespace InternshipProject.EFDataAccess
 {
-    class EFCardRepository :BaseRepository<Card>, ICardRepository
+    public class EFCardRepository :BaseRepository<Card>, ICardRepository
     {
       
         public EFCardRepository(BankingDbContext dbContext):base(dbContext)
         {
            
         }
+
         public Card Add(Card card)
         {
             var addedEntity = dbContext.Add(card);
@@ -21,9 +22,9 @@ namespace InternshipProject.EFDataAccess
             return addedEntity.Entity;
         }
 
-        public IEnumerable<Card> GetByAccount(Guid accountId)
+        public IEnumerable<Card> GetByUserId(Guid userId)
         {
-            var cardList = dbContext.Cards.Where(BankAccount => BankAccount.Id == accountId);
+            var cardList = dbContext.Cards.Where(user => user.BankAccount.Id == userId);
             return cardList;
         }
 

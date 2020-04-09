@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace InternshipProject.ViewModels.Cards
 {
-    public class CardListViewModel
+    public class CardWithColorViewModel
     {
-        public IEnumerable<Card> Cards { get; set; } 
-
+        public Card Card { get; set; }
+        public CardColor CardColor { get; set; }
     }
 }

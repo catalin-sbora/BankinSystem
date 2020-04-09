@@ -11,6 +11,16 @@
     <Compile Remove="Migrations\20200408121018_AddBankAccountMetaData.Designer.cs" />
     <Compile Remove="Migrations\20200408121142_AddBankAccountMetaData.cs" />
     <Compile Remove="Migrations\20200408121142_AddBankAccountMetaData.Designer.cs" />
+    <Compile Remove="Migrations\20200408193433_AddMetaData.cs" />
+    <Compile Remove="Migrations\20200408193433_AddMetaData.Designer.cs" />
+    <Compile Remove="Migrations\20200409070357_AddCardColor.cs" />
+    <Compile Remove="Migrations\20200409070357_AddCardColor.Designer.cs" />
+    <Compile Remove="Migrations\20200409071954_AddCardColor1.cs" />
+    <Compile Remove="Migrations\20200409071954_AddCardColor1.Designer.cs" />
+    <Compile Remove="Migrations\20200409072737_AddCardColor1.cs" />
+    <Compile Remove="Migrations\20200409072737_AddCardColor1.Designer.cs" />
+    <Compile Remove="Migrations\20200409085120_CardColor.cs" />
+    <Compile Remove="Migrations\20200409085120_CardColor.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

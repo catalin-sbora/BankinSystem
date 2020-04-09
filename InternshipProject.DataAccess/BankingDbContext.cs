@@ -18,6 +18,7 @@ namespace InternshipProject.EFDataAccess
         public DbSet<ContactDetails> ContactDetails { get; set; }
         public DbSet<CardTransaction> CardTransactions { get; set; }
         public DbSet<BankAccountMetaData> BankAccountMetaDatas { get; set; }
+        public DbSet<CardColor> CardColors { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -31,7 +32,8 @@ namespace InternshipProject.EFDataAccess
 
             builder.Entity<BankAccountMetaData>()
                     .HasOne<BankAccount>();
-                    
+            builder.Entity<CardColor>()
+                    .HasOne<Card>();
         }
 
 

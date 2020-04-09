@@ -4,14 +4,16 @@ using InternshipProject.EFDataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace InternshipProject.EFDataAccess.Migrations
 {
     [DbContext(typeof(BankingDbContext))]
-    partial class BankingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200409120739_CardColor")]
+    partial class CardColor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -209,7 +211,7 @@ namespace InternshipProject.EFDataAccess.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18, 4)");
 
-                    b.Property<Guid>("BankAccountId")
+                    b.Property<Guid?>("BankAccountId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Details")
@@ -288,9 +290,7 @@ namespace InternshipProject.EFDataAccess.Migrations
                 {
                     b.HasOne("InternshipProject.ApplicationLogic.Model.BankAccount", null)
                         .WithMany("Transactions")
-                        .HasForeignKey("BankAccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("BankAccountId");
                 });
 #pragma warning restore 612, 618
         }
