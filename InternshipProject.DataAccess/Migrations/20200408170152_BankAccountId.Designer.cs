@@ -4,14 +4,16 @@ using InternshipProject.EFDataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace InternshipProject.EFDataAccess.Migrations
 {
     [DbContext(typeof(BankingDbContext))]
-    partial class BankingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200408170152_BankAccountId")]
+    partial class BankAccountId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -98,25 +100,6 @@ namespace InternshipProject.EFDataAccess.Migrations
                     b.HasIndex("BankAccountId");
 
                     b.ToTable("Cards");
-                });
-
-            modelBuilder.Entity("InternshipProject.ApplicationLogic.Model.CardColor", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("CardId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Color")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CardId");
-
-                    b.ToTable("CardColors");
                 });
 
             modelBuilder.Entity("InternshipProject.ApplicationLogic.Model.CardTransaction", b =>
@@ -255,15 +238,6 @@ namespace InternshipProject.EFDataAccess.Migrations
                     b.HasOne("InternshipProject.ApplicationLogic.Model.BankAccount", "BankAccount")
                         .WithMany()
                         .HasForeignKey("BankAccountId");
-                });
-
-            modelBuilder.Entity("InternshipProject.ApplicationLogic.Model.CardColor", b =>
-                {
-                    b.HasOne("InternshipProject.ApplicationLogic.Model.Card", null)
-                        .WithMany()
-                        .HasForeignKey("CardId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("InternshipProject.ApplicationLogic.Model.CardTransaction", b =>

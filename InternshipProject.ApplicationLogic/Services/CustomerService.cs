@@ -72,6 +72,7 @@ namespace InternshipProject.ApplicationLogic.Services
 
             return customer;
         }
+
         public IEnumerable<Card> GetCardsByUserID(string userID)
         {
             Guid idToSearch = Guid.Empty;
@@ -79,5 +80,8 @@ namespace InternshipProject.ApplicationLogic.Services
             var cards = cardRepository.GetByUserId(idToSearch);
             return cards;
         }
+
+
+
     }
 }

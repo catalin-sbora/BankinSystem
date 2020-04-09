@@ -96,6 +96,36 @@ font-weight: bold;
     
 }
 
+.button {
+    float: right;
+    background-color: #008A00;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+    border: 1px solid #ddd;
+}
+
+th, td {
+    text-align: left;
+    padding: 16px;
+}
+
+tr:nth-child(even) {
+    background: #f2f2f2
+}
+
 form.searchButtonPayments input[type=text] {
     padding: 10px;
     font-size: 17px;

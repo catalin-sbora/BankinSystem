@@ -46,12 +46,17 @@ namespace InternshipProject
             
             services.AddScoped<ICustomerRepository, EFCustomerRepository>();
             services.AddScoped<IBankAccountMetaDataRepository, EFBankAccountMetaDataRepository>();
+
             services.AddScoped<ICardRepository, EFCardRepository>();
             services.AddScoped<ICardColorRepository, EFCardColorRepository>();
+
+            services.AddScoped<ITransactionRepository, EFTransactionRepository>();
+
 
             services.AddScoped<CustomerService>();
             services.AddScoped<MetaDataService>();
             services.AddScoped<StatisticsServices>();
+            services.AddScoped<TransactionService>();
 
             services.AddControllersWithViews();
             services.AddRazorPages()
