@@ -20,7 +20,7 @@
                     <h5 class="card-title">Name:@card.Card.OwnerName</h5>
                     <p class="card-text">Serial Number:@card.Card.SerialNumber</p>
                     <p class="card-text">Expiry Date:@card.Card.ExpiryDate.ToShortDateString()</p>
-                    <a href="#" class="btn" style="background-color:#04B431">See Payments</a>
+                    <input type="button" class="btn-success" value="See Transactions" onclick="location.href='@Url.Action("CardPayments", "Cards", new { Id = card.Card.Id })'" />
                 </div>
             </div>
         }

@@ -1,0 +1,43 @@
+﻿@model InternshipProject.ViewModels.Cards.TransactionViewModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<h1 ">New Payment</h1>
+
+<br />
+@using (Html.BeginForm("CreateCardTransaction", "Cards"))
+{
+<div style="width: 270px; padding-left: 25px;">
+    <div class="form-group ">
+        <strong>
+            @Html.Label("External IBAN")
+        </strong>
+        <div style="margin-left:10px"></div>
+        @Html.TextBoxFor(payment => payment.IBan, new { @class = "form-control" })
+    </div>
+    <br />
+    <div class="form-group" >
+        <strong>
+            @Html.Label("Amount")
+        </strong>
+        <div style="margin-left:10px"></div>
+        @Html.TextBoxFor(payment => payment.Amount, new { @class = "form-control" })
+    </div>
+    <br />
+    <div class="form-group">
+        <strong>
+            @Html.Label("Select Account")
+        </strong>
+        @Html.DropDownListFor(payment => payment.CardId, new SelectList(Model.CardList, "Id", "CVV"), "", new { @class = "form-control" })
+    </div>
+
+    <br />
+
+
+
+</div>
+    <button class=" btn-success "style="background-color:green;margin-left:20px" >Create</button>
+}

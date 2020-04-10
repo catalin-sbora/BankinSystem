@@ -39,5 +39,9 @@ namespace InternshipProject.EFDataAccess
             return transactionList.AsEnumerable();
         }
 
+        public IEnumerable<Transaction> GetTransactionsFromBankAccount(Guid Id)
+        {
+            return dbContext.Transactions.Where(b => b.BankAccountId == Id);
+        }
     }
 }

@@ -16,18 +16,21 @@ namespace InternshipProject.ApplicationLogic.Model
         public string OwnerName { get; private set; }
         public virtual BankAccount BankAccount { get; private set; }
        
-        public virtual IReadOnlyCollection<CardTransaction> CardTransactions
+        public virtual List<CardTransaction> CardTransactions
         {
             get 
             {
-                return cardTransactions.AsReadOnly();
+                return cardTransactions;
             }
             set 
             {
-                cardTransactions = new List<CardTransaction>(value);
+                CardTransactions = new List<CardTransaction>(value);
             }
         }
-
+        public void Add(CardTransaction cardTransaction)
+        {
+            cardTransactions.Add(cardTransaction);
+        }
         protected Card()
         { 
         }

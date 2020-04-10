@@ -56,5 +56,9 @@ namespace InternshipProject.ApplicationLogic.Services
 
             return searchedTransactionList;
         }
+        public IEnumerable<Transaction> GetTransactionsFromBankAccount(Guid Id)
+        {
+            return transactionRepository.GetTransactionsFromBankAccount(Id);
+        }
     }
 }
