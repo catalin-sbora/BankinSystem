@@ -62,6 +62,13 @@ body {
   /* Margin bottom by footer height */
   margin-bottom: 60px;
 }
+h1{
+    font-weight:bold;
+}
+.page-title {
+    font-size: 24px;
+    font-weight:bold;
+}
 .footer {
   position: absolute;
   bottom: 0;
@@ -71,7 +78,7 @@ body {
 }
 
 .bg-menu {
-    background-color: #008A00 !important;
+    background-color: #3a2a5e !important;
     color: #FFFFFF !important;
     border-bottom: 1px solid #046504 !important;
 }
@@ -110,21 +117,17 @@ font-weight: bold;
     cursor: pointer;
 }
 
-table {
-    border-collapse: collapse;
-    border-spacing: 0;
-    width: 100%;
-    border: 1px solid #ddd;
+
+
+
+
+.table-header {
+    color: white;
+    background-color: #30254a;
 }
 
-th, td {
-    text-align: left;
-    padding: 16px;
-}
 
-tr:nth-child(even) {
-    background: #f2f2f2
-}
+
 
 form.searchButtonPayments input[type=text] {
     padding: 10px;
@@ -197,7 +200,33 @@ form.searchButtonPayments::after {
     font-weight: normal;
     text-align: left;
 }
+.table-shadow {
+    -webkit-box-shadow: 0px 0px 16px 5px rgba(0,0,0,0.13);
+    box-shadow: 0px 0px 16px 5px rgba(0,0,0,0.13);
+}
+.light-button {
+    -webkit-box-shadow: 0px 0px 6px 0px rgba(0,0,0,0.13);
+    box-shadow: 0px 0px 6px 0px rgba(0,0,0,0.13);
+}
 
+.light-button:hover {
+    -webkit-box-shadow: 0px 0px 9px 0px rgba(0,0,0,0.13);
+    box-shadow: 0px 0px 9px 0px rgba(0,0,0,0.13);
+}
+
+.details-card {
+    -webkit-box-shadow: 0px 0px 6px 0px rgba(0,0,0,0.13);
+    box-shadow: 0px 0px 6px 0px rgba(0,0,0,0.13);
+}
+.details-card:hover {
+    -webkit-box-shadow: 0px 0px 16px 5px rgba(0,0,0,0.13);
+    box-shadow: 0px 0px 16px 5px rgba(0,0,0,0.13);
+}
+.details-card-button {
+    width: 80%;
+    border-bottom-left-radius:0px;
+    border-bottom-right-radius:0px;
+}
 .details-card-colorbox {
     width: 40px;
     height: 40px;
