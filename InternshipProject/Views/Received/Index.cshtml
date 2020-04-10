@@ -28,7 +28,7 @@
 
 
 @{
-    int i = 0;
+    int i = 1;
 }
 
 <div class="table-responsive">
@@ -41,74 +41,106 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td><label>@Html.RadioButtonFor(i => i.IsSelected, 0)IBAN1</label></td>
-                <td><label>@Html.RadioButtonFor(i => i.IsSelected, 1)IBAN2</label></td>
-            </tr>
             @*
-                            @foreach (var account in Model.BankAccounts)
-                            {
-                                <tr>
-                                    <td>
-                                        <div>
-                                            <input type="radio" id="@account.Transactions.GetEnumerator()" name="account" value="@account.Transactions.GetEnumerator()">
-                                            <label for="@account.Transactions.GetEnumerator()">@account.IBAN</label><br>
+                <tr>
+                    <td><label>@Html.RadioButtonFor(i => i.IsSelected, 0)IBAN1</label></td>
+                    <td><label>@Html.RadioButtonFor(i => i.IsSelected, 1)IBAN2</label></td>
+                </tr>*@
 
-                          </div>
+            @foreach (var account in Model.BankAccounts)
+            {
 
-                  </td>
+
+                <tr>
+                    <td>
+                        <div>
+                            <input type="radio" id="@account.Transactions.GetEnumerator()" name="account" value="@{i++;} " checked="checked">
+                            <label for="@account.Transactions.GetEnumerator()">@account.IBAN</label><br>@i
+                            @{i++;}
+
+                        </div>
+
+                    </td>
 
                 </tr>
-                            }*@
+                                }
+
         </tbody>
     </table>
 </div>
 
-    <div class="d-flex flex-row-reverse bd-highlight">
-        <div class="p-2 bd-highlight">
-            @using (Html.BeginForm("AddReceived", "Received"))
-            {
-                <button class="btn btn-success" type="submit">
-                    New Payment
-                </button>
-            }
-        </div>
+<div class="d-flex flex-row-reverse bd-highlight">
+    <div class="p-2 bd-highlight">
+        @using (Html.BeginForm("AddReceived", "Received"))
+        {
+            <button class="btn btn-success" type="submit">
+                New Incoming
+            </button>
+        }
     </div>
+</div>
 
 <form class="searchButtonPayments " action="" style="margin: auto; width: 300px; margin-right: 0px;  color: #008A00 !important">
     <input id="myInput" type="text" placeholder="Search" name="search">
 
 </form>
 
+<script type="text/javascript">
+     function Filter() {
+         var radios = document.getElementsByName('account');
+         for (var k = 0 ; k < radios.length; k++) {
+             if (radios[k].checked) {
+                 
 
+                 break;
+                 }
+             }
+         }
+    }
+</script>
 
-<table class="table table-striped" id="exportTable">
-    <thead>
-        <tr style="background-color:#008A00 ;color: white">
-            <th scope="col">#</th>
-            <th scope="col">Amount</th>
-            <th scope="col">Date</th>
-            <th scope="col">Status</th>
-            <th scope="col">External Name</th>
-            <th scope="col">External Account</th>
-            <th scope="col">Details</th>
-        </tr>
-    </thead>
-
-    <tbody>
-
-        @foreach (var transaction in Model.Transactions)
-        {
-            <tr>
-                <th scope="row">@i@{i++;}</th>
-                <td>@transaction.Amount</td>
-                <td>@transaction.Time</td>
-                <td>@transaction.Status</td>
-                <td>@transaction.ExternalName</td>
-                <td>@transaction.ExternalIBAN</td>
-                <td> @Html.ActionLink("Details", "Details", "Payments", new { Id = transaction.Id }, null) </td>
-            </tr>
+<script type="text/javascript">
+    function myFunction() {
+        var rows = document.querySelector("#exportTable tbody").rows;
+        for (var i = 0; i < rows.length; i++) {
+            if (rows[i].cells[1].textContent < 0)
+                rows[i].style.display = "none";
         }
-    </tbody>
-</table>
+    }
+</script>
+
+
+<body onload="myFunction()">
+    <table class="table table-striped" id="exportTable">
+        <thead>
+            <tr style="background-color:#008A00 ;color: white">
+                <th scope="col">#</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Date</th>
+                <th scope="col">Status</th>
+                <th scope="col">External Name</th>
+                <th scope="col">External Account</th>
+                <th scope="col">Details</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var account in Model.BankAccounts)
+
+            @foreach (var transaction in account.Transactions)
+                {
+                    <tr>
+                        <th scope="row">@i@{i++;}</th>
+                        <td>@transaction.Amount</td>
+                        <td>@transaction.Time</td>
+                        <td>@transaction.Status</td>
+                        <td>@transaction.ExternalName</td>
+                        <td>@transaction.ExternalIBAN</td>
+                        <td hidden>@account.IBAN</td>
+                        <td> @Html.ActionLink("Details", "Details", "Payments", new { Id = transaction.Id }, null) </td>
+                    </tr>
+                }
+        </tbody>
+    </table>
+</body>
 <button id="exportButton" class="btn btn-lg btn-success clearfix"><span class="fa fa-file-excel-o"></span> Export to Excel</button>

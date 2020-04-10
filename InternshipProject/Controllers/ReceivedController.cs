@@ -33,19 +33,22 @@ namespace InternshipProject.Controllers
             {
                 var customer = customerServices.GetCustomer(userId);
                 List<Transaction> received = new List<Transaction>() ;
-                for (var i = 0; i < customer.BankAccounts.ElementAt(0).Transactions.Count(); i++)
+                foreach(var account in customer.BankAccounts)
                 {
-                    if (customer.BankAccounts.ElementAt(0).Transactions.ElementAt(i).Amount > 0)
-                        received.Add(customer.BankAccounts.ElementAt(0).Transactions.ElementAt(i));
+                    for(int i=0;i<account.Transactions.Count;i++)
+                    foreach (var transaction in account.Transactions)
+                        if (account.Transactions.ElementAt(i).Amount > 0)
+                            received.Add(account.Transactions.ElementAt(i));
                 }
+                
+                
                 var viewModel = new ReceivedListViewModel()
                 {
                     //IsSelected = viewModel.IsSelected,
                     CustomerName = $"{customer.FirstName} {customer.LastName}",
                     PhoneNo = customer.ContactDetails?.PhoneNo,
                     BankAccounts = customer.BankAccounts,
-
-                    Transactions = received
+                    //Transactions = received
             };
                 return View(viewModel);
             }
