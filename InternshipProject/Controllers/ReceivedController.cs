@@ -33,13 +33,7 @@ namespace InternshipProject.Controllers
             {
                 var customer = customerServices.GetCustomer(userId);
                 List<Transaction> received = new List<Transaction>() ;
-                foreach(var account in customer.BankAccounts)
-                {
-                    for(int i=0;i<account.Transactions.Count;i++)
-                    foreach (var transaction in account.Transactions)
-                        if (account.Transactions.ElementAt(i).Amount > 0)
-                            received.Add(account.Transactions.ElementAt(i));
-                }
+               
                 
                 
                 var viewModel = new ReceivedListViewModel()
