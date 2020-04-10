@@ -78,6 +78,27 @@ namespace InternshipProject.Controllers
             transactionService.AddReceived(viewModel.Amount, viewModel.ExternalName, viewModel.ExternalIBAN, viewModel.BankAccountId);
             return RedirectToAction("Index");
         }
+        public IActionResult ChangeTabel(int option)
+        {
+            var userId = userManager.GetUserId(User);
+            try
+            {
+                var customer = customerServices.GetCustomer(userId);
+                List<BankAccount> aux = new List<BankAccount>();
+                aux.Add(customer.BankAccounts.ElementAt(option));
+                var viewModel = new AddReceivedViewModel()
+                {
+
+                    BankAccount = aux
+                };
+
+                return View( viewModel);
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Bad Input");
+            }
+        }
         
     }
 }

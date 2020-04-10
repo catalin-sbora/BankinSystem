@@ -25,11 +25,17 @@
 </div>
 
 <h1>Received Transactions</h1>
+<script>
+    function Reset() {
+    var source = document.getElementById('exportTable');
+    var destination = document.getElementById('copyTable');
+    var copy = source.cloneNode(true);
+    copy.setAttribute('id', 'copyTable');
+        destination.parentNode.replaceChild(copy, destination);
+    }
+</script>
 
 
-@{
-    int i = 1;
-}
 
 <div class="table-responsive">
     <table class="table table-striped" style="width: 300px;">
@@ -41,33 +47,49 @@
             </tr>
         </thead>
         <tbody>
-            @*
-                <tr>
-                    <td><label>@Html.RadioButtonFor(i => i.IsSelected, 0)IBAN1</label></td>
-                    <td><label>@Html.RadioButtonFor(i => i.IsSelected, 1)IBAN2</label></td>
-                </tr>*@
+@{ int i = 0;}
 
-            @foreach (var account in Model.BankAccounts)
-            {
+           @foreach (var account in Model.BankAccounts)
+                {
 
 
-                <tr>
-                    <td>
-                        <div>
-                            <input type="radio" id="@account.Transactions.GetEnumerator()" name="account" value="@{i++;} " checked="checked">
-                            <label for="@account.Transactions.GetEnumerator()">@account.IBAN</label><br>@i
-                            @{i++;}
+        <tr>
+            <td>
+            
+                <input type="radio" id="yes" onclick="Button1()" name="account" value="@Model.BankAccounts.ElementAt(i).IBAN" checked="checked">
 
-                        </div>
+                <label>@Model.BankAccounts.ElementAt(i).IBAN</label><br>
+                @{ i++;}
 
-                    </td>
+            </td>
 
-                </tr>
-                                }
-
+        </tr>
+                }
+            
         </tbody>
     </table>
 </div>
+
+
+
+<script type="text/javascript">
+    function Button1() {
+        
+        var rates = document.getElementsByName('account');
+        var rate_value;
+        var rows = document.querySelector("#exportTable tbody").rows;
+        for (var i = 0; i < rates.length; i++) {
+            if (rates[i].checked) {
+                rate_value = rates[i].value;
+                break;
+            }
+        }
+        for (var i = 0; i < rows.length; i++) {
+            if (rows[i].cells[5].textContent != rate_value)
+                rows[i].style.display = "none";
+        }
+    }
+</script>
 
 <div class="d-flex flex-row-reverse bd-highlight">
     <div class="p-2 bd-highlight">
@@ -85,36 +107,24 @@
 
 </form>
 
-<script type="text/javascript">
-     function Filter() {
-         var radios = document.getElementsByName('account');
-         for (var k = 0 ; k < radios.length; k++) {
-             if (radios[k].checked) {
-                 
 
-                 break;
-                 }
-             }
-         }
-    }
-</script>
 
 <script type="text/javascript">
     function myFunction() {
         var rows = document.querySelector("#exportTable tbody").rows;
         for (var i = 0; i < rows.length; i++) {
-            if (rows[i].cells[1].textContent < 0)
+            if (rows[i].cells[0].textContent < 0)
                 rows[i].style.display = "none";
         }
     }
 </script>
 
 
-<body onload="myFunction()">
+<body onload="myFunction();Button1()">
     <table class="table table-striped" id="exportTable">
         <thead>
             <tr style="background-color:#008A00 ;color: white">
-                <th scope="col">#</th>
+
                 <th scope="col">Amount</th>
                 <th scope="col">Date</th>
                 <th scope="col">Status</th>
@@ -127,16 +137,16 @@
         <tbody>
             @foreach (var account in Model.BankAccounts)
 
-            @foreach (var transaction in account.Transactions)
+                @foreach (var transaction in account.Transactions)
                 {
                     <tr>
-                        <th scope="row">@i@{i++;}</th>
+
                         <td>@transaction.Amount</td>
                         <td>@transaction.Time</td>
                         <td>@transaction.Status</td>
                         <td>@transaction.ExternalName</td>
                         <td>@transaction.ExternalIBAN</td>
-                        <td hidden>@account.IBAN</td>
+                        <td >@account.IBAN</td>
                         <td> @Html.ActionLink("Details", "Details", "Payments", new { Id = transaction.Id }, null) </td>
                     </tr>
                 }
