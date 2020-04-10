@@ -73,6 +73,56 @@ namespace InternshipProject.ApplicationLogic.Services
             return customer;
         }
 
+        public BankAccount GetCustomerBankAccount(Customer customer, string accountId)
+        {            
+            if (string.IsNullOrEmpty(accountId))
+            {
+                throw new ArgumentException("accountId");
+            }
+            var account = customer.BankAccounts
+                    .Where(ba => accountId.Equals(ba.Id.ToString()))
+                    .SingleOrDefault();
+            if (account == null)
+            {
+                throw new AccountNotFoundException(accountId);
+            }
+
+            return account;
+        }
+
+        public IEnumerable<Transaction> SearchTransactions(Customer customer, string accountId, string stringToSearch)
+        {
+            if (string.IsNullOrEmpty(accountId))
+            {
+                throw new ArgumentException("accountId");
+            }
+            var account = customer.BankAccounts
+                    .Where(ba => accountId.Equals(ba.Id.ToString()))
+                    .SingleOrDefault();
+            if (account == null)
+            {
+                throw new AccountNotFoundException(accountId);
+            }
+
+            IEnumerable<Transaction> transactions;
+            if (string.IsNullOrEmpty(stringToSearch))
+            {
+                transactions = account.Transactions;
+            }
+            else
+            {
+
+                transactions = account.Transactions
+                                      .Where(t =>
+                                      t.Amount.ToString().Contains(stringToSearch) ||
+                                      (t.ExternalIBAN != null && t.ExternalIBAN.ToString().Contains(stringToSearch)) ||
+                                      (t.ExternalName != null && t.ExternalName.ToString().Contains(stringToSearch)) ||
+                                      (t.Details != null && t.Details.ToString().Contains(stringToSearch))
+                                      );
+            }
+            return transactions.AsEnumerable();
+        }
+
         public IEnumerable<Card> GetCardsByUserID(string userID)
         {
             Guid idToSearch = Guid.Empty;

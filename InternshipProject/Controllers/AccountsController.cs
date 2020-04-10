@@ -11,7 +11,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace InternshipProject.Controllers
 {
-  //  [Authorize]
+    [Authorize]
+    [Route("[controller]/[action]/{id?}")]
     public class AccountsController : Controller
     {
         private readonly CustomerService customerServices;
@@ -25,8 +26,7 @@ namespace InternshipProject.Controllers
             this.metaDataService = metaDataService;
         }
         public IActionResult Index()
-        {
-            
+        {            
             string userId = userManager.GetUserId(User);
             try
             {
@@ -57,6 +57,46 @@ namespace InternshipProject.Controllers
                 //log exception
                 return BadRequest("Unable retrieve data for the current user");
             }
+        }
+
+        
+        public IActionResult Details([FromRoute]string id)
+        {
+            string userId = userManager.GetUserId(User);
+            try
+            {
+                var customer = customerServices.GetCustomer(userId);
+                var bankAccount = customerServices.GetCustomerBankAccount(customer, id);
+                var viewModel = new BankAccountViewModel
+                {
+                    CustomerName = $"{customer.FirstName} {customer.LastName}",
+                    CustomerContact = customer.ContactDetails?.PhoneNo,
+                    BankAccount = bankAccount,
+                    MetaData = metaDataService.GetMetaDataForBankAccount(bankAccount.Id)
+                };
+                return View(viewModel);
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Unable to process your request");
+            }
+        }
+        [HttpGet]
+        [Route("/[controller]/{accountId}/[action]")]
+        public IActionResult Transactions([FromRoute]string accountId,[FromQuery]string searchString)
+        {            
+            string userId = userManager.GetUserId(User);
+            try
+            {
+                var customer = customerServices.GetCustomer(userId);
+                var transactions = customerServices.SearchTransactions(customer, accountId, searchString);             
+                return PartialView("_TransactionsPartial", transactions);
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Unable to process your request");
+            }
+           
         }
     }
 }

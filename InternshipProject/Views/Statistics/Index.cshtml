@@ -6,126 +6,137 @@
 
 @section Scripts{
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.min.js"></script>
+    @*DOWNLOAD AND PUT IN WWWROOT BELOW LIB*@
+}
 
-    }
-    
-        <div class="account-grid">
-            <div class="account-grid-main-component">Name:</div>
-            <div class="account-grid-data-component">@Model.CustomerName</div>
-            <div class="account-grid-main-component">Customer:</div>
-            <div class="account-grid-data-component">@Model.PhoneNo</div>
-        </div>
+<div class="d-flex justify-content-end">
 
-        <hr style="height:2px;border:none;background-color:#D4D4D4;" />
+    <div class="customer-details-label">
+        Name
+    </div>
+    <div class="customer-details-value">
+        @Model.CustomerName
+    </div>
+</div>
+<div class="d-flex justify-content-end">
 
-        <div align="center">
-            <button class="statistics-button">All-time</button>
-            <button class="statistics-button">Year</button>
-            <button class="statistics-button">Month</button>
-            <button class="statistics-button">Week</button>
-            <button class="statistics-button">Day</button>
-        </div>
-        <br /><br />
+    <div class="customer-details-label">
+        Contact
+    </div>
+    <div class="customer-details-value">
+        @Model.PhoneNo
+    </div>
+</div>
 
-        <div>
-            <table style="width:70%; font:large" align="right" border="1">
-                <tr style="text-align: center; background-color: #60A917; color: white; border-right:none;">
-                    <th>Account IBAN</th>
-                    <th>Current Balance</th>
-                    <th>Credit</th>
-                    <th>Debit</th>
-                    <th>Last Transaction</th>
-                </tr>
+<hr style="height:2px;border:none;background-color:#D4D4D4;" />
+<!--
+<div align="center">
+    <a asp-controller="Statistics" asp-action="Index" asp-route-interval="alltime" class="btn btn-success statistics-button">All-time</a>
+    <a asp-controller="Statistics" asp-action="Index" asp-route-interval="year" class="btn btn-success statistics-button">Year</a>
+    <a asp-controller="Statistics" asp-action="Index" asp-route-interval="month" class="btn btn-success statistics-button">Month</a>
+    <a asp-controller="Statistics" asp-action="Index" asp-route-interval="week" class="btn btn-success statistics-button"> Week</a>
+    <a asp-controller="Statistics" asp-action="Index" asp-route-interval="day" class="btn btn-success statistics-button">Day</a>
+</div> -->
+
+<div align="center">
+    <a href="#" onclick="loadPartialView('alltime')" class="btn btn-success statistics-button">All-time</a>
+    <a href="#" onclick="loadPartialView('year')" class="btn btn-success statistics-button">Year</a>
+    <a href="#" onclick="loadPartialView('month')" class="btn btn-success statistics-button">Month</a>
+    <a asp-controller="Statistics" asp-action="Index" asp-route-interval="week" class="btn btn-success statistics-button"> Week</a>
+    <a asp-controller="Statistics" asp-action="Index" asp-route-interval="day" class="btn btn-success statistics-button">Day</a>
+</div>
+<br />
+<br />
+
+<div style="width:70%; height:70%;margin:auto;">
+    <div id="lineChartContainer" >
+        
+    </div>   
+    <script>
+         function loadPartialView(param)
+         {
+             $.get("@Url.Action("LineChart","Statistics")" + "?interval=" + param, function (data) {
+                 $("#lineChartContainer").html(data);
+                 loadChartData();
+             });                 
+        }
+        loadPartialView("alltime");
+
+    </script>
+
+    <canvas id="pieChart"></canvas>
+    <script>
+
+    function hexToRgbA(hex){
+                var c;
+                if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
+                    c= hex.substring(1).split('');
+                    if(c.length== 3){
+                        c= [c[0], c[0], c[1], c[1], c[2], c[2]];
+                    }
+                    c= '0x'+c.join('');
+                    return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+',0.1)';
+                }
+                throw new Error('Bad Hex');
+            }
+    function addLineData(chart, label, data, color) {
+                chart.data.datasets.push({
+                    label: label,
+                    backgroundColor: hexToRgbA(color),
+                    borderColor: color,
+                    fill: true,
+                    data: data
+                });
+                chart.update();
+}
+
+   
+
+                 
+
+           
+        $(document).ready(function () {
+           
+            var ctx = document.getElementById('pieChart').getContext('2d');
+            var pieChart = new Chart(ctx, {
+
+                type: 'pie',
+
+                data: {
+                    labels: [],
+                    datasets: [{
+                        data: [],
+                        backgroundColor: [],
+                        borderColor: [],
+                        borderWidth: 1
+                    }]
+                },
+
+                options: {
+                    title: {
+                        display: true,
+                        text: 'Balance of your accounts'
+                    }
+                }
+            });
+
+
+            function addPieData(chart, label, data, color) {
+                chart.data.labels.push(label);
+                chart.data.datasets.forEach((dataset) => {
+                    dataset.data.push(data);
+                    dataset.backgroundColor.push(color);
+                });
+                chart.update();
+            }
+
+
+
                 @foreach (var account in Model.BankAccounts)
                 {
-                    <tr style="text-align:center; border-right:none;">
-                        <td>@account.IBAN</td>
-                        <td>@account.Balance</td>
-                        <td>+@account.Balance</td>
-                        <td>-@account.Balance</td>
-                        <td>21/04/2020</td>
-                    </tr>
+                    @Html.Raw($"addPieData(pieChart, '{account.MetaData.Name}', {account.BankAccount.Balance}, '#'+'{account.MetaData.Color.ToString("X6")}');");
+                   
                 }
-            </table>
-        </div>
-
-        <div style="width:700px; height:700px;">
-            <canvas id="lineChart"></canvas>
-            <canvas id="pieChart"></canvas>
-            <script>
-            window.onload = function () {
-                var ctx = document.getElementById('lineChart').getContext('2d');
-                var lineChart = new Chart(ctx, {
-
-                    type: 'line',
-                    data: {
-                        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-                        datasets: [{
-                            label: 'Balance over time',
-                            data: [12, 19, 3, 5, 2, 3],
-                            backgroundColor: [
-                                'rgba(255, 99, 132, 0.2)',
-                                'rgba(54, 162, 235, 0.2)',
-                                'rgba(255, 206, 86, 0.2)',
-                                'rgba(75, 192, 192, 0.2)',
-                                'rgba(153, 102, 255, 0.2)',
-                                'rgba(255, 159, 64, 0.2)'
-                            ],
-                            borderColor: [
-                                'rgba(255, 99, 132, 1)',
-                                'rgba(54, 162, 235, 1)',
-                                'rgba(255, 206, 86, 1)',
-                                'rgba(75, 192, 192, 1)',
-                                'rgba(153, 102, 255, 1)',
-                                'rgba(255, 159, 64, 1)'
-                            ],
-                            borderWidth: 1
-                        }]
-                    },
-
-                    options: {
-                        scales: {
-                            yAxes: [{
-                                ticks: {
-                                    beginAtZero: true
-                                }
-                            }]
-                        }
-                    }
-                });
-
-                var ctx = document.getElementById('pieChart').getContext('2d');
-                var pieChart = new Chart(ctx, {
-
-                    type: 'pie',
-                    data: {
-                        labels: ["Tet"],
-                        datasets: [{
-                            label: 'Balance of your accounts',
-                            data: [1],
-                            backgroundColor: ['rgba(255, 99, 132, 0.2)'],
-                            borderColor: ['rgba(255, 99, 132, 1)'],
-                            borderWidth: 1
-                        }]
-                    },
-                });
-                 function addData(chart, label, data) {
-                    chart.data.labels.push(label);
-                    chart.data.datasets.forEach((dataset) => {
-                        dataset.data.push(data);
-                    });
-                    chart.update();
-                }
-                @foreach(var account in Model.BankAccounts)
-                {
-                     @Html.Raw($"addData(pieChart, '{account.IBAN}', {account.Balance});");
-                     @Html.Raw($"addData(lineChart, '{account.IBAN}', {account.Balance});");
-                }
-
-
-            };
-            </script>
-        </div>
-        <br />
-
-    
+        });
+    </script>
+</div>
