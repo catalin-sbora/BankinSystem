@@ -1,7 +1,7 @@
 ﻿@model InternshipProject.ViewModels.Received.ReceivedListViewModel
 
 @{
-    ViewData["Title"] = "ReceivedTransactions";
+    ViewData["Title"] = "Index";
 }
 
 <div class="d-flex justify-content-end">
@@ -63,7 +63,7 @@
         </tbody>
     </table>
 </div>
-@*
+
     <div class="d-flex flex-row-reverse bd-highlight">
         <div class="p-2 bd-highlight">
             @using (Html.BeginForm("AddReceived", "Received"))
@@ -74,7 +74,7 @@
             }
         </div>
     </div>
-*@
+
 <form class="searchButtonPayments " action="" style="margin: auto; width: 300px; margin-right: 0px;  color: #008A00 !important">
     <input id="myInput" type="text" placeholder="Search" name="search">
 

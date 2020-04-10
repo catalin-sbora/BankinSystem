@@ -49,13 +49,13 @@ namespace InternshipProject.Controllers
             };
                 return View(viewModel);
             }
-            catch (Exception e)
+            catch (Exception e) 
             {
                 return BadRequest("Unable to retrieve data");
             }
         }
 
-        public IActionResult New()
+        public IActionResult AddReceived()
         {
             var userId = userManager.GetUserId(User);
             try
@@ -63,6 +63,7 @@ namespace InternshipProject.Controllers
                 var customer = customerServices.GetCustomer(userId);
                 var viewModel = new AddReceivedViewModel()
                 {
+                    
                     BankAccount = customer.BankAccounts
                 };
 
@@ -77,9 +78,9 @@ namespace InternshipProject.Controllers
         [HttpPost]
         public IActionResult Create(AddReceivedViewModel viewModel)
         {
-            transactionService.Add(viewModel.Amount, viewModel.ExternalName, viewModel.ExternalIBAN, viewModel.BankAccountId);
+            transactionService.AddReceived(viewModel.Amount, viewModel.ExternalName, viewModel.ExternalIBAN, viewModel.BankAccountId);
             return RedirectToAction("Index");
         }
-
+        
     }
 }
