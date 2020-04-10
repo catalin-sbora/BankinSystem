@@ -7,11 +7,11 @@
             <thead class="table-header">
                 <tr>
                     <th>Amount</th>
-                    <th>Date</th>
-                    <th>Balance</th>
+                    <th >Date</th>
+                    <th class="d-none d-md-table-cell">Balance</th>
                     <th>Details</th>
-                    <th>Name</th>
-                    <th>External Account</th>
+                    <th class="d-none d-md-table-cell">Name</th>
+                    <th class="d-none d-md-table-cell">External Account</th>
                 </tr>
             </thead>
             <tbody>
@@ -20,10 +20,10 @@
                     <tr>
                         <td>@transaction.Amount.ToString("N")</td>
                         <td>@transaction.Time.ToShortDateString()</td>
-                        <td>10.30</td>
+                        <td class="d-none d-md-table-cell">10.30</td>
                         <td>@transaction.Details</td>
-                        <td>@transaction.ExternalName</td>
-                        <td>@transaction.ExternalIBAN</td>
+                        <td class="d-none d-md-table-cell">@transaction.ExternalName</td>
+                        <td class="d-none d-md-table-cell">@transaction.ExternalIBAN</td>
                     </tr>
                 }
             </tbody>
