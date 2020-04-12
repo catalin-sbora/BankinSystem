@@ -26,11 +26,8 @@ namespace InternshipProject.Controllers
         // GET: OnlineBanking
         public IActionResult Index()
         {
-
-            var currentUser = userManager.GetUserId(User);
-            var customerId = customerServices.GetCustomerIdFromUserId(currentUser);
-            IEnumerable<BankAccount> bankAccounts = customerServices.GetCustomerBankAccounts(customerId);
-
+            var currentUser = userManager.GetUserId(User);            
+            IEnumerable<BankAccount> bankAccounts = customerServices.GetCustomerBankAccounts(currentUser);
             return View(bankAccounts);
         }
 

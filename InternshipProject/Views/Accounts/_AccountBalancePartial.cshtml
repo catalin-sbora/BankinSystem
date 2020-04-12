@@ -1,0 +1,9 @@
+﻿@model InternshipProject.ApplicationLogic.Model.BankAccount
+@if (Model != null)
+{
+    <span class="customer-details-label">Balance: @Model.Balance.ToString("N") @Model.Currency</span>
+}
+else
+{
+    <span class="customer-details-label">Balance: Not Available</span>
+}

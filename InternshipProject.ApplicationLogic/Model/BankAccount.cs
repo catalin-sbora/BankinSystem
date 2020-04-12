@@ -71,10 +71,18 @@ namespace InternshipProject.ApplicationLogic.Model
 
             if (string.IsNullOrEmpty(destinationName))
                 throw new Exception("");
+
+            if (amount > Balance)
+            {
+                throw new NotEnoughFundsException(Balance, amount);
+            }
             
             Transactions.Count();
             var transaction = Transaction.Create(-amount, destinationName, destinationIBAN, description);
+
             AddTransaction(transaction);
+            
+            Balance -= amount;
 
             return transaction;
         }   
@@ -89,6 +97,7 @@ namespace InternshipProject.ApplicationLogic.Model
 
             var transaction = Transaction.Create(amount, sourceName, sourceIBAN, description);
             AddTransaction(transaction);
+            Balance += amount;
         }
 
         public decimal GetAmountPaidInCurrentMonth()

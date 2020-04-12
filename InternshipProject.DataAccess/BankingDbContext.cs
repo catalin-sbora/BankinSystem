@@ -20,8 +20,28 @@ namespace InternshipProject.EFDataAccess
         public DbSet<BankAccountMetaData> BankAccountMetaDatas { get; set; }
         public DbSet<CardColor> CardColors { get; set; }
 
+        private void ConfigureEntity<T>(ModelBuilder builder) where T: DataEntity
+        {
+            builder.Entity<T>()
+                   .HasKey(c => c.Id);
+
+            builder.Entity<T>()
+                    .Property(c => c.Id)
+                    .IsRequired()
+                    .ValueGeneratedNever();
+        }
         protected override void OnModelCreating(ModelBuilder builder)
         {
+
+
+            ConfigureEntity<Customer>(builder);
+            ConfigureEntity<Transaction>(builder);
+            ConfigureEntity<BankAccount>(builder);
+            ConfigureEntity<Card>(builder);
+            ConfigureEntity<BankAccountMetaData>(builder);
+            ConfigureEntity<CardTransaction>(builder);
+            ConfigureEntity<CardColor>(builder);
+
             builder.Entity<BankAccount>()
                     .Property(ba => ba.Balance)
                     .HasColumnType("decimal(18, 4)");
@@ -32,6 +52,7 @@ namespace InternshipProject.EFDataAccess
 
             builder.Entity<BankAccountMetaData>()
                     .HasOne<BankAccount>();
+
             builder.Entity<CardColor>()
                     .HasOne<Card>();
         }

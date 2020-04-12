@@ -13,7 +13,7 @@ namespace InternshipProject.ApplicationLogic.Services
         private readonly ICustomerRepository customerRepository;
         private readonly ICardRepository cardRepository;
         private readonly ICardColorRepository cardColorRepository;
-        public CustomerService(ICustomerRepository customerRepository , ICardRepository cardRepository,ICardColorRepository cardColorRepository )
+        public CustomerService(ICustomerRepository customerRepository , ICardRepository cardRepository, ICardColorRepository cardColorRepository )
         {
             this.customerRepository = customerRepository;
             this.cardRepository = cardRepository;
@@ -31,17 +31,6 @@ namespace InternshipProject.ApplicationLogic.Services
             return foundCustomer.Id;
         }
         
-        public IEnumerable<BankAccount> GetCustomerBankAccounts(Guid customerId)
-        {
-            var customer = customerRepository?.GetById(customerId);
-            if (customer == null)
-            {
-                throw new CustomerNotFoundException(customerId);
-            }
-            
-            return customer.BankAccounts
-                            .AsEnumerable();           
-        }
         public IEnumerable<BankAccount> GetCustomerBankAccounts(string userId)
         {
             Guid idToSearch = Guid.Empty;            
@@ -55,6 +44,14 @@ namespace InternshipProject.ApplicationLogic.Services
 
             return customer.BankAccounts
                             .AsEnumerable();
+        }
+        public void CreateAccountPayment(string userId, Guid account, decimal amount, string destinationName, string destinationIBAN, string details)
+        {
+            var customer = GetCustomer(userId);
+            var bankAccount = GetCustomerBankAccount(customer, account);
+            bankAccount.CreatePayment(amount, destinationName, destinationIBAN, details);
+            customerRepository.Update(customer);
+
         }
         public CardColor GetCardColor(Guid cardId)
         {
@@ -72,15 +69,21 @@ namespace InternshipProject.ApplicationLogic.Services
 
             return customer;
         }
-
-        public BankAccount GetCustomerBankAccount(Customer customer, string accountId)
-        {            
-            if (string.IsNullOrEmpty(accountId))
+        public BankAccount GetCustomerBankAccount(string userId, Guid bankAccountId)
+        {
+            var customer = GetCustomer(userId);
+            var bankAccount = customer.BankAccounts.Where(account => account.Id.Equals(bankAccountId))
+                                 .SingleOrDefault();
+            if (bankAccount == null)
             {
-                throw new ArgumentException("accountId");
+                throw new AccountNotFoundException(bankAccountId);
             }
+            return bankAccount;
+        }
+        public BankAccount GetCustomerBankAccount(Customer customer, Guid accountId)
+        {            
             var account = customer.BankAccounts
-                    .Where(ba => accountId.Equals(ba.Id.ToString()))
+                    .Where(ba => accountId.Equals(ba.Id))
                     .SingleOrDefault();
             if (account == null)
             {
@@ -88,40 +91,7 @@ namespace InternshipProject.ApplicationLogic.Services
             }
 
             return account;
-        }
-
-        public IEnumerable<Transaction> SearchTransactions(Customer customer, string accountId, string stringToSearch)
-        {
-            if (string.IsNullOrEmpty(accountId))
-            {
-                throw new ArgumentException("accountId");
-            }
-            var account = customer.BankAccounts
-                    .Where(ba => accountId.Equals(ba.Id.ToString()))
-                    .SingleOrDefault();
-            if (account == null)
-            {
-                throw new AccountNotFoundException(accountId);
-            }
-
-            IEnumerable<Transaction> transactions;
-            if (string.IsNullOrEmpty(stringToSearch))
-            {
-                transactions = account.Transactions;
-            }
-            else
-            {
-
-                transactions = account.Transactions
-                                      .Where(t =>
-                                      t.Amount.ToString().Contains(stringToSearch) ||
-                                      (t.ExternalIBAN != null && t.ExternalIBAN.ToString().Contains(stringToSearch)) ||
-                                      (t.ExternalName != null && t.ExternalName.ToString().Contains(stringToSearch)) ||
-                                      (t.Details != null && t.Details.ToString().Contains(stringToSearch))
-                                      );
-            }
-            return transactions.AsEnumerable();
-        }
+        }       
 
         public IEnumerable<Card> GetCardsByUserID(string userID)
         {
@@ -130,8 +100,6 @@ namespace InternshipProject.ApplicationLogic.Services
             var cards = cardRepository.GetByUserId(idToSearch);
             return cards;
         }
-
-
 
     }
 }
