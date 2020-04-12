@@ -73,6 +73,17 @@ namespace InternshipProject.ApplicationLogic.Services
             return customer;
         }
 
+        public IEnumerable<Transaction> GetAllTransaction(Customer customer)
+        {
+            var transactionList = new List<Transaction>();
+            foreach(var account in customer.BankAccounts)
+            {
+                transactionList.AddRange(account.Transactions);
+            }
+
+            return transactionList.AsEnumerable();
+        }
+
         public BankAccount GetCustomerBankAccount(Customer customer, string accountId)
         {            
             if (string.IsNullOrEmpty(accountId))

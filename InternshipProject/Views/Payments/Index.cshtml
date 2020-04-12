@@ -23,11 +23,11 @@
 </div>
 
 <br />
-<div class="table-responsive">
-    <table class="table table-striped" style="width: 500px;">
+<div class="table-responsive ">
+    <table class="table table-striped " style="width: 500px;">
         <thead>
             <tr>
-                <th style="color: white; background-color: #60A917;">
+                <th style="color: white; background-color: #30254a;">
                     Select accounts
                 </th>
             </tr>
@@ -50,33 +50,38 @@
     </table>
 </div>
 
-
-<div class="d-flex flex-row-reverse bd-highlight">
-    <div class="p-2 bd-highlight">
-        @using (Html.BeginForm("New", "Payments"))
-        {
-        <button class="btn btn-success" type="submit">
-            New Payment
-        </button>
-        }
+<div class="d-flex flex-column flex-md-row">
+    <div class="d-flex flex-column flex-grow-1">
+        <a href="#" class="btn btn-light light-button mr-0 mr-md-auto mb-4"><i class="fas fa-filter"></i> Filter </a>
+    </div>
+    <div class="d-flex flex-column ">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                @using (Html.BeginForm("New", "Payments"))
+                {
+                    <button class="btn btn-light light-button mt-4" type="submit">
+                        <i class="fas fa-money-bill"></i> New Payment
+                    </button>
+                }
+            </div>
+        </div>
     </div>
 </div>
 
-
 <br />
-<form class="searchButtonPayments " action="/Payments/SearchPayments/{searchString}" style="margin: auto; width: 300px; margin-right: 0px;">
+<form class="searchButtonPayments " action="/{searchString}" style="margin: auto; width: 300px; margin-right: 0px;">
     <input type="text" placeholder="Search.." name="searchString">
     <button type="submit">
-        <i class="fa fa-search"></i>
+        <i class="fas fa-search"></i>
     </button>
 </form>
 
 
-<div class="table-responsive">
-    <table class="table table-striped">
-        <thead>
-            <tr style="color: white; background-color: #60A917;">
-                <th style="width: 150px;"> Amount </th>
+<div class="table-responsive table-shadow">
+    <table class="table table-striped table-light">
+        <thead class="table-header">
+            <tr style="color: white; background-color: #30254a;">
+                <th class="d-none d-md-table-cell" style="width: 150px;"> Amount </th>
                 <th style="width: 230px;"> Date </th>
                 <th> Internal Account </th>
                 <th> External Account </th>
@@ -84,18 +89,15 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var account in Model.BanksAccounts)
+            @foreach (var transaction in Model.Transactions)
             {
-                @foreach (var transaction in account.Transactions)
-                {
-                    <tr>
-                        <td> @transaction.Amount.ToString("N") </td>
-                        <td> @transaction.Time.ToString("dd/MM/yyyy") </td>
-                        <td> @account.IBAN </td>
-                        <td> @transaction.ExternalIBAN </td>
-                        <td> @Html.ActionLink("Details", "Details", "Payments", new { Id = transaction.Id }, null) </td>
-                    </tr>
-                }
+                <tr>
+                    <td> @transaction.Amount.ToString("N") </td>
+                    <td> @transaction.Time.ToString("dd/MM/yyyy") </td>
+                    <td> @transaction.ExternalIBAN </td>
+                    <td> @transaction.ExternalIBAN </td>
+                    <td> @Html.ActionLink("Details", "Details", "Payments", new { Id = transaction.Id }, null) </td>
+                </tr>
             }
         </tbody>
     </table>
@@ -103,8 +105,10 @@
 
 <div class="d-flex flex-row-reverse bd-highlight">
     <div class="p-2 bd-highlight">
-        <button class="btn btn-success" href="">
+        <button class="btn btn-success" href="" style="background-color: #30254a;">
             Export
         </button>
     </div>
 </div>
+
+
