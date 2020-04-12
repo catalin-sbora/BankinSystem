@@ -71,6 +71,18 @@ namespace InternshipProject.ApplicationLogic.Model
                                .AsEnumerable();
         }
 
+        public BankAccount GetAccount(Guid accountId)
+        {
+            var account = BankAccounts.Where(ba => ba.Id == accountId)
+                                      .SingleOrDefault();
+            if (account == null)
+            {
+                throw new AccountNotFoundException(accountId);
+            }
+
+            return account;
+        }
+
 
     }
 }

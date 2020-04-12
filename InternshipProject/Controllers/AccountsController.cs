@@ -1,30 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Threading.Tasks;
 using InternshipProject.ApplicationLogic.Exceptions;
-using InternshipProject.ApplicationLogic.Model;
 using InternshipProject.ApplicationLogic.Services;
 using InternshipProject.ViewModels.Accounts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Net.Http.Headers;
+using RazorPagesReporting;
 
 namespace InternshipProject.Controllers
 {
-    [Authorize]
-    [Route("[controller]/[action]/{id?}")]
+    [Authorize]   
     public class AccountsController : Controller
     {
         private readonly CustomerService customerServices;
         private readonly UserManager<IdentityUser> userManager;
         private readonly MetaDataService metaDataService;
-
-        public AccountsController(CustomerService customerServices, MetaDataService metaDataService, UserManager<IdentityUser> userManager)
+        private readonly RazorPagesReportingEngine reportingEngine;
+        public AccountsController(CustomerService customerServices, 
+                                  MetaDataService metaDataService, 
+                                  UserManager<IdentityUser> userManager,
+                                  RazorPagesReportingEngine reportingEngine)
         {
             this.customerServices = customerServices;
             this.userManager = userManager;
             this.metaDataService = metaDataService;
+            this.reportingEngine = reportingEngine;
         }
         public IActionResult Index()
         {
@@ -79,7 +83,7 @@ namespace InternshipProject.Controllers
             }
         }
         [HttpGet]
-        [Route("/[controller]/{accountId}/[action]")]
+       
         public IActionResult Transactions([FromRoute]Guid accountId, [FromQuery]string searchString)
         {
             string userId = userManager.GetUserId(User);
@@ -87,17 +91,48 @@ namespace InternshipProject.Controllers
             {
                 var customer = customerServices.GetCustomer(userId);
                 var transactions = customer.GetFilteredAccountTransactions(accountId, searchString);
-                return PartialView("_TransactionsPartial", transactions);
+                var partialResult = PartialView("_TransactionsPartial", transactions);
+                return partialResult;
             }
             catch (Exception e)
             {
                 return BadRequest("Unable to process your request");
             }
-
         }
+
         
-        [HttpGet]
-        [Route("/[controller]/{accountId}/[action]")]
+        public async Task<IActionResult> TransactionsReport([FromRoute]Guid accountId, [FromQuery]string searchString)
+        {    
+            
+            string userId = userManager.GetUserId(User);
+            try
+            {
+                var customer = customerServices.GetCustomer(userId);
+                var transactions = customer.GetFilteredAccountTransactions(accountId, searchString);
+                var account = customer.GetAccount(accountId);
+                var reportViewModel = new TransactionsReportViewModel
+                {
+                    CustomerName = $"{customer.FirstName} {customer.LastName}",
+                    Account = account.IBAN,
+                    Currency = account.Currency,
+                    Transactions = transactions,
+                    Balance = account.Balance
+                    
+                };
+                var fileName = $"TrRep_{DateTime.UtcNow.ToShortDateString()}_{account.IBAN}.pdf";
+                fileName = fileName.Replace('/', '_');
+                fileName = fileName.Replace('\\', '_');
+                fileName = fileName.Replace(':', '_');
+
+                return await reportingEngine.RenderViewAsPdf("Accounts/TransactionsReport", reportViewModel, fileName); //PartialView("_TransactionsPartial", transactions);
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Unable to process your request");
+            }
+        }
+
+        [HttpGet]       
         public IActionResult NewPayment(string accountId)
         {
             var accountGuid = Guid.Empty;
@@ -146,7 +181,6 @@ namespace InternshipProject.Controllers
         }
 
         [HttpGet]
-        [Route("/[controller]/{accountId}/[action]")]
         public IActionResult AccountBalance([FromRoute]Guid accountId)
         {
             var userId = userManager.GetUserId(User);
@@ -160,6 +194,8 @@ namespace InternshipProject.Controllers
                 return PartialView("_AccountBalancePartial");
             }
         }
+
+   
 
     }
 }
