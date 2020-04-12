@@ -59,5 +59,22 @@ namespace InternshipProject.ApplicationLogic.Services
 
             return searchedTransactionList;
         }
+
+        public IEnumerable<Transaction> GetUserTransactions(string userId)
+        {
+            Guid guidUserId = Guid.Empty;
+            Guid.TryParse(userId, out guidUserId);
+
+            if (guidUserId == Guid.Empty)
+            {
+                throw new Exception("Wrong guid");
+            }
+
+            var transactionList = transactionRepository.GetAllTransactionsForCustomer(guidUserId)
+                                                        .OrderByDescending(t => t.Time);
+
+            return transactionList.AsEnumerable();
+
+        }
     }
 }

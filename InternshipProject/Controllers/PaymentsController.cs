@@ -61,7 +61,8 @@ namespace InternshipProject.Controllers
                         CustomerName = $"{customer.FirstName} {customer.LastName}",
                         CustomerPhoneNo = customer.ContactDetails?.PhoneNo,
                         BanksAccounts = customer.BankAccounts,
-                        Transactions = customerServices.GetAllTransaction(customer).OrderByDescending(transaction => transaction.Time)
+                        Transactions = transactionService.GetUserTransactions(userId)
+                                        
                     };
                     return View(viewModel);
                 }
