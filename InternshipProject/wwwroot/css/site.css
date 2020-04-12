@@ -135,15 +135,15 @@ form.searchButtonPayments input[type=text] {
     font-size: 17px;
     border: 1px solid grey;
     width: 200px;
-    background: #f1f1f1;
+    background: #fbfcfc;
     float: right;
 }
 
 form.searchButtonPayments button {
     width: 20%;
     padding: 10px;
-    background: #60A917;
-    color: white;
+    background: #e9ecef;
+    color: #495057;
     font-size: 17px;
     border: 1px solid grey;
     border-left: none;

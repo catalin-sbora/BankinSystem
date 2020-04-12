@@ -41,7 +41,7 @@ namespace InternshipProject.ApplicationLogic.Services
             return transactionRepository.GetTransactionById(transactionId);
         }
 
-        public IEnumerable<Transaction> SearchedTransactionsByAmount(string amount, string userId)
+        public IEnumerable<Transaction> SearchedTransactions(string searchedString, string userId)
         {
             Guid guidUserId = Guid.Empty;
             Guid.TryParse(userId, out guidUserId);
@@ -52,7 +52,10 @@ namespace InternshipProject.ApplicationLogic.Services
             }
 
             var transactionList = transactionRepository.GetAllTransactionsForCustomer(guidUserId);
-            var searchedTransactionList = transactionList.Where(transaction => transaction.Amount.ToString().Contains(amount));
+            var searchedTransactionList = transactionList.Where(transaction => (transaction.Amount.ToString().Contains(searchedString)) ||
+                                                                               (transaction.ExternalIBAN.ToLower().Contains(searchedString)) ||
+                                                                               (transaction.ExternalName.ToLower().Contains(searchedString)) ||
+                                                                               (transaction.Time.ToString().Contains(searchedString)));
 
             return searchedTransactionList;
         }
