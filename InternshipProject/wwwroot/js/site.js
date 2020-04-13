@@ -28,6 +28,17 @@ function filterTable(event) {
 
 document.querySelector('#myInput').addEventListener('keyup', filterTable, false);
 
+
+
+
+$('#filter').click(function () {
+    var min = +$('#min').val(); // invalid input will use 0 as minimum
+    // Replace invalid max input with very high value, so everything will be shown
+    var max = +$('#max').val() || 1e20;
+    updateFilter(min, max);
+});
+
+
 $(function () {
     $("#exporttable").click(function (e) {
         var table = $("#exportTable");

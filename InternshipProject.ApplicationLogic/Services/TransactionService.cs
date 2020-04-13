@@ -28,6 +28,18 @@ namespace InternshipProject.ApplicationLogic.Services
            
             return transactionRepository.NewTransaction(amount, externalName, externalIBAN, guidBankAccountId);
         }
+        public Transaction AddReceived(decimal amount, string externalName, string externalIBAN, string bankAccountId)
+        {
+            Guid guidBankAccountId = Guid.Empty;
+            Guid.TryParse(bankAccountId, out guidBankAccountId);
+
+            if (guidBankAccountId == Guid.Empty)
+            {
+                throw new Exception("Wrong guid");
+            }
+
+            return transactionRepository.NewReceived(amount, externalName, externalIBAN, guidBankAccountId);
+        }
 
         public Transaction GetById(string Id)
         {
