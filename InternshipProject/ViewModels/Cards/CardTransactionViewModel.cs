@@ -9,6 +9,7 @@ namespace InternshipProject.ViewModels.Cards
     {
         public decimal Amount { get; set; }
         public string Name { get; set; }
+       
         public string TransactionType { get; set; }
         public DateTime DateTime { get; set; }
     }

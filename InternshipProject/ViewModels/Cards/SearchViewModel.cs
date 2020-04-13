@@ -5,10 +5,9 @@ using System.Threading.Tasks;
 
 namespace InternshipProject.ViewModels.Cards
 {
-    public class CardTransactionsListViewModel
+    public class SearchViewModel
     {
-        public List<CardTransactionViewModel> CardTransactions { get; set; }
         public Guid BankAccountId { get; set; }
-        
+        public string SearchBy { get; set; }
     }
 }
