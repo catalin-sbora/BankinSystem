@@ -54,7 +54,7 @@ namespace InternshipProject
             services.AddScoped<ITransactionRepository, EFTransactionRepository>();
             services.AddScoped<ICardTransactionRepository, EFCardTransactionRepository>();
             
-            services.AddScoped<CustomerService>();
+            services.AddScoped<AccountsService>();
             services.AddScoped<MetaDataService>();
             services.AddScoped<StatisticsServices>();
             services.AddScoped<TransactionService>();

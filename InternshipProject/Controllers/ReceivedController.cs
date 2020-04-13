@@ -16,38 +16,92 @@ namespace InternshipProject.Controllers
     public class ReceivedController : Controller
     {
         private readonly UserManager<IdentityUser> userManager;
-        private readonly CustomerService customerServices;
 
-        public ReceivedController(UserManager<IdentityUser> userManager, CustomerService customerServices)
+        private readonly AccountsService customerServices;
+
+        public ReceivedController(UserManager<IdentityUser> userManager, AccountsService customerServices)
+
+       
         {
             this.userManager = userManager;
             this.customerServices = customerServices;
+            this.transactionService = transactionService;
         }
         //[HttpPost]
-       
+     
         public IActionResult IndexAsync()
         {
             var userId = userManager.GetUserId(User);
             try
             {
                 var customer = customerServices.GetCustomer(userId);
+                List<Transaction> received = new List<Transaction>() ;
+               
+                
+                
                 var viewModel = new ReceivedListViewModel()
                 {
                     //IsSelected = viewModel.IsSelected,
                     CustomerName = $"{customer.FirstName} {customer.LastName}",
                     PhoneNo = customer.ContactDetails?.PhoneNo,
                     BankAccounts = customer.BankAccounts,
-                    Transactions= customer.BankAccounts.ElementAt(0).Transactions,
-                    
-
+                    //Transactions = received
             };
                 return View(viewModel);
             }
-            catch (Exception e)
+            catch (Exception e) 
             {
                 return BadRequest("Unable to retrieve data");
             }
         }
-   
+
+        public IActionResult AddReceived()
+        {
+            var userId = userManager.GetUserId(User);
+            try
+            {
+                var customer = customerServices.GetCustomer(userId);
+                var viewModel = new AddReceivedViewModel()
+                {
+                    
+                    BankAccount = customer.BankAccounts
+                };
+
+                return View(viewModel);
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Bad Input");
+            }
+        }
+
+        [HttpPost]
+        public IActionResult Create(AddReceivedViewModel viewModel)
+        {
+            transactionService.AddReceived(viewModel.Amount, viewModel.ExternalName, viewModel.ExternalIBAN, viewModel.BankAccountId);
+            return RedirectToAction("Index");
+        }
+        public IActionResult ChangeTabel(int option)
+        {
+            var userId = userManager.GetUserId(User);
+            try
+            {
+                var customer = customerServices.GetCustomer(userId);
+                List<BankAccount> aux = new List<BankAccount>();
+                aux.Add(customer.BankAccounts.ElementAt(option));
+                var viewModel = new AddReceivedViewModel()
+                {
+
+                    BankAccount = aux
+                };
+
+                return View( viewModel);
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Bad Input");
+            }
+        }
+        
     }
 }

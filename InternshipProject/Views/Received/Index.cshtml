@@ -1,7 +1,7 @@
 ﻿@model InternshipProject.ViewModels.Received.ReceivedListViewModel
 
 @{
-    ViewData["Title"] = "ReceivedTransactions";
+    ViewData["Title"] = "Index";
 }
 
 <div class="d-flex justify-content-end">
@@ -25,19 +25,17 @@
 </div>
 
 <h1>Received Transactions</h1>
-<div class="d-flex justify-content-start">
+<script>
+    function Reset() {
+    var source = document.getElementById('exportTable');
+    var destination = document.getElementById('copyTable');
+    var copy = source.cloneNode(true);
+    copy.setAttribute('id', 'copyTable');
+        destination.parentNode.replaceChild(copy, destination);
+    }
+</script>
 
-    <div class="customer-details-label">
-        Balance:
-    </div>
-    <div class="customer-details-value">
-        @Model.BankAccounts.ElementAt(0).Balance
-    </div>
-</div>
 
-@{
-    int i = 0;
-}
 
 <div class="table-responsive">
     <table class="table table-striped" style="width: 300px;">
@@ -49,24 +47,59 @@
             </tr>
         </thead>
         <tbody>
-            
-            @foreach (var account in Model.BankAccounts)
-            {
-                <tr>
-                    <td>
-                        <div class="form-check"  >
-                            <label class="form-check-label" >
-                                
-                                @Html.RadioButtonFor(model => model.IsSelected,true)
-                                @account.IBAN
+@{ int i = 0;}
 
-                            </label>
-                        </div>
-                    </td>
-                </tr>
-            }
+           @foreach (var account in Model.BankAccounts)
+                {
+
+
+        <tr>
+            <td>
+            
+                <input type="radio" id="yes" onclick="Button1()" name="account" value="@Model.BankAccounts.ElementAt(i).IBAN" checked="checked">
+
+                <label>@Model.BankAccounts.ElementAt(i).IBAN</label><br>
+                @{ i++;}
+
+            </td>
+
+        </tr>
+                }
+            
         </tbody>
     </table>
+</div>
+
+
+@*Script pentru butoanele de ales IBAN-ul...Nu reseateaza cand schimb butonul asa ca tabelul o sa se goleasca*@
+<script type="text/javascript">
+    function Button1() {
+        
+        var rates = document.getElementsByName('account');
+        var rate_value;
+        var rows = document.querySelector("#exportTable tbody").rows;
+        for (var i = 0; i < rates.length; i++) {
+            if (rates[i].checked) {
+                rate_value = rates[i].value;
+                break;
+            }
+        }
+        for (var i = 0; i < rows.length; i++) {
+            if (rows[i].cells[5].textContent != rate_value)
+                rows[i].style.display = "none";
+        }
+    }
+</script>
+
+<div class="d-flex flex-row-reverse bd-highlight">
+    <div class="p-2 bd-highlight">
+        @using (Html.BeginForm("AddReceived", "Received"))
+        {
+            <button class="btn btn-success" type="submit">
+                New Incoming
+            </button>
+        }
+    </div>
 </div>
 
 <form class="searchButtonPayments " action="" style="margin: auto; width: 300px; margin-right: 0px;  color: #008A00 !important">
@@ -76,32 +109,48 @@
 
 
 
-<table class="table table-striped" id="exportTable">
-    <thead>
-        <tr style="background-color:#008A00 ;color: white">
-            <th scope="col">#</th>
-            <th scope="col">Amount</th>
-            <th scope="col">Date</th>
-            <th scope="col">Status</th>
-            <th scope="col">External Name</th>
-            <th scope="col">External Account</th>
-            <th scope="col">Details</th>
-        </tr>
-    </thead>
-
-    <tbody>
-        @foreach (var transaction in Model.BankAccounts.ElementAt(0).Transactions)
-        {
-            <tr>
-                <th scope="row">@i@{i++;}</th>
-                <td>@transaction.Amount</td>
-                <td>@transaction.Time</td>
-                <td>@transaction.Status</td>
-                <td>@transaction.ExternalName</td>
-                <td>@transaction.ExternalIBAN</td>
-
-            </tr>
+<script type="text/javascript">
+    function myFunction() {
+        var rows = document.querySelector("#exportTable tbody").rows;
+        for (var i = 0; i < rows.length; i++) {
+            if (rows[i].cells[0].textContent < 0)
+                rows[i].style.display = "none";
         }
-    </tbody>
-</table>
+    }
+</script>
+
+
+<body onload="myFunction();Button1()">
+    <table class="table table-striped" id="exportTable">
+        <thead>
+            <tr style="background-color:#008A00 ;color: white">
+
+                <th scope="col">Amount</th>
+                <th scope="col">Date</th>
+                <th scope="col">Status</th>
+                <th scope="col">External Name</th>
+                <th scope="col">External Account</th>
+                <th scope="col">Details</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var account in Model.BankAccounts)
+
+                @foreach (var transaction in account.Transactions)
+                {
+                    <tr>
+
+                        <td>@transaction.Amount</td>
+                        <td>@transaction.Time</td>
+                        <td>@transaction.Status</td>
+                        <td>@transaction.ExternalName</td>
+                        <td>@transaction.ExternalIBAN</td>
+                        <td >@account.IBAN</td>
+                        <td> @Html.ActionLink("Details", "Details", "Payments", new { Id = transaction.Id }, null) </td>
+                    </tr>
+                }
+        </tbody>
+    </table>
+</body>
 <button id="exportButton" class="btn btn-lg btn-success clearfix"><span class="fa fa-file-excel-o"></span> Export to Excel</button>
