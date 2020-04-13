@@ -52,14 +52,14 @@ namespace InternshipProject
             services.AddScoped<ICardColorRepository, EFCardColorRepository>();
 
             services.AddScoped<ITransactionRepository, EFTransactionRepository>();
-
-
+            services.AddScoped<ICardTransactionRepository, EFCardTransactionRepository>();
+            
             services.AddScoped<CustomerService>();
             services.AddScoped<MetaDataService>();
             services.AddScoped<StatisticsServices>();
             services.AddScoped<TransactionService>();
+            services.AddScoped<CardServices>();
             services.AddScoped<RazorPagesReportingEngine>();
-
             services.AddControllersWithViews();
             services.AddRazorPages()
                 .AddRazorRuntimeCompilation();

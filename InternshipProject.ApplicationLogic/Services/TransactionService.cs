@@ -60,6 +60,11 @@ namespace InternshipProject.ApplicationLogic.Services
             return searchedTransactionList;
         }
 
+        public IEnumerable<Transaction> GetTransactionsFromBankAccount(Guid Id)
+        {
+            return transactionRepository.GetTransactionsFromBankAccount(Id);
+        }
+
         public IEnumerable<Transaction> GetUserTransactions(string userId)
         {
             Guid guidUserId = Guid.Empty;
@@ -74,6 +79,7 @@ namespace InternshipProject.ApplicationLogic.Services
                                                         .OrderByDescending(t => t.Time);
 
             return transactionList.AsEnumerable();
+
 
         }
     }

@@ -20,12 +20,13 @@ namespace InternshipProject.ApplicationLogic.Model
         { 
         }
 
-        public static CardTransaction Create(Transaction transaction, CardTransactionType transactionType)
+        public static CardTransaction Create(Transaction transaction, CardTransactionType transactionType )
         {
             return new CardTransaction { 
                 Id = Guid.NewGuid(),
                 Transaction = transaction,
                 TransactionType = transactionType
+                
             };
         }
     }
