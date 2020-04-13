@@ -1,9 +1,4 @@
-﻿using InternshipProject.ApplicationLogic.Model;
-using InternshipProject.ViewModels.Accounts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace InternshipProject.ViewModels.Statistics
 {
@@ -12,5 +7,6 @@ namespace InternshipProject.ViewModels.Statistics
         public IEnumerable<BankAccountStatisticsViewModel> BankAccounts { get; set; }
         public string CustomerName { get; set; }
         public string PhoneNo { get; set; }
+        public IEnumerable<int> TransactionIndexes { get; set; }
     }
 }

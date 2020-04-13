@@ -16,33 +16,62 @@ namespace InternshipProject.Controllers
     public class PaymentsController : Controller
     {
         private readonly UserManager<IdentityUser> userManager;
-        private readonly CustomerService customerServices;
+        private readonly AccountsService customerServices;
         private readonly TransactionService transactionService;
 
-        public PaymentsController(UserManager<IdentityUser> userManager, CustomerService customerServices, TransactionService transactionService)
+        public PaymentsController(UserManager<IdentityUser> userManager, 
+            AccountsService accountsService, 
+            TransactionService transactionService)
         {
             this.userManager = userManager;
-            this.customerServices = customerServices;
+            this.customerServices = accountsService;
             this.transactionService = transactionService;
         }
 
-        public IActionResult Index()
+        [HttpGet("{searchString?}")]
+        public IActionResult Index([FromQuery]string searchString)
         {
             var userId = userManager.GetUserId(User);
-            try
+            var customer = customerServices.GetCustomer(userId);
+            
+            if (!String.IsNullOrEmpty(searchString))
             {
-                var customer = customerServices.GetCustomer(userId);
-                var viewModel = new PaymentsViewModel()
+                try
                 {
-                    CustomerName = $"{customer.FirstName} {customer.LastName}",
-                    CustomerPhoneNo = customer.ContactDetails?.PhoneNo,
-                    BanksAccounts = customer.BankAccounts
-                };
-                return View(viewModel);
+                    var transactionList = transactionService.SearchedTransactions(searchString, userId);
+                    var viewModel = new PaymentsViewModel
+                    {
+                        BanksAccounts = customer.BankAccounts,
+                        CustomerName = $"{customer.FirstName} {customer.LastName}",
+                        CustomerPhoneNo = customer.ContactDetails?.PhoneNo,
+                        Transactions = transactionList.OrderByDescending(transaction => transaction.Time)
+                    };
+
+                    return View(viewModel);
+                }
+                catch(Exception e)
+                {
+                    return BadRequest(e.Message);
+                }
             }
-            catch (Exception e)
+            else
             {
-                return BadRequest("Unable to retrieve data");
+                try
+                {
+                    var viewModel = new PaymentsViewModel()
+                    {
+                        CustomerName = $"{customer.FirstName} {customer.LastName}",
+                        CustomerPhoneNo = customer.ContactDetails?.PhoneNo,
+                        BanksAccounts = customer.BankAccounts,
+                        Transactions = transactionService.GetUserTransactions(userId)
+                                        
+                    };
+                    return View(viewModel);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e.Message);
+                }
             }
         }
 
@@ -61,7 +90,7 @@ namespace InternshipProject.Controllers
             }
             catch(Exception e)
             {
-                return BadRequest("No");
+                return BadRequest(e.Message);
             }
         }
 
@@ -77,18 +106,5 @@ namespace InternshipProject.Controllers
             var transaction = transactionService.GetById(Id);
             return View(transaction);
         }
-
-        public IActionResult SearchPayments(string searchString)
-        {
-            IEnumerable<Transaction> transactionList = new List<Transaction>();
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                var userId = userManager.GetUserId(User);
-                transactionList = transactionService.SearchedTransactionsByAmount(searchString, userId);
-            }
-
-            return View(transactionList);
-        }
-
     }
 }

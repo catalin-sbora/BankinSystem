@@ -11,6 +11,7 @@ namespace InternshipProject.ViewModels.Payments
         public IEnumerable<BankAccount> BanksAccounts { get; set; }
         public string CustomerName { get; set; }
         public string CustomerPhoneNo { get; set; }
-
+        public IEnumerable<Transaction> Transactions { get; set; }
+        
     }
 }

@@ -1,0 +1,57 @@
+﻿@model InternshipProject.ViewModels.Cards.TransactionViewModel
+
+
+<!DOCTYPE html>
+
+<h1 ">New Payment</h1>
+
+<br />
+@*<form asp-action="CreateCardTransaction" asp-controller="Cards"  method="post">
+    <div>
+        <label asp-for="IBan">IBan</label>
+        <input asp-for="IBan" type="text"/>
+    </div>
+    <div>
+        <label asp-for="Amount">Amount</label>
+        <input asp-for="Amount" type="text"/>
+    </div>
+    <input type="hidden" name="CardId" value="@Guid.NewGuid()" />
+    <button type="submit">Create</button>
+</form>
+    *@
+
+
+@using (Html.BeginForm("CreateCardTransaction", "Cards"))
+{
+    <div style="width: 270px; padding-left: 25px;">
+        <div class="form-group ">
+            <strong>
+                @Html.Label("External IBAN")
+            </strong>
+            <div style="margin-left:10px"></div>
+            @Html.TextBoxFor(payment => payment.IBan, new { @class = "form-control" })
+        </div>
+        <br />
+        <div class="form-group">
+            <strong>
+                @Html.Label("Amount")
+            </strong>
+            <div style="margin-left:10px"></div>
+            @Html.TextBoxFor(payment => payment.Amount, new { @class = "form-control" })
+        </div>
+        <br />
+        <div class="form-group">
+            <strong>
+                @Html.Label("Select Account")
+            </strong>
+            @Html.DropDownListFor(payment => payment.CardId, new SelectList(Model.CardList, "Id", "CVV"), "", new { @class = "form-control" })
+        </div>
+
+        <br />
+
+
+
+
+    </div>
+    <button class=" btn-primary " style="margin-left:20px">Create</button>
+}

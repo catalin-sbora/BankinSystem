@@ -14,10 +14,10 @@ namespace InternshipProject.Controllers
     [Authorize]
     public class OnlineBankingController : Controller
     {
-        private readonly CustomerService customerServices;
+        private readonly AccountsService customerServices;
         private readonly UserManager<IdentityUser> userManager;
 
-        public OnlineBankingController(CustomerService customerServices, UserManager<IdentityUser> userManager)
+        public OnlineBankingController(AccountsService customerServices, UserManager<IdentityUser> userManager)
         {
 
             this.userManager = userManager;
@@ -26,11 +26,8 @@ namespace InternshipProject.Controllers
         // GET: OnlineBanking
         public IActionResult Index()
         {
-
-            var currentUser = userManager.GetUserId(User);
-            var customerId = customerServices.GetCustomerIdFromUserId(currentUser);
-            IEnumerable<BankAccount> bankAccounts = customerServices.GetCustomerBankAccounts(customerId);
-
+            var currentUser = userManager.GetUserId(User);            
+            IEnumerable<BankAccount> bankAccounts = customerServices.GetCustomerBankAccounts(currentUser);
             return View(bankAccounts);
         }
 

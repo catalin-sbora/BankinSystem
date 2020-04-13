@@ -22,7 +22,6 @@ namespace InternshipProject.EFDataAccess.Migrations
             modelBuilder.Entity("InternshipProject.ApplicationLogic.Model.BankAccount", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("Balance")
@@ -50,7 +49,6 @@ namespace InternshipProject.EFDataAccess.Migrations
             modelBuilder.Entity("InternshipProject.ApplicationLogic.Model.BankAccountMetaData", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("BankAccountId")
@@ -72,7 +70,6 @@ namespace InternshipProject.EFDataAccess.Migrations
             modelBuilder.Entity("InternshipProject.ApplicationLogic.Model.Card", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("BankAccountId")
@@ -103,7 +100,6 @@ namespace InternshipProject.EFDataAccess.Migrations
             modelBuilder.Entity("InternshipProject.ApplicationLogic.Model.CardColor", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("CardId")
@@ -122,7 +118,6 @@ namespace InternshipProject.EFDataAccess.Migrations
             modelBuilder.Entity("InternshipProject.ApplicationLogic.Model.CardTransaction", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("CardId")
@@ -175,7 +170,6 @@ namespace InternshipProject.EFDataAccess.Migrations
             modelBuilder.Entity("InternshipProject.ApplicationLogic.Model.Customer", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("ContactDetailsId")
@@ -203,7 +197,6 @@ namespace InternshipProject.EFDataAccess.Migrations
             modelBuilder.Entity("InternshipProject.ApplicationLogic.Model.Transaction", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("Amount")

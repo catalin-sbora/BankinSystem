@@ -8,6 +8,7 @@
     </br>
     </br>
     </br>
+@*
 <div class="container ">
     <div class="card-deck">
         @foreach (var card in Model.Cards)
@@ -20,10 +21,30 @@
                     <h5 class="card-title">Name:@card.Card.OwnerName</h5>
                     <p class="card-text">Serial Number:@card.Card.SerialNumber</p>
                     <p class="card-text">Expiry Date:@card.Card.ExpiryDate.ToShortDateString()</p>
-                    <a href="#" class="btn" style="background-color:#04B431">See Payments</a>
+                    <a class ="btn btn-success" asp-controller="Cards" asp-action="CardPayments" asp-route-id="@card.Card.Id">Go to payments</a>
+                   
                 </div>
             </div>
         }
     </div>
 </div>
+    *@
+<div class="d-flex flex-row flex-wrap justify-content-around">
+    @foreach (var card in Model.Cards)
+    {
+        <div class="card details-card" style="width:300px; margin-bottom: 30px;">
 
+            <div class="d-flex justify-content-center">
+                <div class="details-card-colorbox" style="background-color: #@card.CardColor.Color.ToString("X6");"></div>
+            </div>
+            <div class="d-flex justify-content-center flex-column">
+                <div class="details-card-amount">@card.Card.OwnerName</div><br />
+                <div class="details-card-property-name">Serial Number:@card.Card.SerialNumber</div><br />
+                <div class="details-card-property-name">Expiry Date:@card.Card.ExpiryDate.ToShortDateString()</div><br />
+                <a class="btn btn-light stretched-link" asp-controller="Cards" asp-action="CardPayments" asp-route-id="@card.Card.Id">Go to payments</a>
+
+                
+                </div>
+            </div>
+    }
+</div>

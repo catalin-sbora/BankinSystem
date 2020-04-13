@@ -15,6 +15,7 @@ using Microsoft.Extensions.Hosting;
 using InternshipProject.EFDataAccess;
 using InternshipProject.ApplicationLogic.Services;
 using InternshipProject.ApplicationLogic.Abstractions;
+using RazorPagesReporting;
 
 namespace InternshipProject
 {
@@ -51,13 +52,14 @@ namespace InternshipProject
             services.AddScoped<ICardColorRepository, EFCardColorRepository>();
 
             services.AddScoped<ITransactionRepository, EFTransactionRepository>();
-
-
-            services.AddScoped<CustomerService>();
+            services.AddScoped<ICardTransactionRepository, EFCardTransactionRepository>();
+            
+            services.AddScoped<AccountsService>();
             services.AddScoped<MetaDataService>();
             services.AddScoped<StatisticsServices>();
             services.AddScoped<TransactionService>();
-
+            services.AddScoped<CardServices>();
+            services.AddScoped<RazorPagesReportingEngine>();
             services.AddControllersWithViews();
             services.AddRazorPages()
                 .AddRazorRuntimeCompilation();
@@ -88,8 +90,13 @@ namespace InternshipProject
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
+                    name: "Accounts",
+                    pattern: "{controller=Accounts}/{accountId?}/{action=Index}");
+
+                endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                
                 endpoints.MapRazorPages();
             });
         }

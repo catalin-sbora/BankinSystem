@@ -2,9 +2,6 @@
 using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using InternshipProject.ViewModels.Accounts;
 using Microsoft.AspNetCore.Identity;
 using InternshipProject.ViewModels.Statistics;
 using InternshipProject.ApplicationLogic.Services;
@@ -17,11 +14,11 @@ namespace InternshipProject.Controllers
     public class StatisticsController : Controller
     {
         private readonly StatisticsServices statisticsService;
-        private readonly CustomerService customerService;
+        private readonly AccountsService customerService;
         private readonly MetaDataService metaDataService;
         private readonly UserManager<IdentityUser> userManager;
 
-        public StatisticsController(StatisticsServices statisticsServices, CustomerService customerServices, 
+        public StatisticsController(StatisticsServices statisticsServices, AccountsService customerServices, 
             MetaDataService metaDataServices, UserManager<IdentityUser> userManager)
         {
             this.statisticsService = statisticsServices;
@@ -42,12 +39,10 @@ namespace InternshipProject.Controllers
 
                 foreach (var bankAccount in customer.BankAccounts)
                 {                  
-
                     statisticsViewModels.Add(new BankAccountStatisticsViewModel
                     {
                         BankAccount = bankAccount,
-                        MetaData = metaDataService.GetMetaDataForBankAccount(bankAccount.Id)                
-                        
+                        MetaData = metaDataService.GetMetaDataForBankAccount(bankAccount.Id)
                     });
                 }
 
@@ -87,6 +82,7 @@ namespace InternshipProject.Controllers
                         case "alltime":
                             balanceHistory = new List<decimal>(statisticsService.BankAccountHistoryAllTime(bankAccount));
                             break;
+
                         case "year":
                             balanceHistory = new List<decimal>(statisticsService.BankAccountHistoryYear(bankAccount));
                             break;
@@ -96,18 +92,19 @@ namespace InternshipProject.Controllers
                             break;
 
                         case "week":
+                            balanceHistory = new List<decimal>(statisticsService.BankAccountHistoryWeek(bankAccount));
                             break;
 
                         case "day":
+                            balanceHistory = new List<decimal>(statisticsService.BankAccountHistoryDay(bankAccount));
                             break;
-
                     }
 
                     statisticsViewModels.Add(new BankAccountStatisticsViewModel
                     {
                         BankAccount = bankAccount,
                         MetaData = metaDataService.GetMetaDataForBankAccount(bankAccount.Id),
-                        BalanceHistory = balanceHistory
+                        BalanceHistory = balanceHistory,
                     });
                 }
 
@@ -115,9 +112,9 @@ namespace InternshipProject.Controllers
                 {
                     BankAccounts = statisticsViewModels,
                     CustomerName = $"{customer.FirstName} {customer.LastName}",
-                    PhoneNo = customer.ContactDetails?.PhoneNo
+                    PhoneNo = customer.ContactDetails?.PhoneNo,
+                    TransactionIndexes = statisticsService.GetMostTransactionAccount(userId)
                 };
-
 
                 return PartialView("_LineChartPartial", viewModel);
             }

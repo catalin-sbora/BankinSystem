@@ -25,7 +25,7 @@ namespace InternshipProject.ApplicationLogic.Services
             {
                 throw new Exception("Wrong guid");
             }
-
+           
             return transactionRepository.NewTransaction(amount, externalName, externalIBAN, guidBankAccountId);
         }
         public Transaction AddReceived(decimal amount, string externalName, string externalIBAN, string bankAccountId)
@@ -53,7 +53,7 @@ namespace InternshipProject.ApplicationLogic.Services
             return transactionRepository.GetTransactionById(transactionId);
         }
 
-        public IEnumerable<Transaction> SearchedTransactionsByAmount(string amount, string userId)
+        public IEnumerable<Transaction> SearchedTransactions(string searchedString, string userId)
         {
             Guid guidUserId = Guid.Empty;
             Guid.TryParse(userId, out guidUserId);
@@ -64,9 +64,41 @@ namespace InternshipProject.ApplicationLogic.Services
             }
 
             var transactionList = transactionRepository.GetAllTransactionsForCustomer(guidUserId);
-            var searchedTransactionList = transactionList.Where(transaction => transaction.Amount.ToString().Contains(amount));
+            var searchedTransactionList = transactionList.Where(transaction => (transaction.Amount.ToString().Contains(searchedString)) ||
+                                                                               (transaction.ExternalIBAN.ToLower().Contains(searchedString)) ||
+                                                                               (transaction.ExternalName.ToLower().Contains(searchedString)) ||
+                                                                               (transaction.Time.ToString().Contains(searchedString)));
 
             return searchedTransactionList;
+        }
+
+        public IEnumerable<Transaction> GetTransactionsFromBankAccount(Guid Id)
+        {
+            return transactionRepository.GetTransactionsFromBankAccount(Id);
+        }
+
+        public IEnumerable<Transaction> GetUserTransactions(string userId)
+        {
+            Guid guidUserId = Guid.Empty;
+            Guid.TryParse(userId, out guidUserId);
+
+            if (guidUserId == Guid.Empty)
+            {
+                throw new Exception("Wrong guid");
+            }
+            //foreach(var bankAccount in customer.BankAccounts)
+            //{ 
+            //  transactionList.AddRange(
+            //    bankAccount.Transactions.Where(t=>t.Amount < 0)
+            //);  
+            //}
+            //customer.Transactions.Where(t=>t.Amount < 0)
+            var transactionList = transactionRepository.GetAllTransactionsForCustomer(guidUserId)
+                                                        .OrderByDescending(t => t.Time);
+
+            return transactionList.AsEnumerable();
+
+
         }
     }
 }

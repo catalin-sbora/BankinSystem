@@ -1,5 +1,6 @@
 ﻿using InternshipProject.ApplicationLogic.Abstractions;
 using InternshipProject.ApplicationLogic.Model;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,8 +50,10 @@ namespace InternshipProject.EFDataAccess
 
         public T Update(T itemToUpdate)
         {
-            var entity = dbContext.Update<T>(itemToUpdate);
-            dbContext.SaveChanges();
+            var entity = dbContext.Set<T>()
+                                  .Update(itemToUpdate);
+            //dbContext.Entry(itemToUpdate).State = EntityState.Modified;
+            dbContext.SaveChanges();          
             return entity.Entity;
         }
     }
