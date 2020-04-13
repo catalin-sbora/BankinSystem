@@ -6,7 +6,6 @@
 
 @section Scripts{
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.min.js"></script>
-    @*DOWNLOAD AND PUT IN WWWROOT BELOW LIB*@
 }
 
 <div class="d-flex justify-content-end">
@@ -39,35 +38,34 @@
 </div> -->
 
 <div align="center">
-    <a href="#" onclick="loadPartialView('alltime')" class="btn btn-success statistics-button">All-time</a>
+    <a href="#" onclick="loadPartialView('alltime')" class="btn btn-success statistics-button">General</a>
     <a href="#" onclick="loadPartialView('year')" class="btn btn-success statistics-button">Year</a>
     <a href="#" onclick="loadPartialView('month')" class="btn btn-success statistics-button">Month</a>
-    <a asp-controller="Statistics" asp-action="Index" asp-route-interval="week" class="btn btn-success statistics-button"> Week</a>
-    <a asp-controller="Statistics" asp-action="Index" asp-route-interval="day" class="btn btn-success statistics-button">Day</a>
+    <a href="#" onclick="loadPartialView('week')" class="btn btn-success statistics-button">Week</a>
+    <a href="#" onclick="loadPartialView('day')" class="btn btn-success statistics-button">Day</a>
 </div>
+
 <br />
 <br />
 
-<div style="width:70%; height:70%;margin:auto;">
-    <div id="lineChartContainer" >
-        
-    </div>   
+<div style="width:100%; height:100%;">
+    <div id="lineChartContainer">
+    </div>
     <script>
          function loadPartialView(param)
          {
              $.get("@Url.Action("LineChart","Statistics")" + "?interval=" + param, function (data) {
                  $("#lineChartContainer").html(data);
                  loadChartData();
-             });                 
-        }
+             });
+         }
         loadPartialView("alltime");
-
     </script>
 
     <canvas id="pieChart"></canvas>
-    <script>
 
-    function hexToRgbA(hex){
+    <script>
+        function hexToRgbA(hex) {
                 var c;
                 if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
                     c= hex.substring(1).split('');
@@ -78,30 +76,24 @@
                     return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+',0.1)';
                 }
                 throw new Error('Bad Hex');
-            }
-    function addLineData(chart, label, data, color) {
-                chart.data.datasets.push({
-                    label: label,
-                    backgroundColor: hexToRgbA(color),
-                    borderColor: color,
-                    fill: true,
-                    data: data
-                });
-                chart.update();
-}
+        }
 
-   
+        function addLineData(chart, label, data, color) {
+            chart.data.datasets.push({
+                label: label,
+                backgroundColor: hexToRgbA(color),
+                borderColor: color,
+                fill: true,
+                data: data
+            });
+            chart.update();
+        }
 
-                 
-
-           
         $(document).ready(function () {
-           
+
             var ctx = document.getElementById('pieChart').getContext('2d');
             var pieChart = new Chart(ctx, {
-
                 type: 'pie',
-
                 data: {
                     labels: [],
                     datasets: [{
@@ -120,23 +112,19 @@
                 }
             });
 
-
             function addPieData(chart, label, data, color) {
                 chart.data.labels.push(label);
                 chart.data.datasets.forEach((dataset) => {
                     dataset.data.push(data);
                     dataset.backgroundColor.push(color);
+                    dataset.borderColor.push(color);
                 });
                 chart.update();
             }
 
-
-
-                @foreach (var account in Model.BankAccounts)
-                {
-                    @Html.Raw($"addPieData(pieChart, '{account.MetaData.Name}', {account.BankAccount.Balance}, '#'+'{account.MetaData.Color.ToString("X6")}');");
-                   
-                }
+            @foreach (var account in Model.BankAccounts) {
+                @Html.Raw($"addPieData(pieChart, '{account.MetaData.Name}', {account.BankAccount.Balance}, '#'+'{account.MetaData.Color.ToString("X6")}');");
+            }
         });
     </script>
 </div>
