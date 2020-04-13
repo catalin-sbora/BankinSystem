@@ -28,7 +28,9 @@
 
 
   <ItemGroup>
+    <ProjectReference Include="..\InternshipProject.ApplicationLogic\InternshipProject.ApplicationLogic.csproj" />
     <ProjectReference Include="..\InternshipProject.DataAccess\InternshipProject.EFDataAccess.csproj" />
+    <ProjectReference Include="..\RazorPagesReportingEngine\RazorPagesReportingEngine.csproj" />
   </ItemGroup>
 
 </Project>

@@ -6,8 +6,8 @@ namespace InternshipProject.ApplicationLogic.Exceptions
 {
     public class AccountNotFoundException: Exception
     {
-        public string AccountId { get; private set; }
-        public AccountNotFoundException(string id) : base($"Account with id {id} was not found")
+        public Guid AccountId { get; private set; }
+        public AccountNotFoundException(Guid id) : base($"Account with id {id.ToString()} was not found")
         {
             this.AccountId = id;
         }

@@ -1,5 +1,7 @@
-﻿using System;
+﻿using InternshipProject.ApplicationLogic.Exceptions;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace InternshipProject.ApplicationLogic.Model
@@ -37,7 +39,49 @@ namespace InternshipProject.ApplicationLogic.Model
             ContactDetails.PhoneNo = phoneNo;
             ContactDetails.AlternatePhoneNo = altPhone;
             ContactDetails.Email = email;
-        }       
+        }
+
+        public IEnumerable<Transaction> GetFilteredAccountTransactions(Guid accountId, string filter)
+        {
+            var account = BankAccounts
+                    .Where(ba => accountId.Equals(ba.Id))
+                    .SingleOrDefault();
+            if (account == null)
+            {
+                throw new AccountNotFoundException(accountId);
+            }
+
+            IEnumerable<Transaction> transactions;
+            if (string.IsNullOrEmpty(filter))
+            {
+                transactions = account.Transactions;
+            }
+            else
+            {
+                filter = filter.ToLower();
+                transactions = account.Transactions
+                                      .Where(t =>
+                                      t.Amount.ToString().Contains(filter) ||
+                                      (t.ExternalIBAN != null && t.ExternalIBAN.ToLower().Contains(filter)) ||
+                                      (t.ExternalName != null && t.ExternalName.ToLower().Contains(filter)) ||
+                                      (t.Details != null && t.Details.ToLower().Contains(filter))
+                                      );
+            }
+            return transactions.OrderByDescending(t => t.Time)
+                               .AsEnumerable();
+        }
+
+        public BankAccount GetAccount(Guid accountId)
+        {
+            var account = BankAccounts.Where(ba => ba.Id == accountId)
+                                      .SingleOrDefault();
+            if (account == null)
+            {
+                throw new AccountNotFoundException(accountId);
+            }
+
+            return account;
+        }
 
 
     }

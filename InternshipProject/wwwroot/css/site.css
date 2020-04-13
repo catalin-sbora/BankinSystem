@@ -61,6 +61,7 @@ html {
 body {
   /* Margin bottom by footer height */
   margin-bottom: 60px;
+  font-family: Roboto
 }
 h1{
     font-weight:bold;
@@ -134,15 +135,15 @@ form.searchButtonPayments input[type=text] {
     font-size: 17px;
     border: 1px solid grey;
     width: 200px;
-    background: #f1f1f1;
+    background: #fbfcfc;
     float: right;
 }
 
 form.searchButtonPayments button {
     width: 20%;
     padding: 10px;
-    background: #60A917;
-    color: white;
+    background: #e9ecef;
+    color: #495057;
     font-size: 17px;
     border: 1px solid grey;
     border-left: none;
@@ -212,6 +213,15 @@ form.searchButtonPayments::after {
 .light-button:hover {
     -webkit-box-shadow: 0px 0px 9px 0px rgba(0,0,0,0.13);
     box-shadow: 0px 0px 9px 0px rgba(0,0,0,0.13);
+}
+
+.shadow-button {
+    -webkit-box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.7);
+    box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.7);
+}
+.shadow-button:hover {
+    -webkit-box-shadow: 0px 0px 9px 0px rgba(0,0,0,0.7);
+    box-shadow: 0px 0px 9px 0px rgba(0,0,0,0.7);
 }
 
 .details-card {

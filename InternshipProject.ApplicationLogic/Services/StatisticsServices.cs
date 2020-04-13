@@ -4,8 +4,6 @@ using InternshipProject.ApplicationLogic.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
 
 namespace InternshipProject.ApplicationLogic.Services
 {
@@ -50,6 +48,38 @@ namespace InternshipProject.ApplicationLogic.Services
                             .AsEnumerable();
         }
 
+        private BankAccount GetChosenBankAccount(string userId)
+        {
+            BankAccount chosenBankAccount = null;
+            int maxTransactions = 0;
+
+            foreach (BankAccount account in GetCustomerBankAccounts(userId))
+            {
+                int transactionCount = account.Transactions.Count();
+                if (transactionCount > maxTransactions)
+                {
+                    maxTransactions = transactionCount;
+                    chosenBankAccount = account;
+                }
+            }
+
+            return chosenBankAccount;
+        }
+
+        public IEnumerable<int> GetMostTransactionAccount(string userId)
+        {
+            List<int> transactionList = new List<int>();
+
+            BankAccount chosenBankAccount = GetChosenBankAccount(userId);
+
+            for (int i = 1; i <= chosenBankAccount.Transactions.Count(); i++)
+            {
+                transactionList.Add(i);
+            }
+
+            return transactionList.AsEnumerable();
+        }
+
         public IEnumerable<decimal> BankAccountHistoryAllTime(BankAccount bankAccount)
         {
             
@@ -88,6 +118,21 @@ namespace InternshipProject.ApplicationLogic.Services
                                                                 DateTime.UtcNow
                                                                         .Subtract(transaction.Time)
                                                                         .Days <= 7);
+
+            return ProcessBalanceHistory(bankAccount.Balance, sortedTransactions);
+        }
+
+        public IEnumerable<decimal> BankAccountHistoryDay(BankAccount bankAccount)
+        {
+
+            var sortedTransactions = FilterAccountTransactions(bankAccount,
+                                                                transaction =>
+                                                                transaction.Time.Year == DateTime.UtcNow.Year
+                                                                &&
+                                                                transaction.Time.Month == DateTime.UtcNow.Month
+                                                                &&
+                                                                transaction.Time.Day == DateTime.UtcNow.Day
+                                                                );
 
             return ProcessBalanceHistory(bankAccount.Balance, sortedTransactions);
         }
