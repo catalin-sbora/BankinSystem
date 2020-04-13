@@ -24,7 +24,7 @@
     </div>
 </div>
 
-<h1>Received Transactions</h1>
+<h2>Received Transactions</h2>
 <script>
     function Reset() {
     var source = document.getElementById('exportTable');
@@ -41,7 +41,7 @@
     <table class="table table-striped" style="width: 300px;">
         <thead>
             <tr>
-                <th style="color: white; background-color: #008A00;">
+                <th style="color: white; background-color: #30254a;">
                     Select account
                 </th>
             </tr>
@@ -95,17 +95,29 @@
     <div class="p-2 bd-highlight">
         @using (Html.BeginForm("AddReceived", "Received"))
         {
-            <button class="btn btn-success" type="submit">
-                New Incoming
+        <div class="d-flex flex-column">
+            <button class="btn btn-light light-button" data-toggle="modal" data-target="#newPaymentModal">
+                <i class="fas fa-money-bill"></i> New Incoming
             </button>
+        </div>
         }
     </div>
 </div>
+<br />
+<div class="d-flex flex-column flex-md-row">
+    <div class="d-flex flex-column flex-grow-1">
+        <a asp-controller="Accounts" asp-action="TransactionsReport" asp-route-accountid="@Model.BankAccounts.ElementAt(0)" class="btn btn-light light-button mr-0 mr-md-auto mb-4"><i class="fas fa-file-excel"></i> Export</a>
+    </div>
+    <div class="d-flex flex-column">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fas fa-filter"></i></span>
+            </div>
+            <input id="myInput" type="text" placeholder="Search" name="search">
+        </div>
+    </div>
+</div>
 
-<form class="searchButtonPayments " action="" style="margin: auto; width: 300px; margin-right: 0px;  color: #008A00 !important">
-    <input id="myInput" type="text" placeholder="Search" name="search">
-
-</form>
 
 
 
@@ -123,7 +135,7 @@
 <body onload="myFunction();Button1()">
     <table class="table table-striped" id="exportTable">
         <thead>
-            <tr style="background-color:#008A00 ;color: white">
+            <tr style="background-color:#30254a ;color: white">
 
                 <th scope="col">Amount</th>
                 <th scope="col">Date</th>
@@ -146,7 +158,7 @@
                         <td>@transaction.Status</td>
                         <td>@transaction.ExternalName</td>
                         <td>@transaction.ExternalIBAN</td>
-                        <td >@account.IBAN</td>
+                        <td hidden>@account.IBAN</td>
                         <td> @Html.ActionLink("Details", "Details", "Payments", new { Id = transaction.Id }, null) </td>
                     </tr>
                 }
