@@ -8,12 +8,12 @@ using System.Text;
 
 namespace InternshipProject.ApplicationLogic.Services
 {
-    public class CustomerService
+    public class AccountsService
     {
         private readonly ICustomerRepository customerRepository;
         private readonly ICardRepository cardRepository;
         private readonly ICardColorRepository cardColorRepository;
-        public CustomerService(ICustomerRepository customerRepository , ICardRepository cardRepository, ICardColorRepository cardColorRepository )
+        public AccountsService(ICustomerRepository customerRepository , ICardRepository cardRepository, ICardColorRepository cardColorRepository )
         {
             this.customerRepository = customerRepository;
             this.cardRepository = cardRepository;
@@ -48,10 +48,8 @@ namespace InternshipProject.ApplicationLogic.Services
         public void CreateAccountPayment(string userId, Guid account, decimal amount, string destinationName, string destinationIBAN, string details)
         {
             var customer = GetCustomer(userId);
-            var bankAccount = GetCustomerBankAccount(customer, account);
-            bankAccount.CreatePayment(amount, destinationName, destinationIBAN, details);
+            customer.MakePayment(account, amount, destinationName, destinationIBAN, details);
             customerRepository.Update(customer);
-
         }
         public CardColor GetCardColor(Guid cardId)
         {

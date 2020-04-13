@@ -25,7 +25,7 @@ namespace InternshipProject.ApplicationLogic.Services
             {
                 throw new Exception("Wrong guid");
             }
-
+           
             return transactionRepository.NewTransaction(amount, externalName, externalIBAN, guidBankAccountId);
         }
 
@@ -74,7 +74,13 @@ namespace InternshipProject.ApplicationLogic.Services
             {
                 throw new Exception("Wrong guid");
             }
-
+            //foreach(var bankAccount in customer.BankAccounts)
+            //{ 
+            //  transactionList.AddRange(
+            //    bankAccount.Transactions.Where(t=>t.Amount < 0)
+            //);  
+            //}
+            //customer.Transactions.Where(t=>t.Amount < 0)
             var transactionList = transactionRepository.GetAllTransactionsForCustomer(guidUserId)
                                                         .OrderByDescending(t => t.Time);
 

@@ -14,9 +14,9 @@ namespace InternshipProject.Controllers
     {
         private TransactionService transactionService;
         private UserManager<IdentityUser> userManager;
-        private CustomerService customerServices;
+        private AccountsService customerServices;
         private CardServices cardService;
-        public CardsController(CustomerService customerServices, UserManager<IdentityUser> userManager, CardServices cardService,TransactionService transactionService)
+        public CardsController(AccountsService customerServices, UserManager<IdentityUser> userManager, CardServices cardService,TransactionService transactionService)
        
         {
             this.transactionService = transactionService;

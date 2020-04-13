@@ -16,9 +16,9 @@ namespace InternshipProject.Controllers
     public class ReceivedController : Controller
     {
         private readonly UserManager<IdentityUser> userManager;
-        private readonly CustomerService customerServices;
+        private readonly AccountsService customerServices;
 
-        public ReceivedController(UserManager<IdentityUser> userManager, CustomerService customerServices)
+        public ReceivedController(UserManager<IdentityUser> userManager, AccountsService customerServices)
         {
             this.userManager = userManager;
             this.customerServices = customerServices;

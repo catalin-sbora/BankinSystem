@@ -16,13 +16,15 @@ namespace InternshipProject.Controllers
     public class PaymentsController : Controller
     {
         private readonly UserManager<IdentityUser> userManager;
-        private readonly CustomerService customerServices;
+        private readonly AccountsService customerServices;
         private readonly TransactionService transactionService;
 
-        public PaymentsController(UserManager<IdentityUser> userManager, CustomerService customerServices, TransactionService transactionService)
+        public PaymentsController(UserManager<IdentityUser> userManager, 
+            AccountsService accountsService, 
+            TransactionService transactionService)
         {
             this.userManager = userManager;
-            this.customerServices = customerServices;
+            this.customerServices = accountsService;
             this.transactionService = transactionService;
         }
 
@@ -31,7 +33,7 @@ namespace InternshipProject.Controllers
         {
             var userId = userManager.GetUserId(User);
             var customer = customerServices.GetCustomer(userId);
-
+            
             if (!String.IsNullOrEmpty(searchString))
             {
                 try
