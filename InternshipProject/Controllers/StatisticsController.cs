@@ -113,7 +113,7 @@ namespace InternshipProject.Controllers
                     BankAccounts = statisticsViewModels,
                     CustomerName = $"{customer.FirstName} {customer.LastName}",
                     PhoneNo = customer.ContactDetails?.PhoneNo,
-                    TransactionIndexes = statisticsService.GetMostTransactionAccount(userId)
+                    TransactionIndexes = statisticsService.GetIndexListForTransactions(userId)
                 };
 
                 return PartialView("_LineChartPartial", viewModel);
