@@ -17,39 +17,36 @@
 </br>
 </br>
 </br>
-<div class="float-right">
-<form asp-action="CardPayments" asp-controller="Cards" method="post">
-    <div class="input-group-append">
-    
-    <select class="form-control" id="Type" name="Type" >
-       
-        <option value="Online">Online</option>
-        <option value="POS">POS</option>
-        <option value="ATM">ATM</option>
-    </select>
-        <button class="btn btn-light" type="submit">Type</button>
- </div>
-    </form>
-    </div>
-<br />
-<br />
+
 <div class="container">
     <br />
     <form asp-action="CardPayments" asp-controller="Cards" method="post">
-        
-        <div class="input-group-append float-right" style="width:200px">
-            <input name ="SearchBy"  type="text" class="form-control " placeholder="Search">
-            <button type="submit" class="bg-menu" >
-                <div class="input-group-append">
+
+        <div class="d-flex flex-md-row flex-column  justify-content-between">
+            <div>
+                <h2>Transactions</h2>
+            </div>
+            <div class="d-flex flex-md-row flex-column" >
+                <select class="form-control" asp-for="TransactionType">
+
+                    <option selected>All</option>
+                    <option value="2">Online</option>
+                    <option value="0">POS</option>
+                    <option value="1">ATM</option>
+
+                </select>
+                <input asp-for="SearchBy" type="text" class="form-control " placeholder="Search">
+                <button type="submit" class="btn btn-light light-button">
+
 
                     <i class="fa fa-search"></i>
-            </button>
+                </button>
 
             </div>
-        
-        </form>
+        </div>
+    </form>
     </div>
-    <h2>Transactions</h2>
+    
     <table class="table table-striped table-hover align-content-center ">
         <thead class="bg-menu text-white">
             <tr>

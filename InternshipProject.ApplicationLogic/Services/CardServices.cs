@@ -2,6 +2,7 @@
 using InternshipProject.ApplicationLogic.Model;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace InternshipProject.ApplicationLogic.Services
@@ -28,9 +29,31 @@ namespace InternshipProject.ApplicationLogic.Services
              cardTransactionRepository.Add(cardTransaction);
              return cardTransaction;
         }
-        public IEnumerable<CardTransaction> GetCardTransactions(IEnumerable<Transaction> transactions)
+        public IEnumerable<CardTransaction> GetAllCardTransactions(Guid cardId)
         {
-           return cardTransactionRepository.GetCardTransactions(transactions);
+            var card = GetCardByCardId(cardId);
+            return card.CardTransactions;
+           // return cardTransactionRepository.GetCardTransactions(transactions);
+        }
+        public IEnumerable<CardTransaction> GetFilteredCardTransactions(Guid cardId ,string searchBy, CardTransactionType? type )
+        {
+            var card = GetCardByCardId(cardId);
+            var transactions = card.CardTransactions;
+            if (type != null)
+
+            {
+             transactions = transactions.Where(cardTransaction=> cardTransaction.TransactionType == type.Value ).ToList();
+            }
+            if(!string.IsNullOrEmpty(searchBy))
+            {
+                searchBy = searchBy.ToLower();
+                transactions = transactions.Where(transaction =>
+                                      transaction.Transaction.ExternalName.ToLower().Contains(searchBy) ||
+                                      transaction.Transaction.Time.ToString().Contains(searchBy) ||
+                                      transaction.Transaction.Amount.ToString().Contains(searchBy)).ToList();
+            }
+            return transactions.AsEnumerable();
+
         }
     }
 }

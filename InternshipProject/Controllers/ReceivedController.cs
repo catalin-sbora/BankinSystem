@@ -18,8 +18,8 @@ namespace InternshipProject.Controllers
         private readonly UserManager<IdentityUser> userManager;
 
         private readonly AccountsService customerServices;
-
-        public ReceivedController(UserManager<IdentityUser> userManager, AccountsService customerServices)
+        TransactionService transactionService;
+        public ReceivedController(UserManager<IdentityUser> userManager, AccountsService customerServices,TransactionService transactionService)
 
        
         {

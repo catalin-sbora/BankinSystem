@@ -99,7 +99,7 @@ namespace InternshipProject.ApplicationLogic.Model
             AddTransaction(transaction);
             Balance += amount;
 
-  
+            return transaction;
         }
 
         public decimal GetAmountPaidInCurrentMonth()
