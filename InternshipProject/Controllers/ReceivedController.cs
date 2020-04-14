@@ -16,10 +16,10 @@ namespace InternshipProject.Controllers
     public class ReceivedController : Controller
     {
         private readonly UserManager<IdentityUser> userManager;
-
         private readonly AccountsService customerServices;
+        private readonly TransactionService transactionService;
 
-        public ReceivedController(UserManager<IdentityUser> userManager, AccountsService customerServices)
+        public ReceivedController(UserManager<IdentityUser> userManager, AccountsService customerServices, TransactionService transactionService)
 
        
         {
@@ -45,7 +45,8 @@ namespace InternshipProject.Controllers
                     CustomerName = $"{customer.FirstName} {customer.LastName}",
                     PhoneNo = customer.ContactDetails?.PhoneNo,
                     BankAccounts = customer.BankAccounts,
-                    //Transactions = received
+                    Transactions = received
+                    //receivedService
             };
                 return View(viewModel);
             }
