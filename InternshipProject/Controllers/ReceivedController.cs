@@ -17,6 +17,7 @@ namespace InternshipProject.Controllers
     {
         private readonly UserManager<IdentityUser> userManager;
         private readonly AccountsService customerServices;
+
         private readonly TransactionService transactionService;
 
         public ReceivedController(UserManager<IdentityUser> userManager, AccountsService customerServices, TransactionService transactionService)
@@ -25,7 +26,7 @@ namespace InternshipProject.Controllers
         {
             this.userManager = userManager;
             this.customerServices = customerServices;
-            this.transactionService = transactionService;
+            this.transactionServices = transactionServices;
         }
         //[HttpPost]
      
@@ -37,8 +38,6 @@ namespace InternshipProject.Controllers
                 var customer = customerServices.GetCustomer(userId);
                 List<Transaction> received = new List<Transaction>() ;
                
-                
-                
                 var viewModel = new ReceivedListViewModel()
                 {
                     //IsSelected = viewModel.IsSelected,
@@ -79,9 +78,10 @@ namespace InternshipProject.Controllers
         [HttpPost]
         public IActionResult Create(AddReceivedViewModel viewModel)
         {
-            transactionService.AddReceived(viewModel.Amount, viewModel.ExternalName, viewModel.ExternalIBAN, viewModel.BankAccountId);
+            transactionServices.AddReceived(viewModel.Amount, viewModel.ExternalName, viewModel.ExternalIBAN, viewModel.BankAccountId);
             return RedirectToAction("Index");
         }
+
         public IActionResult ChangeTabel(int option)
         {
             var userId = userManager.GetUserId(User);
