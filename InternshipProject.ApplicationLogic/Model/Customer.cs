@@ -83,6 +83,12 @@ namespace InternshipProject.ApplicationLogic.Model
             return account;
         }
 
+        public void MakePayment(Guid sourceAccount, decimal amount, string destinationName, string destinationIBAN, string details)
+        {
+            var bankAccount = GetAccount(sourceAccount);
+            bankAccount.CreatePayment(amount, destinationName, destinationIBAN, details);
+        }
+
 
     }
 }

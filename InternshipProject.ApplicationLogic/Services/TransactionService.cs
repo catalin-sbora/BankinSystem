@@ -25,8 +25,20 @@ namespace InternshipProject.ApplicationLogic.Services
             {
                 throw new Exception("Wrong guid");
             }
-
+           
             return transactionRepository.NewTransaction(amount, externalName, externalIBAN, guidBankAccountId);
+        }
+        public Transaction AddReceived(decimal amount, string externalName, string externalIBAN, string bankAccountId)
+        {
+            Guid guidBankAccountId = Guid.Empty;
+            Guid.TryParse(bankAccountId, out guidBankAccountId);
+
+            if (guidBankAccountId == Guid.Empty)
+            {
+                throw new Exception("Wrong guid");
+            }
+
+            return transactionRepository.NewReceived(amount, externalName, externalIBAN, guidBankAccountId);
         }
 
         public Transaction GetById(string Id)
@@ -74,7 +86,13 @@ namespace InternshipProject.ApplicationLogic.Services
             {
                 throw new Exception("Wrong guid");
             }
-
+            //foreach(var bankAccount in customer.BankAccounts)
+            //{ 
+            //  transactionList.AddRange(
+            //    bankAccount.Transactions.Where(t=>t.Amount < 0)
+            //);  
+            //}
+            //customer.Transactions.Where(t=>t.Amount < 0)
             var transactionList = transactionRepository.GetAllTransactionsForCustomer(guidUserId)
                                                         .OrderByDescending(t => t.Time);
 

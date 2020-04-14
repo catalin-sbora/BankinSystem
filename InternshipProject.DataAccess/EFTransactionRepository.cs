@@ -25,7 +25,14 @@ namespace InternshipProject.EFDataAccess
 
             return transaction;
         }
+        public Transaction NewReceived(decimal amount, string externalName, string externalIBAN, Guid bankAccountId)
+        {
+            var selectedBankAccount = dbContext.BankAccounts.Where(bankAccount => bankAccount.Id == bankAccountId).SingleOrDefault();
+            var transaction = selectedBankAccount.CreateReceive(amount, externalName, externalIBAN, null);
+            Add(transaction);
 
+            return transaction;
+        }
         public IEnumerable<Transaction> GetAllTransactionsForCustomer(Guid userId)
         {
             var customer = dbContext.Customers.Where(c => c.UserId == userId).SingleOrDefault();
