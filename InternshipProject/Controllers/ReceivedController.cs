@@ -45,7 +45,8 @@ namespace InternshipProject.Controllers
                     CustomerName = $"{customer.FirstName} {customer.LastName}",
                     PhoneNo = customer.ContactDetails?.PhoneNo,
                     BankAccounts = customer.BankAccounts,
-                    //Transactions = received
+                    Transactions = received
+                    //receivedService
             };
                 return View(viewModel);
             }
