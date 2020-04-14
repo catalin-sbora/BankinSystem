@@ -20,14 +20,15 @@ namespace InternshipProject.ApplicationLogic.Services
         {
             List<decimal> balanceOverTime = new List<decimal>();
             var currentBalance = initialBalance;
-            balanceOverTime.Add(currentBalance);
-            
+
+            balanceOverTime.Add(initialBalance);
             foreach (Transaction transaction in transactions)
             {
                 currentBalance -= transaction.Amount;
                 balanceOverTime.Add(currentBalance);
             }
-            return balanceOverTime.AsEnumerable();
+
+            return balanceOverTime.AsEnumerable().Reverse();
         }
 
         private IEnumerable<Transaction> FilterAccountTransactions(BankAccount account, Func<Transaction, bool> condition)

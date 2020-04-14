@@ -51,15 +51,17 @@ namespace InternshipProject.ApplicationLogic.Services
             var sendingCustomer = GetCustomer(userId);
             var transaction = sendingCustomer.MakePayment(account, amount, destinationName, destinationIBAN, details);
 
-            var sendingCurrency = GetCustomerBankAccount(sendingCustomer, transaction.BankAccountId).Currency;
+            var sendingAccount = GetCustomerBankAccount(sendingCustomer, transaction.BankAccountId);
+            var sendingCurrency = sendingAccount.Currency;
             var receiverCustomer = GetCustomerWithIBAN(destinationIBAN, sendingCurrency);
 
             if (receiverCustomer != null)
             {
-                receiverCustomer.NotifyTransaction(transaction);
+                receiverCustomer.NotifyTransaction(transaction, sendingAccount.IBAN);
             }
 
             customerRepository.Update(sendingCustomer);
+            customerRepository.Update(receiverCustomer);
         }
 
         private Customer GetCustomerWithIBAN(string currency, string destinationIBAN)
@@ -69,12 +71,12 @@ namespace InternshipProject.ApplicationLogic.Services
                 var foundBankAccount = customer.GetBankAccountByIBAN(destinationIBAN);
                 if (foundBankAccount != null)
                 {
-                    if (foundBankAccount.Currency.Equals(currency))
-                    {
-                        return customer;
-                    }
+                    //if (!foundBankAccount.Currency.Equals(currency))
+                    //{
+                    //    throw new WrongCurrencyException(currency, foundBankAccount.Currency);
+                    //}
+                    return customer;
 
-                    throw new WrongCurrencyException(currency, foundBankAccount.Currency);
                 }
             }
             throw new AccountIBANNotFoundException(destinationIBAN);
