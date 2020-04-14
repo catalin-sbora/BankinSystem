@@ -14,11 +14,11 @@ namespace InternshipProject.Controllers
     public class StatisticsController : Controller
     {
         private readonly StatisticsServices statisticsService;
-        private readonly CustomerService customerService;
+        private readonly AccountsService customerService;
         private readonly MetaDataService metaDataService;
         private readonly UserManager<IdentityUser> userManager;
 
-        public StatisticsController(StatisticsServices statisticsServices, CustomerService customerServices, 
+        public StatisticsController(StatisticsServices statisticsServices, AccountsService customerServices, 
             MetaDataService metaDataServices, UserManager<IdentityUser> userManager)
         {
             this.statisticsService = statisticsServices;
@@ -113,7 +113,7 @@ namespace InternshipProject.Controllers
                     BankAccounts = statisticsViewModels,
                     CustomerName = $"{customer.FirstName} {customer.LastName}",
                     PhoneNo = customer.ContactDetails?.PhoneNo,
-                    TransactionIndexes = statisticsService.GetMostTransactionAccount(userId)
+                    TransactionIndexes = statisticsService.GetIndexListForTransactions(userId)
                 };
 
                 return PartialView("_LineChartPartial", viewModel);

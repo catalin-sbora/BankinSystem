@@ -16,6 +16,6 @@ namespace InternshipProject.ApplicationLogic.Abstractions
         /*
          * Write Methods   */      
         Customer UpdateCustomerDetails(Guid customerId, Customer customerDetails);
-
+        IEnumerable<Customer> GetCustomerstWithBankAccounts();
     }
 }

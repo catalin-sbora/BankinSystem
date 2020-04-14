@@ -87,7 +87,7 @@ namespace InternshipProject.ApplicationLogic.Model
             return transaction;
         }   
 
-        public void CreateReceive(decimal amount, string sourceName, string sourceIBAN, string description)
+        public Transaction CreateReceive(decimal amount, string sourceName, string sourceIBAN, string description)
         {
             if (string.IsNullOrEmpty(sourceName) && string.IsNullOrEmpty(sourceIBAN))
                 throw new Exception("");
@@ -95,9 +95,13 @@ namespace InternshipProject.ApplicationLogic.Model
             if (amount <= 0)
                 throw new Exception("");
 
+            Transactions.Count();
             var transaction = Transaction.Create(amount, sourceName, sourceIBAN, description);
             AddTransaction(transaction);
+
             Balance += amount;
+
+            return transaction;
         }
 
         public decimal GetAmountPaidInCurrentMonth()

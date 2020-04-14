@@ -8,12 +8,12 @@ using System.Text;
 
 namespace InternshipProject.ApplicationLogic.Services
 {
-    public class CustomerService
+    public class AccountsService
     {
         private readonly ICustomerRepository customerRepository;
         private readonly ICardRepository cardRepository;
         private readonly ICardColorRepository cardColorRepository;
-        public CustomerService(ICustomerRepository customerRepository , ICardRepository cardRepository, ICardColorRepository cardColorRepository )
+        public AccountsService(ICustomerRepository customerRepository , ICardRepository cardRepository, ICardColorRepository cardColorRepository )
         {
             this.customerRepository = customerRepository;
             this.cardRepository = cardRepository;
@@ -45,18 +45,49 @@ namespace InternshipProject.ApplicationLogic.Services
             return customer.BankAccounts
                             .AsEnumerable();
         }
+
         public void CreateAccountPayment(string userId, Guid account, decimal amount, string destinationName, string destinationIBAN, string details)
         {
-            var customer = GetCustomer(userId);
-            var bankAccount = GetCustomerBankAccount(customer, account);
-            bankAccount.CreatePayment(amount, destinationName, destinationIBAN, details);
-            customerRepository.Update(customer);
+            var sendingCustomer = GetCustomer(userId);
 
+            var transaction = sendingCustomer.MakePayment(account, amount, destinationName, destinationIBAN, details);
+            var sendingAccount = GetCustomerBankAccount(sendingCustomer, transaction.BankAccountId);
+            var sendingCurrency = sendingAccount.Currency;
+            var receiverCustomer = GetCustomerWithIBAN(destinationIBAN, sendingCurrency);
+
+            if (receiverCustomer != null)
+            {
+                receiverCustomer.NotifyTransaction(transaction, sendingAccount.IBAN);
+            }
+
+            customerRepository.Update(sendingCustomer);
+            customerRepository.Update(receiverCustomer);
         }
+
+        public Customer GetCustomerWithIBAN(string destinationIBAN, string currency)
+        {
+            foreach (Customer customer in customerRepository.GetCustomerstWithBankAccounts())
+            {
+                var foundBankAccount = customer.GetBankAccountByIBAN(destinationIBAN);
+                if (foundBankAccount != null)
+                {
+                    //if (!foundBankAccount.Currency.Equals(currency))
+                    //{
+                    //    throw new WrongCurrencyException(currency, foundBankAccount.Currency);
+                    //}
+                    return customer;
+
+                }
+            }
+            throw new AccountIBANNotFoundException(destinationIBAN);
+        }
+
+
         public CardColor GetCardColor(Guid cardId)
         {
             return cardColorRepository.GetColor(cardId);
         }
+
         public Customer GetCustomer(string userId)
         {
             Guid idToSearch = Guid.Empty;
@@ -69,6 +100,7 @@ namespace InternshipProject.ApplicationLogic.Services
 
             return customer;
         }
+
         public BankAccount GetCustomerBankAccount(string userId, Guid bankAccountId)
         {
             var customer = GetCustomer(userId);
@@ -80,6 +112,7 @@ namespace InternshipProject.ApplicationLogic.Services
             }
             return bankAccount;
         }
+
         public BankAccount GetCustomerBankAccount(Customer customer, Guid accountId)
         {            
             var account = customer.BankAccounts

@@ -83,6 +83,29 @@ namespace InternshipProject.ApplicationLogic.Model
             return account;
         }
 
+        public Transaction MakePayment(Guid sourceAccount, decimal amount, string destinationName, string destinationIBAN, string details)
+        {
+            var bankAccount = GetAccount(sourceAccount);
+            return bankAccount.CreatePayment(amount, destinationName, destinationIBAN, details);
+        }
 
+        public void NotifyTransaction(Transaction transaction, string sourceIBAN)
+        {
+            var bankAccount = GetBankAccountByIBAN(transaction.ExternalIBAN);
+            bankAccount.CreateReceive(transaction.Amount, transaction.ExternalName, sourceIBAN, transaction.Details);
+        }
+
+        public BankAccount GetBankAccountByIBAN(string destinationIBAN)
+        {
+            foreach (BankAccount bankAccount in BankAccounts)
+            {
+                if (bankAccount.IBAN == destinationIBAN)
+                {
+                    return bankAccount;
+                }
+            }
+
+            return null;
+        }
     }
 }

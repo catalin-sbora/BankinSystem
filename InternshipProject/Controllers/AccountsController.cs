@@ -16,16 +16,16 @@ namespace InternshipProject.Controllers
     [Authorize]   
     public class AccountsController : Controller
     {
-        private readonly CustomerService customerServices;
+        private readonly AccountsService accountsService;
         private readonly UserManager<IdentityUser> userManager;
         private readonly MetaDataService metaDataService;
         private readonly RazorPagesReportingEngine reportingEngine;
-        public AccountsController(CustomerService customerServices, 
+        public AccountsController(AccountsService customerServices, 
                                   MetaDataService metaDataService, 
                                   UserManager<IdentityUser> userManager,
                                   RazorPagesReportingEngine reportingEngine)
         {
-            this.customerServices = customerServices;
+            this.accountsService = customerServices;
             this.userManager = userManager;
             this.metaDataService = metaDataService;
             this.reportingEngine = reportingEngine;
@@ -35,7 +35,7 @@ namespace InternshipProject.Controllers
             string userId = userManager.GetUserId(User);
             try
             {
-                var customer = customerServices.GetCustomer(userId);
+                var customer = accountsService.GetCustomer(userId);
                 List<BankAccountViewModel> accountViewModels = new List<BankAccountViewModel>();
 
                 foreach (var bankAccount in customer.BankAccounts)
@@ -66,8 +66,8 @@ namespace InternshipProject.Controllers
             string userId = userManager.GetUserId(User);
             try
             {
-                var customer = customerServices.GetCustomer(userId);
-                var bankAccount = customerServices.GetCustomerBankAccount(customer, id);
+                var customer = accountsService.GetCustomer(userId);
+                var bankAccount = accountsService.GetCustomerBankAccount(customer, id);
                 var viewModel = new BankAccountViewModel
                 {
                     CustomerName = $"{customer.FirstName} {customer.LastName}",
@@ -89,7 +89,7 @@ namespace InternshipProject.Controllers
             string userId = userManager.GetUserId(User);
             try
             {
-                var customer = customerServices.GetCustomer(userId);
+                var customer = accountsService.GetCustomer(userId);
                 var transactions = customer.GetFilteredAccountTransactions(accountId, searchString);
                 var partialResult = PartialView("_TransactionsPartial", transactions);
                 return partialResult;
@@ -107,7 +107,7 @@ namespace InternshipProject.Controllers
             string userId = userManager.GetUserId(User);
             try
             {
-                var customer = customerServices.GetCustomer(userId);
+                var customer = accountsService.GetCustomer(userId);
                 var transactions = customer.GetFilteredAccountTransactions(accountId, searchString);
                 var account = customer.GetAccount(accountId);
                 var reportViewModel = new TransactionsReportViewModel
@@ -158,7 +158,7 @@ namespace InternshipProject.Controllers
             try
             {
                 var userId = userManager.GetUserId(User);
-                customerServices.CreateAccountPayment(userId,
+                accountsService.CreateAccountPayment(userId,
                                                       paymentData.SourceAccount.Value,
                                                       paymentData.Amount.Value,
                                                       paymentData.DestinationName,
@@ -186,7 +186,7 @@ namespace InternshipProject.Controllers
             var userId = userManager.GetUserId(User);
             try
             {
-                var bankAccount = customerServices.GetCustomerBankAccount(userId, accountId);
+                var bankAccount = accountsService.GetCustomerBankAccount(userId, accountId);
                 return PartialView("_AccountBalancePartial", bankAccount);
             }
             catch (Exception)
