@@ -166,6 +166,7 @@ form.searchButtonPayments::after {
     font-size: 25px;
     font-weight: bold;
     color: white;
+    margin: 5px;
     background-color: #3a2a5e;
     border-radius: 8px;
     border: 0px solid white;

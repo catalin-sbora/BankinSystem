@@ -49,8 +49,8 @@ namespace InternshipProject.ApplicationLogic.Services
         public void CreateAccountPayment(string userId, Guid account, decimal amount, string destinationName, string destinationIBAN, string details)
         {
             var sendingCustomer = GetCustomer(userId);
-            var transaction = sendingCustomer.MakePayment(account, amount, destinationName, destinationIBAN, details);
 
+            var transaction = sendingCustomer.MakePayment(account, amount, destinationName, destinationIBAN, details);
             var sendingAccount = GetCustomerBankAccount(sendingCustomer, transaction.BankAccountId);
             var sendingCurrency = sendingAccount.Currency;
             var receiverCustomer = GetCustomerWithIBAN(destinationIBAN, sendingCurrency);
@@ -64,7 +64,7 @@ namespace InternshipProject.ApplicationLogic.Services
             customerRepository.Update(receiverCustomer);
         }
 
-        private Customer GetCustomerWithIBAN(string currency, string destinationIBAN)
+        public Customer GetCustomerWithIBAN(string destinationIBAN, string currency)
         {
             foreach (Customer customer in customerRepository.GetCustomerstWithBankAccounts())
             {
