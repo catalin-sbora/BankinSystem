@@ -9,6 +9,6 @@ namespace InternshipProject.ViewModels.Cards
     public class CardWithColorViewModel
     {
         public Card Card { get; set; }
-        public CardColor CardColor { get; set; }
+        public CardMetaData CardColor { get; set; }
     }
 }

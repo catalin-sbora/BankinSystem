@@ -13,5 +13,6 @@ namespace InternshipProject.ViewModels.Cards
 
         public Guid CardId { get; set; }
         public IEnumerable<Card> CardList {get; set;}
+        public string ExternalName { get; set; }
     }
 }

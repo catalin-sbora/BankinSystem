@@ -7,7 +7,7 @@
 @using (Html.BeginForm("NewCardTransaction", "Cards"))
 {
     
-    <button class="btn bg-primary float-right" type="submit">
+    <button class="btn bg-light float-right" type="submit">
         New Payment
     </button>
     
@@ -17,8 +17,24 @@
 </br>
 </br>
 </br>
-
+<div class="float-right">
+<form asp-action="CardPayments" asp-controller="Cards" method="post">
+    <div class="input-group-append">
+    
+    <select class="form-control" id="Type" name="Type" >
+       
+        <option value="Online">Online</option>
+        <option value="POS">POS</option>
+        <option value="ATM">ATM</option>
+    </select>
+        <button class="btn btn-light" type="submit">Type</button>
+ </div>
+    </form>
+    </div>
+<br />
+<br />
 <div class="container">
+    <br />
     <form asp-action="CardPayments" asp-controller="Cards" method="post">
         
         <div class="input-group-append float-right" style="width:200px">

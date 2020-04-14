@@ -53,7 +53,7 @@ namespace InternshipProject.ApplicationLogic.Services
             customerRepository.Update(customer);
 
         }
-        public CardColor GetCardColor(Guid cardId)
+        public CardMetaData GetCardColor(Guid cardId)
         {
             return cardColorRepository.GetColor(cardId);
         }

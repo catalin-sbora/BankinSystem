@@ -82,5 +82,9 @@ namespace InternshipProject.ApplicationLogic.Services
 
 
         }
+        public void Add(Transaction transaction)
+        {
+            transactionRepository.Add(transaction);
+        }
     }
 }

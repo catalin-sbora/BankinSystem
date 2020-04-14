@@ -23,19 +23,14 @@ namespace InternshipProject.ApplicationLogic.Services
         {
             return cardRepository.GetById(CardId);
         }
-        public CardTransaction AddTransaction(decimal amount, string iban, Guid cardId )
+        public CardTransaction AddTransaction(CardTransaction cardTransaction)
         {
-           // Guid guidCardId = Guid.Empty;
-            //Guid.TryParse(cardId, out guidCardId);
-
-            var transaction = Transaction.Create(amount, iban, null, null);
-            transaction.BankAccountId = GetCardByCardId(cardId).BankAccount.Id;
-            var cardTransaction = CardTransaction.Create(transaction, CardTransactionType.Online );
-            transactionRepository.Add(transaction);
-            cardTransactionRepository.Add(cardTransaction);
-           // var cardSelected = cardRepository.GetById(cardId);
-            //cardSelected.CardTransactions.Add(cardTransaction);
-            return cardTransaction;
+             cardTransactionRepository.Add(cardTransaction);
+             return cardTransaction;
+        }
+        public IEnumerable<CardTransaction> GetCardTransactions(IEnumerable<Transaction> transactions)
+        {
+           return cardTransactionRepository.GetCardTransactions(transactions);
         }
     }
 }
