@@ -18,36 +18,33 @@ namespace InternshipProject.Controllers
         private readonly UserManager<IdentityUser> userManager;
         private readonly AccountsService customerServices;
         private readonly TransactionService transactionService;
-
-        public ReceivedController(UserManager<IdentityUser> userManager, AccountsService customerServices, TransactionService transactionService)
-
-       
+        private readonly ReceivedService receivedService;
+        public ReceivedController(UserManager<IdentityUser> userManager, AccountsService customerServices, TransactionService transactionService, ReceivedService receivedService)       
         {
+            this.receivedService = receivedService;
             this.userManager = userManager;
             this.customerServices = customerServices;
             this.transactionService = transactionService;
         }
-        //[HttpPost]
-     
+      
         public IActionResult IndexAsync()
         {
             var userId = userManager.GetUserId(User);
+            var customer = customerServices.GetCustomer(userId);
             try
-            {
-                var customer = customerServices.GetCustomer(userId);
-                List<Transaction> received = new List<Transaction>() ;
-               
+            {  
                 
                 
+                var received = receivedService.GetCustomerTransaction(userId, customer);
+
                 var viewModel = new ReceivedListViewModel()
                 {
                     //IsSelected = viewModel.IsSelected,
                     CustomerName = $"{customer.FirstName} {customer.LastName}",
                     PhoneNo = customer.ContactDetails?.PhoneNo,
                     BankAccounts = customer.BankAccounts,
-                    Transactions = received
-                    //receivedService
-            };
+                    Received = received.OrderByDescending(transaction => transaction.Time)
+                };
                 return View(viewModel);
             }
             catch (Exception e) 

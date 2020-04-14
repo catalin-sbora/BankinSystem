@@ -58,6 +58,7 @@ namespace InternshipProject
             services.AddScoped<MetaDataService>();
             services.AddScoped<StatisticsServices>();
             services.AddScoped<TransactionService>();
+            services.AddScoped<ReceivedService>();
             services.AddScoped<CardServices>();
             services.AddScoped<RazorPagesReportingEngine>();
             services.AddControllersWithViews();
