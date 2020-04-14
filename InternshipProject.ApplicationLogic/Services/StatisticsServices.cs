@@ -20,12 +20,15 @@ namespace InternshipProject.ApplicationLogic.Services
         {
             List<decimal> balanceOverTime = new List<decimal>();
             var currentBalance = initialBalance;
+
+            balanceOverTime.Add(initialBalance);
             foreach (Transaction transaction in transactions)
             {
                 currentBalance -= transaction.Amount;
                 balanceOverTime.Add(currentBalance);
             }
-            return balanceOverTime.AsEnumerable();
+
+            return balanceOverTime.AsEnumerable().Reverse();
         }
 
         private IEnumerable<Transaction> FilterAccountTransactions(BankAccount account, Func<Transaction, bool> condition)
@@ -48,9 +51,9 @@ namespace InternshipProject.ApplicationLogic.Services
                             .AsEnumerable();
         }
 
-        private BankAccount GetChosenBankAccount(string userId)
+        private BankAccount GetBankAccountWithMostTransactions(string userId)
         {
-            BankAccount chosenBankAccount = null;
+            BankAccount maxransactionsBankAccount = null;
             int maxTransactions = 0;
 
             foreach (BankAccount account in GetCustomerBankAccounts(userId))
@@ -59,20 +62,20 @@ namespace InternshipProject.ApplicationLogic.Services
                 if (transactionCount > maxTransactions)
                 {
                     maxTransactions = transactionCount;
-                    chosenBankAccount = account;
+                    maxransactionsBankAccount = account;
                 }
             }
 
-            return chosenBankAccount;
+            return maxransactionsBankAccount;
         }
 
-        public IEnumerable<int> GetMostTransactionAccount(string userId)
+        public IEnumerable<int> GetIndexListForTransactions(string userId)
         {
             List<int> transactionList = new List<int>();
 
-            BankAccount chosenBankAccount = GetChosenBankAccount(userId);
-
-            for (int i = 1; i <= chosenBankAccount.Transactions.Count(); i++)
+            BankAccount chosenBankAccount = GetBankAccountWithMostTransactions(userId);
+            
+            for (int i = 0; i <= chosenBankAccount.Transactions.Count(); i++)
             {
                 transactionList.Add(i);
             }
@@ -82,7 +85,6 @@ namespace InternshipProject.ApplicationLogic.Services
 
         public IEnumerable<decimal> BankAccountHistoryAllTime(BankAccount bankAccount)
         {
-            
             var sortedTransactions = FilterAccountTransactions(bankAccount, t => true);
             return ProcessBalanceHistory(bankAccount.Balance, sortedTransactions);
         }

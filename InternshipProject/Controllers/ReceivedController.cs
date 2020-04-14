@@ -16,10 +16,11 @@ namespace InternshipProject.Controllers
     public class ReceivedController : Controller
     {
         private readonly UserManager<IdentityUser> userManager;
-
         private readonly AccountsService customerServices;
-        TransactionService transactionService;
-        public ReceivedController(UserManager<IdentityUser> userManager, AccountsService customerServices,TransactionService transactionService)
+
+        private readonly TransactionService transactionService;
+
+        public ReceivedController(UserManager<IdentityUser> userManager, AccountsService customerServices, TransactionService transactionService)
 
        
         {
@@ -37,15 +38,14 @@ namespace InternshipProject.Controllers
                 var customer = customerServices.GetCustomer(userId);
                 List<Transaction> received = new List<Transaction>() ;
                
-                
-                
                 var viewModel = new ReceivedListViewModel()
                 {
                     //IsSelected = viewModel.IsSelected,
                     CustomerName = $"{customer.FirstName} {customer.LastName}",
                     PhoneNo = customer.ContactDetails?.PhoneNo,
                     BankAccounts = customer.BankAccounts,
-                    //Transactions = received
+                   //Transactions = received
+                    //receivedService
             };
                 return View(viewModel);
             }
@@ -81,6 +81,7 @@ namespace InternshipProject.Controllers
             transactionService.AddReceived(viewModel.Amount, viewModel.ExternalName, viewModel.ExternalIBAN, viewModel.BankAccountId);
             return RedirectToAction("Index");
         }
+
         public IActionResult ChangeTabel(int option)
         {
             var userId = userManager.GetUserId(User);
