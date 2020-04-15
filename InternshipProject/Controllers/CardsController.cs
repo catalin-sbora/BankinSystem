@@ -63,7 +63,7 @@ namespace InternshipProject.Controllers
         }
        
         
-        public ActionResult CardPayments(Guid Id ,[FromForm] CardTransactionsListViewModel model)
+        public ActionResult CardPayments(Guid Id ,[FromForm] CardTransactionsListViewModel model , string OwnerName , string SerialNumber)
         {
             
             string userId = userManager.GetUserId(User);
@@ -77,6 +77,7 @@ namespace InternshipProject.Controllers
                 var customer = customerServices.GetCustomer(userId);
                 var bankAccounts = customerServices.GetCustomerBankAccounts(userId);
                 var card = cardService.GetCardByCardId(Id);
+                model.CardId = Id;
                  
                 
                 var cardTransactions = cardService.GetFilteredCardTransactions(card.Id ,model.SearchBy,model.TransactionType);
@@ -94,6 +95,8 @@ namespace InternshipProject.Controllers
                 
                 //CardTransactionsListViewModel cardTransactionsListViewModel = new CardTransactionsListViewModel();
                 model.CardTransactions = cardTransactionViewModel;
+                model.OwnerName = OwnerName;
+                model.SerialNumber = SerialNumber;
                 //cardTransactionsListViewModel.BankAccountId = bankAccount.Id;
                
                    
@@ -107,51 +110,40 @@ namespace InternshipProject.Controllers
                 
             }
         }
-        public IActionResult NewCardTransaction()
-        {
-            var userId = userManager.GetUserId(User);
-            try
-            {
-                var customer = customerServices.GetCustomer(userId);
-                var bankAccounts = customerServices.GetCustomerBankAccounts(userId);
-                List<Card> cards = new List<Card>();
-                foreach (var bankAccount in bankAccounts)
-                {
-                    cards.AddRange(customerServices.GetCardsByUserID(bankAccount.Id.ToString()));
-
-                }
-
-                TransactionViewModel transactionViewModel = new TransactionViewModel()
-                {
-                    CardList = cards
-                };
-
-                return View(transactionViewModel);
-            }
-            catch(Exception e)
-            {
-                return BadRequest("Unable to process your request");
-            }
-        }
+        
+       
 
         [HttpPost]
         public IActionResult CreateCardTransaction([FromForm]TransactionViewModel viewModel)
         {
+            var model = new TransactionViewModel { PaymentStatus = NewPaymentStatus.Failed };
+            if(!ModelState.IsValid ||
+                viewModel.IBan == null ||
+                viewModel.ExternalName == null ||
+                viewModel.Amount == 0)
+                return PartialView("NewPaymentPartial", model);
+            ModelState.Clear();
             try
             {
                
                 var transaction = Transaction.Create(viewModel.Amount, viewModel.ExternalName, viewModel.IBan, null);
                 transaction.BankAccountId = cardService.GetCardByCardId(viewModel.CardId).BankAccount.Id;
+                var card = cardService.GetCardByCardId(viewModel.CardId);
                  var cardTransaction = CardTransaction.Create(transaction, CardTransactionType.Online);
-                transactionService.Add(transaction);
-                cardService.AddTransaction(cardTransaction);
+                transactionService.AddTransaction(transaction);
+                var getCardTransaction = cardService.AddTransaction(cardTransaction);
+                card.CardTransactions.Add(getCardTransaction);
+                cardService.AddCardTransaction(card);
                 var id = viewModel.CardId;
-                return RedirectToAction("CardPayments", new {Id=id , SearchBy = ""});
+                // return RedirectToAction("CardPayments", new {Id=id , SearchBy = ""});
+                model.PaymentMessage = "Done";
+                model.PaymentStatus = NewPaymentStatus.Created;
             }
             catch(Exception e)
             {
                 return BadRequest("Unable to process your request");
             }
+            return PartialView("_NewPaymentPartial", model);
         }
     }
 }
