@@ -52,14 +52,14 @@
         <strong>
             @Html.Label("Select Account")
         </strong>
-        @Html.DropDownListFor(payment => payment.CardId, new SelectList(Model.CardList, "Id", "CVV"), "", new { @class = "form-control" })
+        <input type="hidden" value="@Model.CardId" name="CardId" />
     </div>
-
-    <br />
-
-
+   @*  @Html.DropDownListFor(payment => payment.CardId, new SelectList(Model.CardList, "Id", "CVV"), "", new { @class = "form-control" }) *@
+            <br />
 
 
-</div>
-    <button class=" btn-primary " style="margin-left:20px">Create</button>
-}
+
+
+        </div>
+            <button class=" btn-primary " style="margin-left:20px">Create</button>
+        }

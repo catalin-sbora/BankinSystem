@@ -86,6 +86,7 @@ namespace InternshipProject.Controllers
        
         public IActionResult Transactions([FromRoute]Guid accountId, [FromQuery]string searchString)
         {
+            
             string userId = userManager.GetUserId(User);
             try
             {
@@ -173,9 +174,15 @@ namespace InternshipProject.Controllers
                 viewModelResult.PaymentStatus = NewPaymentStatus.Failed;
                 viewModelResult.PaymentMessage = "Not enough funds available";
             }
+            catch (WrongCurrencyException)
+            {
+                viewModelResult.PaymentStatus = NewPaymentStatus.Failed;
+                viewModelResult.PaymentMessage = "Payments not allowed for accounts with different currency";
+            }
             catch (Exception e)
             {
                 viewModelResult.PaymentStatus = NewPaymentStatus.Failed;
+                viewModelResult.PaymentMessage = "Unexpected error occured";
             }
             return PartialView("_NewPaymentPartial", viewModelResult);///RedirectToAction("Details", "Accounts", new { id = paymentData.SourceAccount.ToString() });                 
         }

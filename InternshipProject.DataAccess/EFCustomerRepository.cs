@@ -51,6 +51,22 @@ namespace InternshipProject.EFDataAccess
             return customerEntity.Entity;
         }
 
-       
+        public Customer GetCustomerThatOwnsIban(string iban)
+        {
+            var bankAccount = dbContext.BankAccounts
+                                        .Where(ba => ba.IBAN.Equals(iban))
+                                        .FirstOrDefault();
+            Customer customer = null;
+            
+            if (bankAccount != null)
+            {            
+
+                customer = dbContext.Customers.Where(c => c.BankAccounts
+                                                           .Where(ba => ba.Id == bankAccount.Id)
+                                                           .Count() > 0)
+                                              .FirstOrDefault();                                        
+            }
+            return customer;
+        }
     }
 }

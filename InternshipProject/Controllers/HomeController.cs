@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using InternshipProject.Models;
 using InternshipProject.ApplicationLogic.Services;
+using Serilog;
 
 namespace InternshipProject.Controllers
 {
@@ -24,7 +25,12 @@ namespace InternshipProject.Controllers
         
         public IActionResult Index()
         {
-           
+            
+            _logger.LogError("******* Error message *****");
+            _logger.LogWarning("****Warning Message *****");
+            _logger.LogInformation("****Information Message *****");
+            _logger.LogDebug("****** Debug Message *******");
+
             return View();
         }
 
@@ -36,6 +42,7 @@ namespace InternshipProject.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
+            _logger.LogDebug("Error enocuntered TraceId: " + HttpContext.TraceIdentifier);
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }

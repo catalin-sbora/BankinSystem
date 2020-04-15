@@ -78,7 +78,7 @@ namespace InternshipProject.ApplicationLogic.Model
             }
             
             Transactions.Count();
-            var transaction = Transaction.Create(-amount, destinationName, destinationIBAN, description);
+            var transaction = Transaction.Create(-amount, Id, destinationName, destinationIBAN, description);
 
             AddTransaction(transaction);
             
@@ -96,7 +96,7 @@ namespace InternshipProject.ApplicationLogic.Model
                 throw new Exception("");
 
             Transactions.Count();
-            var transaction = Transaction.Create(amount, sourceName, sourceIBAN, description);
+            var transaction = Transaction.Create(amount, Id, sourceName, sourceIBAN, description);
             AddTransaction(transaction);
 
             Balance += amount;

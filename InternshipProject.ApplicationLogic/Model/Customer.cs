@@ -89,6 +89,20 @@ namespace InternshipProject.ApplicationLogic.Model
             return bankAccount.CreatePayment(amount, destinationName, destinationIBAN, details);
         }
 
+        public void NotifyTransaction(Transaction transaction, Customer sender)
+        {
+            var bankAccount = GetBankAccountByIBAN(transaction.ExternalIBAN);
+            var senderAccount = sender.BankAccounts.Where(ba => ba.Id == transaction.BankAccountId).FirstOrDefault();
+            if (senderAccount == null)
+            {
+                throw new AccountNotFoundException(transaction.BankAccountId);
+            }
+            bankAccount.CreateReceive(Math.Abs(transaction.Amount), 
+                                    $"{sender.FirstName} {sender.LastName}", 
+                                    senderAccount.IBAN, 
+                                    transaction.Details);
+        }
+
         public void NotifyTransaction(Transaction transaction, string sourceIBAN)
         {
             var bankAccount = GetBankAccountByIBAN(transaction.ExternalIBAN);

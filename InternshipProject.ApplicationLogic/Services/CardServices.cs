@@ -53,7 +53,10 @@ namespace InternshipProject.ApplicationLogic.Services
                                       transaction.Transaction.Amount.ToString().Contains(searchBy)).ToList();
             }
             return transactions.AsEnumerable();
-
         }
+            public void AddCardTransaction(Card card)
+            {
+            cardRepository.AddCardTransaction(card);
+            }
     }
 }

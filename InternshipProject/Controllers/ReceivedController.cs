@@ -20,16 +20,16 @@ namespace InternshipProject.Controllers
         private readonly UserManager<IdentityUser> userManager;
         private readonly AccountsService customerServices;
 
-        private readonly TransactionService transactionService;
+        private readonly PaymentsService transactionService;
         private readonly ReceivedService receivedService;
         private readonly RazorPagesReportingEngine reportingEngine;
-        public ReceivedController(UserManager<IdentityUser> userManager, AccountsService customerServices, TransactionService transactionService, ReceivedService receivedService, RazorPagesReportingEngine reportingEngine)       
+        public ReceivedController(UserManager<IdentityUser> userManager, AccountsService customerServices, PaymentsService transactionService, ReceivedService receivedService, RazorPagesReportingEngine reportingEngine)       
         {
             this.reportingEngine = reportingEngine;
             this.receivedService = receivedService;
             this.userManager = userManager;
             this.customerServices = customerServices;
-            this.transactionService = transactionService;
+            //this.transactionService = transactionService;
         }
       
         public IActionResult IndexAsync()
@@ -120,7 +120,7 @@ namespace InternshipProject.Controllers
         [HttpPost]
         public IActionResult Create(AddReceivedViewModel viewModel)
         {
-            transactionService.AddReceived(viewModel.Amount, viewModel.ExternalName, viewModel.ExternalIBAN, viewModel.BankAccountId);
+            //transactionService.AddReceived(viewModel.Amount, viewModel.ExternalName, viewModel.ExternalIBAN, viewModel.BankAccountId);
             return RedirectToAction("Index");
         }
 
