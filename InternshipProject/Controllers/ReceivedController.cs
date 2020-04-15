@@ -25,7 +25,7 @@ namespace InternshipProject.Controllers
         {
             this.userManager = userManager;
             this.customerServices = customerServices;
-            this.transactionService = transactionService;
+            //this.transactionService = transactionService;
         }
         //[HttpPost]
      
@@ -78,7 +78,7 @@ namespace InternshipProject.Controllers
         [HttpPost]
         public IActionResult Create(AddReceivedViewModel viewModel)
         {
-            transactionService.AddReceived(viewModel.Amount, viewModel.ExternalName, viewModel.ExternalIBAN, viewModel.BankAccountId);
+            //transactionService.AddReceived(viewModel.Amount, viewModel.ExternalName, viewModel.ExternalIBAN, viewModel.BankAccountId);
             return RedirectToAction("Index");
         }
         public IActionResult ChangeTabel(int option)

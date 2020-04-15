@@ -6,6 +6,12 @@ using System.Threading.Tasks;
 
 namespace InternshipProject.ViewModels.Payments
 {
+    public enum NewPaymentStatus
+    {
+        NotInitiated = 0,
+        Created,
+        Failed
+    }
     public class NewPaymentViewModel
     {
         public string ExternalIBAN { get; set; }
@@ -13,5 +19,7 @@ namespace InternshipProject.ViewModels.Payments
         public decimal Amount { get; set; }
         public string BankAccountId { get; set; }
         public IEnumerable<BankAccount> BanksAccount { get; set; }
+        public NewPaymentStatus PaymentStatus { get; set; }
+        public string PaymentMessage { get; set; }
     }
 }

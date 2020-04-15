@@ -1,7 +1,37 @@
-﻿@model InternshipProject.ViewModels.Payments.PaymentsViewModel
+﻿@using InternshipProject.ViewModels.Payments;
+@model InternshipProject.ViewModels.Payments.PaymentsViewModel
 @{
     ViewData["Title"] = "Index";
 }
+
+@section Scripts{
+
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/partialViewLoader.js" type="text/javascript"></script>
+    <script>
+        function onPaymentOperationSuccess() {
+            $("#payButton").hide();
+        }
+
+        function onPaymentOperationFailure() {
+            $("#payButton").hide();
+        }
+
+        $(document).ready(function () {
+             $('#newPaymentModal').on('show.bs.modal', function (event) {
+                $("#payButton").show();               
+             });
+
+            $('#newPaymentModal').on('hidden.bs.modal', function (event) {
+                $("#newPaymentBody").html = "";
+                loadServerPartialView("#newPaymentBody", "/Payments/New");
+            });
+        });
+    </script>
+}
+
+
+
 
 <div class="d-flex justify-content-end">
 
@@ -54,22 +84,20 @@
     <div class="d-flex flex-column flex-grow-1">
         <a href="#" class="btn btn-light light-button mr-0 mr-md-auto mb-4"><i class="fas fa-filter"></i> Filter </a>
     </div>
+
     <div class="d-flex flex-column ">
         <div class="input-group mb-3">
             <div class="input-group-prepend">
-                @using (Html.BeginForm("New", "Payments"))
-                {
-                    <button class="btn btn-light light-button mt-4" type="submit">
+                    <button class="btn btn-light light-button mt-4" data-toggle="modal" data-target="#newPaymentModal">
                         <i class="fas fa-money-bill"></i> New Payment
                     </button>
-                }
             </div>
         </div>
     </div>
 </div>
 
 <br />
-<form class="searchButtonPayments " action="/{searchString}" style="margin: auto; width: 300px; margin-right: 0px;">
+<form class="searchButtonPayments " asp-controller="Payments" asp-action="Index" method="get" style="margin: auto; width: 300px; margin-right: 0px;">
     <input type="text" placeholder="Search.." name="searchString">
     <button type="submit">
         <i class="fas fa-search"></i>
@@ -112,3 +140,33 @@
 </div>
 
 
+<form id="newPaymentForm" method="post" asp-controller="Payments" asp-action="New"
+      data
+      -ajax="true"
+      data-ajax-method="POST"
+      data-ajax-mode="replace"
+      data-ajax-update="#newPaymentBody">
+
+    @Html.AntiForgeryToken()
+    <div class="modal" id="newPaymentModal" tabindex="-1" role="dialog" aria-labelledby="newPaymentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title font-weight-bold" id="newPaymentModalLabel">New Payment</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div id="newPaymentBody" class="modal-body">
+                    @await Html.PartialAsync("_NewPaymentPartial", new NewPaymentViewModel { BanksAccount = Model.BanksAccounts })
+                </div>
+                <div id="payFailureMessage" class="text-danger ml-5"></div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary shadow-button" data-dismiss="modal">Close</button>
+                    <button id="payButton" type="submit" class="btn btn-danger shadow-button"> Pay </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

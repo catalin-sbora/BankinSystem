@@ -12,11 +12,11 @@ namespace InternshipProject.Controllers
 {
     public class CardsController : Controller
     {
-        private TransactionService transactionService;
+        private PaymentsService transactionService;
         private UserManager<IdentityUser> userManager;
         private AccountsService customerServices;
         private CardServices cardService;
-        public CardsController(AccountsService customerServices, UserManager<IdentityUser> userManager, CardServices cardService,TransactionService transactionService)
+        public CardsController(AccountsService customerServices, UserManager<IdentityUser> userManager, CardServices cardService,PaymentsService transactionService)
        
         {
             this.transactionService = transactionService;
@@ -84,7 +84,7 @@ namespace InternshipProject.Controllers
                     }
                 }
                 List<CardTransactionViewModel> cardTransactionViewModel = new List<CardTransactionViewModel>();
-                var transactions = transactionService.GetTransactionsFromBankAccount(bankAccount.Id);
+                var transactions = customerServices.GetTransactionBankAccount(userId, bankAccount.Id);
                 foreach (var transaction in transactions)
                 {
                     CardTransactionViewModel temp = new CardTransactionViewModel();

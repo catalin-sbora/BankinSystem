@@ -7,9 +7,9 @@ using System.Text;
 
 namespace InternshipProject.EFDataAccess
 {
-    public class EFTransactionRepository : BaseRepository<Transaction>, ITransactionRepository
+    public class EFPaymentsRepository : BaseRepository<Transaction>, ITransactionRepository
     {
-        public EFTransactionRepository(BankingDbContext dbContext) : base(dbContext)
+        public EFPaymentsRepository(BankingDbContext dbContext) : base(dbContext)
         { }
 
         public Transaction GetTransactionById(Guid transactionId)

@@ -98,7 +98,7 @@ namespace InternshipProject.ApplicationLogic.Model
             var transaction = Transaction.Create(amount, sourceName, sourceIBAN, description);
             AddTransaction(transaction);
             Balance += amount;
-
+            return transaction;
   
         }
 

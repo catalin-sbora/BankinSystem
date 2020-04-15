@@ -90,7 +90,6 @@ namespace InternshipProject.ApplicationLogic.Services
 
             return account;
         }       
-
         public IEnumerable<Card> GetCardsByUserID(string userID)
         {
             Guid idToSearch = Guid.Empty;
@@ -98,6 +97,13 @@ namespace InternshipProject.ApplicationLogic.Services
             var cards = cardRepository.GetByUserId(idToSearch);
             return cards;
         }
+        public IEnumerable<Transaction> GetTransactionBankAccount(string userId, Guid bankAccountId)
+        {
+            Guid idToSearch = Guid.Empty;
+            Guid.TryParse(userId, out idToSearch);
 
+            var bankAccount = GetCustomerBankAccount(userId, bankAccountId);
+            return bankAccount.Transactions;
+        }
     }
 }
