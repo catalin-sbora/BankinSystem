@@ -100,7 +100,7 @@ namespace InternshipProject.ApplicationLogic.Services
 
 
         }
-        public void Add(Transaction transaction)
+        public void AddTransaction(Transaction transaction)
         {
             transactionRepository.Add(transaction);
         }

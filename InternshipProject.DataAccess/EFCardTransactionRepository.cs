@@ -28,5 +28,6 @@ namespace InternshipProject.EFDataAccess
             }
             return cardTransactions.AsEnumerable();
         }
+        
     }
 }
