@@ -95,8 +95,10 @@ namespace InternshipProject.ApplicationLogic.Model
             if (amount <= 0)
                 throw new Exception("");
 
+            Transactions.Count();
             var transaction = Transaction.Create(amount, sourceName, sourceIBAN, description);
             AddTransaction(transaction);
+
             Balance += amount;
 
             return transaction;

@@ -23,35 +23,43 @@
 
 @using (Html.BeginForm("CreateCardTransaction", "Cards"))
 {
-    <div style="width: 270px; padding-left: 25px;">
-        <div class="form-group ">
-            <strong>
-                @Html.Label("External IBAN")
-            </strong>
-            <div style="margin-left:10px"></div>
-            @Html.TextBoxFor(payment => payment.IBan, new { @class = "form-control" })
-        </div>
-        <br />
-        <div class="form-group">
-            <strong>
-                @Html.Label("Amount")
-            </strong>
-            <div style="margin-left:10px"></div>
-            @Html.TextBoxFor(payment => payment.Amount, new { @class = "form-control" })
-        </div>
-        <br />
-        <div class="form-group">
-            <strong>
-                @Html.Label("Select Account")
-            </strong>
-            @Html.DropDownListFor(payment => payment.CardId, new SelectList(Model.CardList, "Id", "CVV"), "", new { @class = "form-control" })
-        </div>
-
-        <br />
-
-
-
-
+<div style="width: 270px; padding-left: 25px;">
+    <div class="form-group ">
+        <strong>
+            @Html.Label("External IBAN")
+        </strong>
+        <div style="margin-left:10px"></div>
+        @Html.TextBoxFor(payment => payment.IBan, new { @class = "form-control" })
     </div>
+    <br />
+    <div class="form-group ">
+        <strong>
+            @Html.Label("External Name")
+        </strong>
+        <div style="margin-left:10px"></div>
+        @Html.TextBoxFor(payment => payment.ExternalName, new { @class = "form-control" })
+    </div>
+    <br />
+    <div class="form-group">
+        <strong>
+            @Html.Label("Amount")
+        </strong>
+        <div style="margin-left:10px"></div>
+        @Html.TextBoxFor(payment => payment.Amount, new { @class = "form-control" })
+    </div>
+    <br />
+    <div class="form-group">
+        <strong>
+            @Html.Label("Select Account")
+        </strong>
+        @Html.DropDownListFor(payment => payment.CardId, new SelectList(Model.CardList, "Id", "CVV"), "", new { @class = "form-control" })
+    </div>
+
+    <br />
+
+
+
+
+</div>
     <button class=" btn-primary " style="margin-left:20px">Create</button>
 }

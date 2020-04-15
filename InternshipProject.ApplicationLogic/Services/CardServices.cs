@@ -2,6 +2,7 @@
 using InternshipProject.ApplicationLogic.Model;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace InternshipProject.ApplicationLogic.Services
@@ -23,19 +24,36 @@ namespace InternshipProject.ApplicationLogic.Services
         {
             return cardRepository.GetById(CardId);
         }
-        public CardTransaction AddTransaction(decimal amount, string iban, Guid cardId )
+        public CardTransaction AddTransaction(CardTransaction cardTransaction)
         {
-           // Guid guidCardId = Guid.Empty;
-            //Guid.TryParse(cardId, out guidCardId);
+             cardTransactionRepository.Add(cardTransaction);
+             return cardTransaction;
+        }
+        public IEnumerable<CardTransaction> GetAllCardTransactions(Guid cardId)
+        {
+            var card = GetCardByCardId(cardId);
+            return card.CardTransactions;
+           // return cardTransactionRepository.GetCardTransactions(transactions);
+        }
+        public IEnumerable<CardTransaction> GetFilteredCardTransactions(Guid cardId ,string searchBy, CardTransactionType? type )
+        {
+            var card = GetCardByCardId(cardId);
+            var transactions = card.CardTransactions;
+            if (type != null)
 
-            var transaction = Transaction.Create(amount, iban, null, null);
-            transaction.BankAccountId = GetCardByCardId(cardId).BankAccount.Id;
-            var cardTransaction = CardTransaction.Create(transaction, CardTransactionType.Online );
-            transactionRepository.Add(transaction);
-            cardTransactionRepository.Add(cardTransaction);
-           // var cardSelected = cardRepository.GetById(cardId);
-            //cardSelected.CardTransactions.Add(cardTransaction);
-            return cardTransaction;
+            {
+             transactions = transactions.Where(cardTransaction=> cardTransaction.TransactionType == type.Value ).ToList();
+            }
+            if(!string.IsNullOrEmpty(searchBy))
+            {
+                searchBy = searchBy.ToLower();
+                transactions = transactions.Where(transaction =>
+                                      transaction.Transaction.ExternalName.ToLower().Contains(searchBy) ||
+                                      transaction.Transaction.Time.ToString().Contains(searchBy) ||
+                                      transaction.Transaction.Amount.ToString().Contains(searchBy)).ToList();
+            }
+            return transactions.AsEnumerable();
+
         }
     }
 }

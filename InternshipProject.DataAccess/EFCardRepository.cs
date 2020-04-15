@@ -19,5 +19,7 @@ namespace InternshipProject.EFDataAccess
             var cardList = dbContext.Cards.Where(user => user.BankAccount.Id == userId);
             return cardList;
         }    
+        
+        
     }
 }

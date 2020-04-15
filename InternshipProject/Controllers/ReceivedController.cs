@@ -19,6 +19,7 @@ namespace InternshipProject.Controllers
     {
         private readonly UserManager<IdentityUser> userManager;
         private readonly AccountsService customerServices;
+
         private readonly TransactionService transactionService;
         private readonly ReceivedService receivedService;
         private readonly RazorPagesReportingEngine reportingEngine;
@@ -36,11 +37,9 @@ namespace InternshipProject.Controllers
             var userId = userManager.GetUserId(User);
             var customer = customerServices.GetCustomer(userId);
             try
-            {  
-                
+            {                 
                 
                 var received = receivedService.GetCustomerTransaction(userId, customer);
-
                 var viewModel = new ReceivedListViewModel()
                 {
                     //IsSelected = viewModel.IsSelected,
@@ -49,6 +48,7 @@ namespace InternshipProject.Controllers
                     BankAccounts = customer.BankAccounts,
                     Received = received.OrderByDescending(transaction => transaction.Time)
                 };
+
                 return View(viewModel);
             }
             catch (Exception e) 
@@ -123,6 +123,7 @@ namespace InternshipProject.Controllers
             transactionService.AddReceived(viewModel.Amount, viewModel.ExternalName, viewModel.ExternalIBAN, viewModel.BankAccountId);
             return RedirectToAction("Index");
         }
+
         public IActionResult ChangeTabel(int option)
         {
             var userId = userManager.GetUserId(User);

@@ -70,6 +70,7 @@ h1{
     font-size: 24px;
     font-weight:bold;
 }
+
 .footer {
   position: absolute;
   bottom: 0;
@@ -157,24 +158,6 @@ form.searchButtonPayments::after {
     display: table;
 }
 
-
-/*Grid for Accout's Name/Contact information used in Statistics*/
-
-.account-grid {
-    justify-content: end;
-    display: grid;
-    grid-template-columns: 100px 100px;
-}
-
-.account-grid-main-component {
-    text-align: left;
-    font-weight: bold;
-}
-
-.account-grid-data-component {
-    text-align: right;
-}
-
 /*Statistic Buttons*/
 
 .statistics-button {
@@ -182,13 +165,12 @@ form.searchButtonPayments::after {
     width: 120px;
     font-size: 25px;
     font-weight: bold;
-    border-color: #005700;
-    border-width: 1.5px;
-    background-color: #60A917;
-    color: #FFFFFF;
+    color: white;
+    margin: 5px;
+    background-color: #3a2a5e;
     border-radius: 8px;
+    border: 0px solid white;
 }
-
 
 .customer-details-label {
     

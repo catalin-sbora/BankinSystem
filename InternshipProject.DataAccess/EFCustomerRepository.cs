@@ -25,6 +25,14 @@ namespace InternshipProject.EFDataAccess
             return customersList.AsEnumerable();
         }
 
+        public IEnumerable<Customer> GetCustomerstWithBankAccounts()
+        {
+            return dbContext.Customers
+                                .Where(customer =>
+                                customer.BankAccounts.Count() > 0);
+        }
+
+
         public Customer GetCustomerByUserId(Guid userId)
         {
             var foundCustomer = dbContext.Customers  
