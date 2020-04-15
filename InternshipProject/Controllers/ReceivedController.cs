@@ -20,10 +20,10 @@ namespace InternshipProject.Controllers
         private readonly UserManager<IdentityUser> userManager;
         private readonly AccountsService customerServices;
 
-        private readonly TransactionService transactionService;
+        private readonly PaymentsService transactionService;
         private readonly ReceivedService receivedService;
         private readonly RazorPagesReportingEngine reportingEngine;
-        public ReceivedController(UserManager<IdentityUser> userManager, AccountsService customerServices, TransactionService transactionService, ReceivedService receivedService, RazorPagesReportingEngine reportingEngine)       
+        public ReceivedController(UserManager<IdentityUser> userManager, AccountsService customerServices, PaymentsService transactionService, ReceivedService receivedService, RazorPagesReportingEngine reportingEngine)       
         {
             this.reportingEngine = reportingEngine;
             this.receivedService = receivedService;

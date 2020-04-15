@@ -13,7 +13,7 @@ namespace InternshipProject.Controllers
 {
     public class CardsController : Controller
     {
-        private TransactionService transactionService;
+        private PaymentsService transactionService;
         private UserManager<IdentityUser> userManager;
         private AccountsService customerServices;
         private CardServices cardService;
@@ -21,7 +21,7 @@ namespace InternshipProject.Controllers
         public CardsController(AccountsService customerServices, 
                                 UserManager<IdentityUser> userManager, 
                                 CardServices cardService,
-                                TransactionService transactionService,
+                                PaymentsService transactionService,
                                 ILogger<CardsController> logger)
        
         {
@@ -132,9 +132,10 @@ namespace InternshipProject.Controllers
             {
                 var sourceAccountId = cardService.GetCardByCardId(viewModel.CardId).BankAccount.Id;
                 var transaction = Transaction.Create(viewModel.Amount, sourceAccountId, viewModel.ExternalName, viewModel.IBan, null);
-                
-                 var cardTransaction = CardTransaction.Create(transaction, CardTransactionType.Online);
-                transactionService.AddTransaction(transaction);
+                var card = cardService.GetCardByCardId(viewModel.CardId);
+
+                var cardTransaction = CardTransaction.Create(transaction, CardTransactionType.Online);
+                transactionService.AddPayment(sourceAccountId.ToString(), transaction.Amount, transaction.ExternalName, transaction.ExternalIBAN);
                 var getCardTransaction = cardService.AddTransaction(cardTransaction);
                 card.CardTransactions.Add(getCardTransaction);
                 cardService.AddCardTransaction(card);
