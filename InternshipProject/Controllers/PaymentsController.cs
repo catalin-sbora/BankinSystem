@@ -16,40 +16,40 @@ namespace InternshipProject.Controllers
     public class PaymentsController : Controller
     {
         private readonly UserManager<IdentityUser> userManager;
-        private readonly AccountsService customerServices;
-        private readonly TransactionService transactionService;
+        private readonly AccountsService accountService;
+        private readonly PaymentsService paymentsService;
 
         public PaymentsController(UserManager<IdentityUser> userManager, 
             AccountsService accountsService, 
-            TransactionService transactionService)
+            PaymentsService paymentsService)
         {
             this.userManager = userManager;
-            this.customerServices = accountsService;
-            this.transactionService = transactionService;
+            this.accountService = accountsService;
+            this.paymentsService = paymentsService;
         }
 
-        [HttpGet("{searchString?}")]
+        [HttpGet]
         public IActionResult Index([FromQuery]string searchString)
         {
             var userId = userManager.GetUserId(User);
-            var customer = customerServices.GetCustomer(userId);
+            var customer = accountService.GetCustomer(userId);
             
             if (!String.IsNullOrEmpty(searchString))
             {
                 try
                 {
-                    var transactionList = transactionService.SearchedTransactions(searchString, userId);
+                    var paymentsList = paymentsService.GetFilteredPayments(userId, searchString);
                     var viewModel = new PaymentsViewModel
                     {
                         BanksAccounts = customer.BankAccounts,
                         CustomerName = $"{customer.FirstName} {customer.LastName}",
                         CustomerPhoneNo = customer.ContactDetails?.PhoneNo,
-                        Transactions = transactionList.OrderByDescending(transaction => transaction.Time)
+                        Transactions = paymentsList.OrderByDescending(payment => payment.Time)
                     };
 
                     return View(viewModel);
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     return BadRequest(e.Message);
                 }
@@ -63,9 +63,9 @@ namespace InternshipProject.Controllers
                         CustomerName = $"{customer.FirstName} {customer.LastName}",
                         CustomerPhoneNo = customer.ContactDetails?.PhoneNo,
                         BanksAccounts = customer.BankAccounts,
-                        Transactions = transactionService.GetUserTransactions(userId)
-                                        
+                        Transactions = paymentsService.GetCustomerPayments(userId).OrderByDescending(payment => payment.Time)
                     };
+
                     return View(viewModel);
                 }
                 catch (Exception e)
@@ -75,36 +75,64 @@ namespace InternshipProject.Controllers
             }
         }
 
+        [HttpGet]
         public IActionResult New()
         {
             var userId = userManager.GetUserId(User);
-            try
+            var customer = accountService.GetCustomer(userId);
+            var viewModel = new NewPaymentViewModel()
             {
-                var customer = customerServices.GetCustomer(userId);
-                var viewModel = new NewPaymentViewModel()
-                {
-                    BanksAccount = customer.BankAccounts
-                };
-
-                return View(viewModel);
-            }
-            catch(Exception e)
-            {
-                return BadRequest(e.Message);
-            }
+                BanksAccount = customer.BankAccounts,
+                PaymentStatus = NewPaymentStatus.NotInitiated
+            };
+            return PartialView("_NewPaymentPartial", viewModel);
         }
 
         [HttpPost]
-        public IActionResult Create(NewPaymentViewModel viewModel)
+        public IActionResult New([FromForm]NewPaymentViewModel paymentData)
         {
-            transactionService.Add(viewModel.Amount, viewModel.ExternalName, viewModel.ExternalIBAN, viewModel.BankAccountId);
+            NewPaymentViewModel viewModelResult = new NewPaymentViewModel()
+            {
+                PaymentStatus = NewPaymentStatus.Failed
+            };
+
+            if (!ModelState.IsValid ||
+                paymentData == null ||
+                paymentData.BankAccountId == null ||
+                paymentData.Amount == null
+                )
+                return PartialView("_NewPaymentPartial", viewModelResult);
+
+            ModelState.Clear();
+            try
+            {
+                var userId = userManager.GetUserId(User);
+                paymentsService.AddPayment(paymentData.BankAccountId,
+                                           paymentData.Amount,
+                                           paymentData.ExternalName,
+                                           paymentData.ExternalIBAN);
+
+                viewModelResult.PaymentMessage = "Done";
+                viewModelResult.PaymentStatus = NewPaymentStatus.Created;
+            }
+            catch (NotEnoughFundsException)
+            {
+                viewModelResult.PaymentStatus = NewPaymentStatus.Failed;
+                viewModelResult.PaymentMessage = "Not enough funds available";
+            }
+            catch (Exception e)
+            {
+                viewModelResult.PaymentStatus = NewPaymentStatus.Failed;
+            }
+            //return PartialView("_NewPaymentPartial", viewModelResult);
             return RedirectToAction("Index");
         }
 
         public IActionResult Details(string Id)
         {
-            var transaction = transactionService.GetById(Id);
-            return View(transaction);
+            var payment = paymentsService.GetById(Id);
+            return View(payment);
         }
     }
 }
+
