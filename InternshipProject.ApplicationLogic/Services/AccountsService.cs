@@ -49,41 +49,45 @@ namespace InternshipProject.ApplicationLogic.Services
         public void CreateAccountPayment(string userId, Guid account, decimal amount, string destinationName, string destinationIBAN, string details)
         {
             var sendingCustomer = GetCustomer(userId);
+            var sendingAccount = sendingCustomer.GetAccount(account);
 
-            var transaction = sendingCustomer.MakePayment(account, amount, destinationName, destinationIBAN, details);
-            var sendingAccount = GetCustomerBankAccount(sendingCustomer, transaction.BankAccountId);
-            var sendingCurrency = sendingAccount.Currency;
-            var receiverCustomer = GetCustomerWithIBAN(destinationIBAN, sendingCurrency);
-
+            var receiverCustomer = customerRepository.GetCustomerThatOwnsIban(destinationIBAN);
             if (receiverCustomer != null)
             {
-                receiverCustomer.NotifyTransaction(transaction, sendingAccount.IBAN);
+                var destAccount = receiverCustomer.GetBankAccountByIBAN(destinationIBAN);
+                if (!destAccount.Currency.Equals(sendingAccount.Currency))
+                {
+                    throw new WrongCurrencyException(sendingAccount.Currency, destAccount.Currency);
+                }
+            }            
+            var transaction = sendingCustomer.MakePayment(account, amount, destinationName, destinationIBAN, details);    
+            
+            customerRepository.Update(sendingCustomer);
+            
+            if (receiverCustomer != null)
+            { 
+                receiverCustomer.NotifyTransaction(transaction, sendingCustomer);
+                customerRepository.Update(receiverCustomer);
             }
 
-            customerRepository.Update(sendingCustomer);
-            customerRepository.Update(receiverCustomer);
+
         }
 
-        public Customer GetCustomerWithIBAN(string destinationIBAN, string currency)
+        public Customer GetCustomerWithIBAN(string destinationIBAN)
         {
             foreach (Customer customer in customerRepository.GetCustomerstWithBankAccounts())
             {
                 var foundBankAccount = customer.GetBankAccountByIBAN(destinationIBAN);
                 if (foundBankAccount != null)
-                {
-                    //if (!foundBankAccount.Currency.Equals(currency))
-                    //{
-                    //    throw new WrongCurrencyException(currency, foundBankAccount.Currency);
-                    //}
+                {                   
                     return customer;
-
                 }
             }
             throw new AccountIBANNotFoundException(destinationIBAN);
         }
 
 
-        public CardColor GetCardColor(Guid cardId)
+        public CardMetaData GetCardColor(Guid cardId)
         {
             return cardColorRepository.GetColor(cardId);
         }
@@ -125,7 +129,6 @@ namespace InternshipProject.ApplicationLogic.Services
 
             return account;
         }       
-
         public IEnumerable<Card> GetCardsByUserID(string userID)
         {
             Guid idToSearch = Guid.Empty;
@@ -133,6 +136,13 @@ namespace InternshipProject.ApplicationLogic.Services
             var cards = cardRepository.GetByUserId(idToSearch);
             return cards;
         }
+        public IEnumerable<Transaction> GetTransactionBankAccount(string userId, Guid bankAccountId)
+        {
+            Guid idToSearch = Guid.Empty;
+            Guid.TryParse(userId, out idToSearch);
 
+            var bankAccount = GetCustomerBankAccount(userId, bankAccountId);
+            return bankAccount.Transactions;
+        }
     }
 }

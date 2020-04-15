@@ -25,9 +25,9 @@
         $(document).ready(function () {
 
             searchTransaction();
-            $('#newPaymentModal').on('show.bs.modal', function (event) {
-                $("#payButton").show();               
-            });
+                $('#newPaymentModal').on('show.bs.modal', function (event) {
+                    $("#payButton").show();               
+                });
 
             $('#newPaymentModal').on('hidden.bs.modal', function (event) {                
                 $("#newPaymentBody").html = "";
@@ -93,35 +93,36 @@
 
 </div>
 
-<form id="newPaymentForm" method="post" asp-controller="Accounts" asp-action="NewPayment"
-      data-ajax="true"
-      data-ajax-method="POST"            
-      data-ajax-mode="replace"
-      data-ajax-update="#newPaymentBody">
+    <form id="newPaymentForm" method="post" asp-controller="Accounts" asp-action="NewPayment"
+          data
+          -ajax="true"
+          data-ajax-method="POST"            
+          data-ajax-mode="replace"
+          data-ajax-update="#newPaymentBody">
 
-    @Html.AntiForgeryToken()
-    <div class="modal" id="newPaymentModal" tabindex="-1" role="dialog" aria-labelledby="newPaymentModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title font-weight-bold" id="newPaymentModalLabel">New Payment</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div id="newPaymentBody" class="modal-body">
-                   @await Html.PartialAsync("_NewPaymentPartial", new NewPaymentViewModel { SourceAccount = Model.BankAccount.Id }) 
-                </div>
-                <div id="payFailureMessage" class="text-danger ml-5"></div>
+        @Html.AntiForgeryToken()
+        <div class="modal" id="newPaymentModal" tabindex="-1" role="dialog" aria-labelledby="newPaymentModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title font-weight-bold" id="newPaymentModalLabel">New Payment</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div id="newPaymentBody" class="modal-body">
+                       @await Html.PartialAsync("_NewPaymentPartial", new NewPaymentViewModel { SourceAccount = Model.BankAccount.Id }) 
+                    </div>
+                    <div id="payFailureMessage" class="text-danger ml-5"></div>
 
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary shadow-button" data-dismiss="modal">Close</button>
-                    <button id="payButton" type="submit" class="btn btn-danger shadow-button"> Pay </button>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary shadow-button" data-dismiss="modal">Close</button>
+                        <button id="payButton" type="submit" class="btn btn-danger shadow-button"> Pay </button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</form>
+    </form>
 
     <!--container
     <div class="table-responsive details-card">

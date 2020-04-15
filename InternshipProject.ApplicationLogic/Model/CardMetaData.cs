@@ -4,7 +4,7 @@ using System.Text;
 
 namespace InternshipProject.ApplicationLogic.Model
 {
-   public class CardColor:DataEntity
+   public class CardMetaData:DataEntity
     {
        
         public int Color { get; set; }

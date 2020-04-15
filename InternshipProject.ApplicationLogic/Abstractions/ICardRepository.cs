@@ -9,7 +9,7 @@ namespace InternshipProject.ApplicationLogic.Abstractions
     {
 
          IEnumerable<Card> GetByUserId(Guid userId);
-
+            void AddCardTransaction(Card card);
 
     }
 }
