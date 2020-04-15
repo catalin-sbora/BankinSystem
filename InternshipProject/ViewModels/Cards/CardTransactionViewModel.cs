@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace InternshipProject.ViewModels.Cards
 {
+    
     public class CardTransactionViewModel
     {
         public decimal Amount { get; set; }

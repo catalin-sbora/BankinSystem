@@ -87,7 +87,7 @@ namespace InternshipProject.ApplicationLogic.Services
         }
 
 
-        public CardColor GetCardColor(Guid cardId)
+        public CardMetaData GetCardColor(Guid cardId)
         {
             return cardColorRepository.GetColor(cardId);
         }
