@@ -132,7 +132,7 @@ namespace InternshipProject.Controllers
             {
                 var sourceAccountId = cardService.GetCardByCardId(viewModel.CardId).BankAccount.Id;
                 var transaction = Transaction.Create(viewModel.Amount, sourceAccountId, viewModel.ExternalName, viewModel.IBan, null);
-                
+                var card = cardService.GetCardByCardId(viewModel.CardId);
                  var cardTransaction = CardTransaction.Create(transaction, CardTransactionType.Online);
                 transactionService.AddTransaction(transaction);
                 var getCardTransaction = cardService.AddTransaction(cardTransaction);
