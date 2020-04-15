@@ -16,7 +16,7 @@ namespace InternshipProject.Controllers
         private UserManager<IdentityUser> userManager;
         private AccountsService customerServices;
         private CardServices cardService;
-        public CardsController(AccountsService customerServices, UserManager<IdentityUser> userManager, CardServices cardService,TransactionService transactionService )
+        public CardsController(AccountsService customerServices, UserManager<IdentityUser> userManager, CardServices cardService,TransactionService transactionService)
        
         {
             this.transactionService = transactionService;
@@ -61,48 +61,59 @@ namespace InternshipProject.Controllers
             }
             
         }
-       
-        
-        public ActionResult CardPayments(Guid Id ,[FromForm] CardTransactionsListViewModel model , string OwnerName , string SerialNumber)
+        public ActionResult Search(string Search)
         {
             
+            return View();
+        }
+        
+        public ActionResult CardPayments(Guid Id ,[FromForm] string? SearchBy)
+        {
             string userId = userManager.GetUserId(User);
             try
             {
-                
-               if(model == null)
-                {
-                    model = new CardTransactionsListViewModel();
-                }
                 var customer = customerServices.GetCustomer(userId);
                 var bankAccounts = customerServices.GetCustomerBankAccounts(userId);
                 var card = cardService.GetCardByCardId(Id);
-                model.CardId = Id;
-                 
-                
-                var cardTransactions = cardService.GetFilteredCardTransactions(card.Id ,model.SearchBy,model.TransactionType);
+                BankAccount bankAccount = null;
+                foreach (var bankAccountIt in bankAccounts)
+                {
+                    if (bankAccountIt.Id == card.BankAccount.Id)
+                    {
+                        bankAccount = bankAccountIt;
+                    }
+                }
                 List<CardTransactionViewModel> cardTransactionViewModel = new List<CardTransactionViewModel>();
-                foreach (var transaction in cardTransactions)
+                var transactions = transactionService.GetTransactionsFromBankAccount(bankAccount.Id);
+                foreach (var transaction in transactions)
                 {
                     CardTransactionViewModel temp = new CardTransactionViewModel();
-                   
-                    temp.Amount = transaction.Transaction.Amount;
-                    temp.Name = transaction.Transaction.ExternalName;
-                    temp.TransactionType = transaction.TransactionType.ToString();
-                    temp.DateTime = transaction.Transaction.Time;
+                    temp.Amount = transaction.Amount;
+                    temp.Name = transaction.ExternalName;
+                    temp.TransactionType = "Online";
+                    temp.DateTime = transaction.Time;
                     cardTransactionViewModel.Add(temp);
                 }
                 
-                //CardTransactionsListViewModel cardTransactionsListViewModel = new CardTransactionsListViewModel();
-                model.CardTransactions = cardTransactionViewModel;
-                model.OwnerName = OwnerName;
-                model.SerialNumber = SerialNumber;
-                //cardTransactionsListViewModel.BankAccountId = bankAccount.Id;
-               
-                   
-                
-              
-                return View(model);
+                CardTransactionsListViewModel cardTransactionsListViewModel = new CardTransactionsListViewModel();
+                cardTransactionsListViewModel.CardTransactions = cardTransactionViewModel;
+                cardTransactionsListViewModel.BankAccountId = bankAccount.Id;
+                if(SearchBy != null)
+                {
+                CardTransactionsListViewModel cardTransactionsList = new CardTransactionsListViewModel();
+                    cardTransactionsList.CardTransactions = new List<CardTransactionViewModel>();
+                    cardTransactionsList.BankAccountId = cardTransactionsListViewModel.BankAccountId;
+                    foreach(var transaction in cardTransactionsListViewModel.CardTransactions)
+                    {
+                        if(transaction.Name.Contains(SearchBy) || transaction.DateTime.ToString().Contains(SearchBy) || transaction.Amount.ToString().Contains(SearchBy))
+                        {
+                             cardTransactionsList.CardTransactions.Add(transaction);
+                        }
+                        
+                    }
+                    return View(cardTransactionsList);
+                }
+                return View(cardTransactionsListViewModel);
             }
             catch(Exception e)
             {
@@ -110,40 +121,58 @@ namespace InternshipProject.Controllers
                 
             }
         }
-        
-       
+        public IActionResult NewCardTransaction()
+        {
+            var userId = userManager.GetUserId(User);
+            try
+            {
+                var customer = customerServices.GetCustomer(userId);
+                var bankAccounts = customerServices.GetCustomerBankAccounts(userId);
+                List<Card> cards = new List<Card>();
+                foreach (var bankAccount in bankAccounts)
+                {
+                    cards.AddRange(customerServices.GetCardsByUserID(bankAccount.Id.ToString()));
+
+                }
+
+                TransactionViewModel transactionViewModel = new TransactionViewModel()
+                {
+                    //CardList = cards
+                };
+
+                return View(transactionViewModel);
+            }
+            catch(Exception e)
+            {
+                return BadRequest("Unable to process your request");
+            }
+        }
 
         [HttpPost]
         public IActionResult CreateCardTransaction([FromForm]TransactionViewModel viewModel)
         {
-            var model = new TransactionViewModel { PaymentStatus = NewPaymentStatus.Failed };
-            if(!ModelState.IsValid ||
-                viewModel.IBan == null ||
-                viewModel.ExternalName == null ||
-                viewModel.Amount == 0)
-                return PartialView("NewPaymentPartial", model);
-            ModelState.Clear();
             try
             {
+
+                cardService.AddTransaction(viewModel.Amount, viewModel.IBan, viewModel.CardId);
+
                
-                var transaction = Transaction.Create(viewModel.Amount, viewModel.ExternalName, viewModel.IBan, null);
-                transaction.BankAccountId = cardService.GetCardByCardId(viewModel.CardId).BankAccount.Id;
+                var BankAccountId = cardService.GetCardByCardId(viewModel.CardId).BankAccount.Id;
+                var transaction = Transaction.Create(viewModel.Amount,BankAccountId, viewModel.ExternalName, viewModel.IBan, null);
                 var card = cardService.GetCardByCardId(viewModel.CardId);
                  var cardTransaction = CardTransaction.Create(transaction, CardTransactionType.Online);
                 transactionService.AddTransaction(transaction);
                 var getCardTransaction = cardService.AddTransaction(cardTransaction);
                 card.CardTransactions.Add(getCardTransaction);
                 cardService.AddCardTransaction(card);
+
                 var id = viewModel.CardId;
-                // return RedirectToAction("CardPayments", new {Id=id , SearchBy = ""});
-                model.PaymentMessage = "Done";
-                model.PaymentStatus = NewPaymentStatus.Created;
+                return RedirectToAction("CardPayments", new {Id=id , SearchBy = ""});
             }
             catch(Exception e)
             {
                 return BadRequest("Unable to process your request");
             }
-            return PartialView("_NewPaymentPartial", model);
         }
     }
 }
