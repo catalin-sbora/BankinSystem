@@ -25,11 +25,12 @@ namespace InternshipProject.ApplicationLogic.Model
         { 
         }
 
-        public static Transaction Create(decimal amount, string externalName, string externalIBAN, string details)
+        public static Transaction Create(decimal amount, Guid bankAccountId, string externalName, string externalIBAN, string details)
         {
             //validare iban - throw exception
             return new Transaction {
                 Id = Guid.NewGuid(),
+                BankAccountId = bankAccountId,
                 ExternalIBAN = externalIBAN,
                 ExternalName = externalName,
                 Amount = amount,

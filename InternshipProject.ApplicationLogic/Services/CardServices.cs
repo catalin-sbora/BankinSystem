@@ -25,17 +25,18 @@ namespace InternshipProject.ApplicationLogic.Services
         }
         public CardTransaction AddTransaction(decimal amount, string iban, Guid cardId )
         {
-           // Guid guidCardId = Guid.Empty;
+            // Guid guidCardId = Guid.Empty;
             //Guid.TryParse(cardId, out guidCardId);
 
-            var transaction = Transaction.Create(amount, iban, null, null);
-            transaction.BankAccountId = GetCardByCardId(cardId).BankAccount.Id;
-            var cardTransaction = CardTransaction.Create(transaction, CardTransactionType.Online );
-            transactionRepository.Add(transaction);
-            cardTransactionRepository.Add(cardTransaction);
-           // var cardSelected = cardRepository.GetById(cardId);
-            //cardSelected.CardTransactions.Add(cardTransaction);
-            return cardTransaction;
+            // var transaction = Transaction.Create(amount, iban, null, null);
+            // transaction.BankAccountId = GetCardByCardId(cardId).BankAccount.Id;
+            // var cardTransaction = CardTransaction.Create(transaction, CardTransactionType.Online );
+            // transactionRepository.Add(transaction);
+            // cardTransactionRepository.Add(cardTransaction);
+            //// var cardSelected = cardRepository.GetById(cardId);
+            // //cardSelected.CardTransactions.Add(cardTransaction);
+            // return cardTransaction;
+            return null;
         }
     }
 }
