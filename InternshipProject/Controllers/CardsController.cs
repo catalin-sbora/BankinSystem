@@ -7,6 +7,7 @@ using InternshipProject.ApplicationLogic.Services;
 using InternshipProject.ViewModels.Cards;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace InternshipProject.Controllers
 {
@@ -16,13 +17,19 @@ namespace InternshipProject.Controllers
         private UserManager<IdentityUser> userManager;
         private AccountsService customerServices;
         private CardServices cardService;
-        public CardsController(AccountsService customerServices, UserManager<IdentityUser> userManager, CardServices cardService,TransactionService transactionService )
+        private ILogger<CardsController> logger;
+        public CardsController(AccountsService customerServices, 
+                                UserManager<IdentityUser> userManager, 
+                                CardServices cardService,
+                                TransactionService transactionService,
+                                ILogger<CardsController> logger)
        
         {
             this.transactionService = transactionService;
             this.userManager = userManager;
             this.cardService = cardService;
             this.customerServices = customerServices;
+            this.logger = logger;
         }
         public IActionResult Index()
         {
@@ -44,19 +51,17 @@ namespace InternshipProject.Controllers
 
                 foreach (var card in cards)
                 {
-
                     CardWithColorViewModel temp = new CardWithColorViewModel();
                     temp.Card = card;
                     temp.CardColor = customerServices.GetCardColor(card.Id);
                     cardList.Cards.Add(temp);
                 }
-
-
-
                 return View(cardList);
             }
             catch(Exception e)
             {
+                logger.LogDebug("Failed to retrieve cards list {@Exception}", e);
+                logger.LogError("Failed to retrieve cards list {ExceptionMessage}", e);
                 return BadRequest("Unable to process your request");
             }
             
@@ -139,9 +144,9 @@ namespace InternshipProject.Controllers
         {
             try
             {
-               
-                var transaction = Transaction.Create(viewModel.Amount, viewModel.ExternalName, viewModel.IBan, null);
-                transaction.BankAccountId = cardService.GetCardByCardId(viewModel.CardId).BankAccount.Id;
+                var sourceAccountId = cardService.GetCardByCardId(viewModel.CardId).BankAccount.Id;
+                var transaction = Transaction.Create(viewModel.Amount, sourceAccountId, viewModel.ExternalName, viewModel.IBan, null);
+                
                  var cardTransaction = CardTransaction.Create(transaction, CardTransactionType.Online);
                 transactionService.Add(transaction);
                 cardService.AddTransaction(cardTransaction);
