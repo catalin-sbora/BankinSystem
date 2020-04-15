@@ -18,7 +18,7 @@ namespace InternshipProject.EFDataAccess
         public DbSet<ContactDetails> ContactDetails { get; set; }
         public DbSet<CardTransaction> CardTransactions { get; set; }
         public DbSet<BankAccountMetaData> BankAccountMetaDatas { get; set; }
-        public DbSet<CardColor> CardColors { get; set; }
+        public DbSet<CardMetaData> CardMetaData { get; set; }
 
         private void ConfigureEntity<T>(ModelBuilder builder) where T: DataEntity
         {
@@ -40,7 +40,7 @@ namespace InternshipProject.EFDataAccess
             ConfigureEntity<Card>(builder);
             ConfigureEntity<BankAccountMetaData>(builder);
             ConfigureEntity<CardTransaction>(builder);
-            ConfigureEntity<CardColor>(builder);
+            ConfigureEntity<CardMetaData>(builder);
 
             builder.Entity<BankAccount>()
                     .Property(ba => ba.Balance)
@@ -53,7 +53,7 @@ namespace InternshipProject.EFDataAccess
             builder.Entity<BankAccountMetaData>()
                     .HasOne<BankAccount>();
 
-            builder.Entity<CardColor>()
+            builder.Entity<CardMetaData>()
                     .HasOne<Card>();
         }
 

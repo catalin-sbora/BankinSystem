@@ -5,8 +5,8 @@ using System.Text;
 
 namespace InternshipProject.ApplicationLogic.Abstractions
 {
-    public interface ICardColorRepository: IRepository<CardColor>
+    public interface ICardColorRepository: IRepository<CardMetaData>
     {
-        CardColor GetColor(Guid cardId);
+        CardMetaData GetColor(Guid cardId);
     }
 }

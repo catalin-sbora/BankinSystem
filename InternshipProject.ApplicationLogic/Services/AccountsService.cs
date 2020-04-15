@@ -45,16 +45,53 @@ namespace InternshipProject.ApplicationLogic.Services
             return customer.BankAccounts
                             .AsEnumerable();
         }
+
         public void CreateAccountPayment(string userId, Guid account, decimal amount, string destinationName, string destinationIBAN, string details)
         {
-            var customer = GetCustomer(userId);
-            customer.MakePayment(account, amount, destinationName, destinationIBAN, details);
-            customerRepository.Update(customer);
+            var sendingCustomer = GetCustomer(userId);
+            var sendingAccount = sendingCustomer.GetAccount(account);
+
+            var receiverCustomer = customerRepository.GetCustomerThatOwnsIban(destinationIBAN);
+            if (receiverCustomer != null)
+            {
+                var destAccount = receiverCustomer.GetBankAccountByIBAN(destinationIBAN);
+                if (!destAccount.Currency.Equals(sendingAccount.Currency))
+                {
+                    throw new WrongCurrencyException(sendingAccount.Currency, destAccount.Currency);
+                }
+            }            
+            var transaction = sendingCustomer.MakePayment(account, amount, destinationName, destinationIBAN, details);    
+            
+            customerRepository.Update(sendingCustomer);
+            
+            if (receiverCustomer != null)
+            { 
+                receiverCustomer.NotifyTransaction(transaction, sendingCustomer);
+                customerRepository.Update(receiverCustomer);
+            }
+
+
         }
-        public CardColor GetCardColor(Guid cardId)
+
+        public Customer GetCustomerWithIBAN(string destinationIBAN)
+        {
+            foreach (Customer customer in customerRepository.GetCustomerstWithBankAccounts())
+            {
+                var foundBankAccount = customer.GetBankAccountByIBAN(destinationIBAN);
+                if (foundBankAccount != null)
+                {                   
+                    return customer;
+                }
+            }
+            throw new AccountIBANNotFoundException(destinationIBAN);
+        }
+
+
+        public CardMetaData GetCardColor(Guid cardId)
         {
             return cardColorRepository.GetColor(cardId);
         }
+
         public Customer GetCustomer(string userId)
         {
             Guid idToSearch = Guid.Empty;
@@ -67,6 +104,7 @@ namespace InternshipProject.ApplicationLogic.Services
 
             return customer;
         }
+
         public BankAccount GetCustomerBankAccount(string userId, Guid bankAccountId)
         {
             var customer = GetCustomer(userId);
@@ -78,6 +116,7 @@ namespace InternshipProject.ApplicationLogic.Services
             }
             return bankAccount;
         }
+
         public BankAccount GetCustomerBankAccount(Customer customer, Guid accountId)
         {            
             var account = customer.BankAccounts

@@ -19,5 +19,12 @@ namespace InternshipProject.EFDataAccess
             var cardList = dbContext.Cards.Where(user => user.BankAccount.Id == userId);
             return cardList;
         }    
+        public void AddCardTransaction(Card card)
+        {
+            dbContext.Cards.Update(card);
+            dbContext.SaveChanges();
+        }
+        
+        
     }
 }

@@ -1,51 +1,123 @@
 ﻿@model InternshipProject.ViewModels.Cards.CardTransactionsListViewModel
+@using InternshipProject.ViewModels.Cards
 
 @{
     ViewData["Title"] = "CardPayments";
 }
-  
-@using (Html.BeginForm("NewCardTransaction", "Cards"))
-{
-    
-    <button class="btn bg-primary float-right" type="submit">
-        New Payment
-    </button>
-    
+
+@* @using (Html.BeginForm("NewCardTransaction", "Cards"))
+    {
+
+        <button class="btn bg-light float-right" type="submit">
+            New Payment
+        </button>
+
+    }*@
+@section Scripts{
+
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/partialViewLoader.js" type="text/javascript"></script>
+    <script>
+
+
+        function onPaymentOperationSuccess() {
+            $("#payButton").hide();
+        }
+
+        function onPaymentOperationFailure() {
+            $("#payButton").hide();
+        }
+
+        $('#newPaymentModal').on('show.bs.modal', function (event) {
+                $("#payButton").show();
+        });
+
+        $('#newPaymentModal').on('hidden.bs.modal', function (event) {
+                $("#newPaymentBody").html = "";
+                loadServerPartialView("#newPaymentBody", "/Cards/@Model.CardId/CreateCardTransaction");
+
+
+            });
+
+    </script>
 }
+<div class="d-flex justify-content-end">
+
+    <div class="customer-details-label">
+        Name:
+    </div>
+    <div class="customer-details-value">
+        @Model.OwnerName
+    </div>
+</div>
+
+<div class="d-flex justify-content-end ">
+
+    <div class="customer-details-label">
+        Serial Number:
+    </div>
+    <div >
+        @Model.SerialNumber
+    </div>
+    
+
+</div>
+<div class="d-flex flex-column flex-md-row">
+    <div class="d-flex flex-column ">
+
+        <button class="btn btn-light light-button " style="position:absolute;right:1" data-toggle="modal" data-target="#newPaymentModal">
+            <i class="fas fa-money-bill"></i> New Payment
+        </button>
+    </div>
+</div>
 
 
-</br>
-</br>
-</br>
+
+            </br>
+            </br>
+            </br>
 
 <div class="container">
+    <br />
     <form asp-action="CardPayments" asp-controller="Cards" method="post">
-        
-        <div class="input-group-append float-right" style="width:200px">
-            <input name ="SearchBy"  type="text" class="form-control " placeholder="Search">
-            <button type="submit" class="bg-menu" >
-                <div class="input-group-append">
+
+        <div class="d-flex flex-md-row flex-column  justify-content-between">
+            <div>
+                <h2>Transactions</h2>
+            </div>
+            <div class="d-flex flex-md-row flex-column">
+                <select class="form-control" asp-for="TransactionType">
+
+                    <option selected>All</option>
+                    <option value="2">Online</option>
+                    <option value="0">POS</option>
+                    <option value="1">ATM</option>
+
+                </select>
+                <input asp-for="SearchBy" type="text" class="form-control " placeholder="Search">
+                <button type="submit" class="btn btn-light light-button">
+
 
                     <i class="fa fa-search"></i>
-            </button>
+                </button>
 
             </div>
-        
-        </form>
-    </div>
-    <h2>Transactions</h2>
-    <table class="table table-striped table-hover align-content-center ">
-        <thead class="bg-menu text-white">
-            <tr>
-                <th scope="col">Amount</th>
-                <th scope="col">Date</th>
+        </div>
+    </form>
+</div>
 
-                <th scope="col">Name</th>
-                <th scope="col">Transaction Type</th>
-            </tr>
-        </thead>
-        @if (Model.CardTransactions != null)
-        {
+<table class="table table-striped table-hover align-content-center ">
+    <thead class="bg-menu text-white">
+        <tr>
+            <th scope="col">Amount</th>
+            <th scope="col">Date</th>
+
+            <th scope="col">Name</th>
+            <th scope="col">Transaction Type</th>
+        </tr>
+    </thead>
+    @if (Model.CardTransactions != null)
+    {
         <tbody>
             @foreach (var transaction in Model.CardTransactions)
             {
@@ -56,11 +128,43 @@
 
                     <td>@transaction.Name</td>
                     <td>@transaction.TransactionType</td>
+                    +
                 </tr>
             }
 
         </tbody>
-        }
-    </table>
-</div>
+    }
+</table>
+        </div>
 
+
+<form id="newPaymentForm" method="post" asp-controller="Cards" asp-action="CreateCardTransaction"
+      data-ajax="true"
+      data-ajax-method="POST"
+      data-ajax-mode="replace"
+      data-ajax-update="#newPaymentBody">
+
+    @Html.AntiForgeryToken()
+    <div class="modal" id="newPaymentModal" tabindex="-1" role="dialog" aria-labelledby="newPaymentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title font-weight-bold" id="newPaymentModalLabel">New Payment</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div id="newPaymentBody" class="modal-body">
+                    @await Html.PartialAsync("_NewPaymentPartial", new TransactionViewModel { CardId = Model.CardId })
+                    @*   <partial name="_NewPaymentPartial.cshtml" model="null" />*@
+                </div>
+                <div id="payFailureMessage" class="text-danger ml-5"></div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary shadow-button" data-dismiss="modal">Close</button>
+                    <button id="payButton" type="submit" class="btn btn-danger shadow-button"> Pay </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

@@ -4,14 +4,16 @@ using InternshipProject.EFDataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace InternshipProject.EFDataAccess.Migrations
 {
     [DbContext(typeof(BankingDbContext))]
-    partial class BankingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200414173407_MetaData")]
+    partial class MetaData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -112,7 +114,7 @@ namespace InternshipProject.EFDataAccess.Migrations
 
                     b.HasIndex("CardId");
 
-                    b.ToTable("CardMetaData");
+                    b.ToTable("CardColors");
                 });
 
             modelBuilder.Entity("InternshipProject.ApplicationLogic.Model.CardTransaction", b =>
