@@ -62,7 +62,7 @@ namespace InternshipProject.Controllers
             catch (Exception e) 
             {
                 logger.LogDebug("Failed to retrieve Received Transaction list{@Exception}", e);
-                logger.LogError("Failed to retrieve Received Transaction list{@ExceptionMessage}", e);
+                logger.LogError("Failed to retrieve Received Transaction list{@ExceptionMessage}", e.Message);
                 return BadRequest("Unable to retrieve data");
             }
         }
@@ -95,7 +95,7 @@ namespace InternshipProject.Controllers
             catch (Exception e)
             {
                 logger.LogDebug("Failed to add the transaction{@Exception}", e);
-                logger.LogError("Failed to add the transaction{@ExceptionMessage}", e);
+                logger.LogError("Failed to add the transaction{@ExceptionMessage}", e.Message);
                 return BadRequest("Bad Input");
             }
         }
