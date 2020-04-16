@@ -17,7 +17,7 @@ namespace InternshipProject.Controllers
         private UserManager<IdentityUser> userManager;
         private AccountsService customerServices;
         private CardServices cardService;
-        private ILogger<CardsController> logger;
+        private ILogger logger;
         public CardsController(AccountsService customerServices, 
                                 UserManager<IdentityUser> userManager, 
                                 CardServices cardService,
@@ -34,11 +34,12 @@ namespace InternshipProject.Controllers
         public IActionResult Index()
         {
             string userId = userManager.GetUserId(User);
+
             try
             {
                 var customer = customerServices.GetCustomer(userId);
                 var bankAccounts = customerServices.GetCustomerBankAccounts(userId);
-
+                
                 List<Card> cards = new List<Card>();
                 CompleteCardsViewModel cardList = new CompleteCardsViewModel();
                 cardList.Cards = new List<CardWithColorViewModel>();
@@ -61,14 +62,14 @@ namespace InternshipProject.Controllers
             catch(Exception e)
             {
                 logger.LogDebug("Failed to retrieve cards list {@Exception}", e);
-                logger.LogError("Failed to retrieve cards list {ExceptionMessage}", e);
+                logger.LogError("Failed to retrieve cards list {ExceptionMessage}", e.Message);
                 return BadRequest("Unable to process your request");
             }
             
         }
        
         
-        public ActionResult CardPayments(Guid Id ,[FromForm] CardTransactionsListViewModel model , string OwnerName , string SerialNumber)
+        public ActionResult CardPayments(Guid Id ,[FromForm] CardTransactionsListViewModel model )
         {
             
             string userId = userManager.GetUserId(User);
@@ -82,6 +83,8 @@ namespace InternshipProject.Controllers
                 var customer = customerServices.GetCustomer(userId);
                 var bankAccounts = customerServices.GetCustomerBankAccounts(userId);
                 var card = cardService.GetCardByCardId(Id);
+                model.OwnerName = card.OwnerName;
+                model.SerialNumber = card.SerialNumber;
                 model.CardId = Id;
                  
                 
@@ -98,11 +101,9 @@ namespace InternshipProject.Controllers
                     cardTransactionViewModel.Add(temp);
                 }
                 
-                //CardTransactionsListViewModel cardTransactionsListViewModel = new CardTransactionsListViewModel();
+                
                 model.CardTransactions = cardTransactionViewModel;
-                model.OwnerName = OwnerName;
-                model.SerialNumber = SerialNumber;
-                //cardTransactionsListViewModel.BankAccountId = bankAccount.Id;
+       
                
                    
                 
@@ -111,6 +112,8 @@ namespace InternshipProject.Controllers
             }
             catch(Exception e)
             {
+                logger.LogError("Unable to retrieve card payments {ExceptionMessage}", e);
+                logger.LogDebug("Unable to retrieve card payments {@Exception}",e);
                 return BadRequest("Unable to process your request");
                 
             }
@@ -146,6 +149,8 @@ namespace InternshipProject.Controllers
             }
             catch(Exception e)
             {
+                logger.LogError("Unable to execute payment {ExceptionMessage}", e);
+                logger.LogDebug("Unable to execute payment {@Exception}", e);
                 return BadRequest("Unable to process your request");
             }
             return PartialView("_NewPaymentPartial", model);

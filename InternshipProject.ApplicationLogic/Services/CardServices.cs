@@ -48,9 +48,12 @@ namespace InternshipProject.ApplicationLogic.Services
             {
                 searchBy = searchBy.ToLower();
                 transactions = transactions.Where(transaction =>
-                                      transaction.Transaction.ExternalName.ToLower().Contains(searchBy) ||
-                                      transaction.Transaction.Time.ToString().Contains(searchBy) ||
-                                      transaction.Transaction.Amount.ToString().Contains(searchBy)).ToList();
+                                      transaction.Transaction != null &&
+                                    ((transaction.Transaction.ExternalName != null &&
+                                    transaction.Transaction.ExternalName.ToLower().Contains(searchBy)) ||
+                                    (transaction.Transaction.Time != null &&
+                                    transaction.Transaction.Time.ToString().Contains(searchBy)) ||
+                                    transaction.Transaction.Amount.ToString().Contains(searchBy))).ToList();
             }
             return transactions.AsEnumerable();
         }

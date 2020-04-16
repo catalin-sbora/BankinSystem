@@ -10,6 +10,7 @@ using InternshipProject.ViewModels.Received;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using RazorPagesReporting;
 
 namespace InternshipProject.Controllers
@@ -23,8 +24,15 @@ namespace InternshipProject.Controllers
         private readonly PaymentsService transactionService;
         private readonly ReceivedService receivedService;
         private readonly RazorPagesReportingEngine reportingEngine;
-        public ReceivedController(UserManager<IdentityUser> userManager, AccountsService customerServices, PaymentsService transactionService, ReceivedService receivedService, RazorPagesReportingEngine reportingEngine)       
+        private readonly ILogger<ReceivedController> logger;
+        public ReceivedController(UserManager<IdentityUser> userManager,
+            AccountsService customerServices, 
+            PaymentsService transactionService, 
+            ReceivedService receivedService, 
+            RazorPagesReportingEngine reportingEngine,
+            ILogger<ReceivedController> logger)       
         {
+            this.logger = logger;
             this.reportingEngine = reportingEngine;
             this.receivedService = receivedService;
             this.userManager = userManager;
@@ -53,6 +61,9 @@ namespace InternshipProject.Controllers
             }
             catch (Exception e) 
             {
+                logger.LogError("Failed to retrieve Received Transaction list{@ExceptionMessage}", e.Message);
+                logger.LogDebug("Failed to retrieve Received Transaction list{@Exception}", e);
+                
                 return BadRequest("Unable to retrieve data");
             }
         }
@@ -65,35 +76,6 @@ namespace InternshipProject.Controllers
         }
 
 
-        public async Task<IActionResult> TransactionsReport([FromRoute]Guid accountId, [FromQuery]string searchString)
-        {
-
-            string userId = userManager.GetUserId(User);
-            try
-            {
-                var customer = customerServices.GetCustomer(userId);
-                var received = receivedService.GetCustomerTransaction(userId, customer); var account = customer.GetAccount(accountId);
-                var reportViewModel = new TransactionsReportViewModel
-                {
-                    CustomerName = $"{customer.FirstName} {customer.LastName}",
-                    Account = account.IBAN,
-                    Currency = account.Currency,
-                    Transactions = received,
-                    Balance = account.Balance
-
-                };
-                var fileName = $"TrRep_{DateTime.UtcNow.ToShortDateString()}_{account.IBAN}.pdf";
-                fileName = fileName.Replace('/', '_');
-                fileName = fileName.Replace('\\', '_');
-                fileName = fileName.Replace(':', '_');
-
-                return await reportingEngine.RenderViewAsPdf("Accounts/TransactionsReport", reportViewModel, fileName); //PartialView("_TransactionsPartial", transactions);
-            }
-            catch (Exception e)
-            {
-                return BadRequest("Unable to process your request");
-            }
-        }
 
 
         [HttpPost]
@@ -113,6 +95,9 @@ namespace InternshipProject.Controllers
             }
             catch (Exception e)
             {
+                logger.LogError("Failed to add the transaction{@ExceptionMessage}", e.Message);
+                logger.LogDebug("Failed to add the transaction{@Exception}", e);
+                
                 return BadRequest("Bad Input");
             }
         }
@@ -124,27 +109,6 @@ namespace InternshipProject.Controllers
             return RedirectToAction("Index");
         }
 
-        public IActionResult ChangeTabel(int option)
-        {
-            var userId = userManager.GetUserId(User);
-            try
-            {
-                var customer = customerServices.GetCustomer(userId);
-                List<BankAccount> aux = new List<BankAccount>();
-                aux.Add(customer.BankAccounts.ElementAt(option));
-                var viewModel = new AddReceivedViewModel()
-                {
-
-                    BankAccount = aux
-                };
-
-                return View( viewModel);
-            }
-            catch (Exception e)
-            {
-                return BadRequest("Bad Input");
-            }
-        }
         
     }
 }
