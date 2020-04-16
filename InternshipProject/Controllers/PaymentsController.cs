@@ -9,6 +9,7 @@ using InternshipProject.ViewModels.Payments;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace InternshipProject.Controllers
 {
@@ -18,14 +19,17 @@ namespace InternshipProject.Controllers
         private readonly UserManager<IdentityUser> userManager;
         private readonly AccountsService accountService;
         private readonly PaymentsService paymentsService;
+        private readonly ILogger<PaymentsController> logger;
 
         public PaymentsController(UserManager<IdentityUser> userManager, 
-            AccountsService accountsService, 
-            PaymentsService paymentsService)
+                                  AccountsService accountsService, 
+                                  PaymentsService paymentsService,
+                                  ILogger<PaymentsController> logger)
         {
             this.userManager = userManager;
             this.accountService = accountsService;
             this.paymentsService = paymentsService;
+            this.logger = logger;
         }
 
         [HttpGet]
@@ -51,7 +55,9 @@ namespace InternshipProject.Controllers
                 }
                 catch (Exception e)
                 {
-                    return BadRequest(e.Message);
+                    logger.LogError("Failed to retrieve searched payments {@Exception}", e.Message);
+                    logger.LogDebug("Failed to see payment {@ExceptionMessage}", e);
+                    return BadRequest("Unable to process your request");
                 }
             }
             else
@@ -70,7 +76,9 @@ namespace InternshipProject.Controllers
                 }
                 catch (Exception e)
                 {
-                    return BadRequest(e.Message);
+                    logger.LogError("Failed to retrieve payments {@Exception}", e.Message);
+                    logger.LogDebug("Failed to see payment {@ExceptionMessage}", e);
+                    return BadRequest("Unable to process your request");
                 }
             }
         }
@@ -122,6 +130,8 @@ namespace InternshipProject.Controllers
             }
             catch (Exception e)
             {
+                logger.LogError("Failed to make payment {@Exception}", e.Message);
+                logger.LogDebug("Failed to see payment {@ExceptionMessage}", e);
                 viewModelResult.PaymentStatus = NewPaymentStatus.Failed;
             }
             //return PartialView("_NewPaymentPartial", viewModelResult);
@@ -130,8 +140,17 @@ namespace InternshipProject.Controllers
 
         public IActionResult Details(string Id)
         {
-            var payment = paymentsService.GetById(Id);
-            return View(payment);
+            try
+            {
+                var payment = paymentsService.GetById(Id);
+                return View(payment);
+            }
+            catch(Exception e)
+            {
+                logger.LogError("Failed to see payment {@Exception}", e.Message);
+                logger.LogDebug("Failed to see payment {@ExceptionMessage}", e);
+                return BadRequest("Unable to process your request");
+            }
         }
     }
 }
