@@ -24,10 +24,10 @@ function filterTable(event) {
     }
 }
 
-function filterTable(rows, filter) {
+function filterTableRows(rows, filter) {
 
-    var filter = filter.toLowerCase();
-
+    filter = filter.toLowerCase();
+    var displayRow = false;
     for (var i = 0; i < rows.length; i++) {
         for (var j = 0; j < rows[i].cells.length; j++) {
             if (rows[i].cells[j].textContent.toLowerCase().indexOf(filter) > -1) {

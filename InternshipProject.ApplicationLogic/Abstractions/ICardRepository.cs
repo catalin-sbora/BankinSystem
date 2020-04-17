@@ -8,8 +8,8 @@ namespace InternshipProject.ApplicationLogic.Abstractions
     public interface ICardRepository: IRepository<Card>
     {
 
-         IEnumerable<Card> GetByUserId(Guid userId);
-            void AddCardTransaction(Card card);
+         IEnumerable<Card> GetByAccountId(Guid userId);
+          void AddCardTransaction(Card card);
 
     }
 }

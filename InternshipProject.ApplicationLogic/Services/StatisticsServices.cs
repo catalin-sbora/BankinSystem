@@ -11,9 +11,9 @@ namespace InternshipProject.ApplicationLogic.Services
     {
 
         private readonly ICustomerRepository customerRepository;
-        public StatisticsServices(ICustomerRepository customerRepository)
+        public StatisticsServices(IPersistenceContext persistenceContext)
         {
-            this.customerRepository = customerRepository;
+            customerRepository = persistenceContext.CustomerRepository;
         }
 
         private IEnumerable<decimal> ProcessBalanceHistory(decimal initialBalance, IEnumerable<Transaction> transactions)

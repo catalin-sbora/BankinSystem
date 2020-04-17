@@ -17,17 +17,17 @@ namespace InternshipProject.Controllers
     public class PaymentsController : Controller
     {
         private readonly UserManager<IdentityUser> userManager;
-        private readonly AccountsService accountService;
+        private readonly CustomerService customerService;
         private readonly PaymentsService paymentsService;
         private readonly ILogger<PaymentsController> logger;
 
         public PaymentsController(UserManager<IdentityUser> userManager, 
-                                  AccountsService accountsService, 
+                                  CustomerService customerService, 
                                   PaymentsService paymentsService,
                                   ILogger<PaymentsController> logger)
         {
             this.userManager = userManager;
-            this.accountService = accountsService;
+            this.customerService = customerService;
             this.paymentsService = paymentsService;
             this.logger = logger;
         }
@@ -36,7 +36,7 @@ namespace InternshipProject.Controllers
         public IActionResult Index([FromQuery]string searchString)
         {
             var userId = userManager.GetUserId(User);
-            var customer = accountService.GetCustomer(userId);
+            var customer = customerService.GetCustomerFromUserId(userId);
             
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -69,7 +69,8 @@ namespace InternshipProject.Controllers
                         CustomerName = $"{customer.FirstName} {customer.LastName}",
                         CustomerPhoneNo = customer.ContactDetails?.PhoneNo,
                         BanksAccounts = customer.BankAccounts,
-                        Transactions = paymentsService.GetCustomerPayments(userId).OrderByDescending(payment => payment.Time)
+                        Transactions = paymentsService.GetCustomerPayments(userId)
+                                                      .OrderByDescending(payment => payment.Time)
                     };
 
                     return View(viewModel);
@@ -87,7 +88,7 @@ namespace InternshipProject.Controllers
         public IActionResult New()
         {
             var userId = userManager.GetUserId(User);
-            var customer = accountService.GetCustomer(userId);
+            var customer = customerService.GetCustomerFromUserId(userId);
             var viewModel = new NewPaymentViewModel()
             {
                 BanksAccount = customer.BankAccounts,
@@ -106,8 +107,7 @@ namespace InternshipProject.Controllers
 
             if (!ModelState.IsValid ||
                 paymentData == null ||
-                paymentData.BankAccountId == null ||
-                paymentData.Amount == null
+                paymentData.BankAccountId == null                
                 )
                 return PartialView("_NewPaymentPartial", viewModelResult);
 
@@ -115,10 +115,12 @@ namespace InternshipProject.Controllers
             try
             {
                 var userId = userManager.GetUserId(User);
-                paymentsService.AddPayment(paymentData.BankAccountId,
-                                           paymentData.Amount,
-                                           paymentData.ExternalName,
-                                           paymentData.ExternalIBAN);
+                paymentsService.CreateAccountPayment(userId,
+                                                    paymentData.BankAccountId.Value,
+                                                    paymentData.Amount,
+                                                    paymentData.ExternalName,
+                                                    paymentData.ExternalIBAN,
+                                                    "");
 
                 viewModelResult.PaymentMessage = "Done";
                 viewModelResult.PaymentStatus = NewPaymentStatus.Created;
@@ -138,11 +140,12 @@ namespace InternshipProject.Controllers
             return RedirectToAction("Index");
         }
 
-        public IActionResult Details(string Id)
+        public IActionResult Details([FromRoute]Guid id)
         {
             try
             {
-                var payment = paymentsService.GetById(Id);
+                var userId = userManager.GetUserId(User);
+                var payment = paymentsService.GetPaymentById(userId, id);
                 return View(payment);
             }
             catch(Exception e)

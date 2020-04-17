@@ -9,55 +9,29 @@ using System.Text;
 namespace InternshipProject.ApplicationLogic.Services
 {
     public class ReceivedService
-    {
-        private readonly ICustomerRepository customerRepository;
-        private readonly ITransactionRepository transactionRepository;
+    {        
+        private CustomerService customerService;
 
-        public ReceivedService(ICustomerRepository customerRepository, ITransactionRepository transactionRepository) 
-        {
-            this.transactionRepository = transactionRepository;
-            this.customerRepository = customerRepository;
+        public ReceivedService(CustomerService customerService) 
+        {           
+            this.customerService = customerService;
         }
-
-        public Customer GetCustomer(string userId)
+       
+        public IEnumerable<Transaction> GetCustomerTransaction(string userId)
         {
-            Guid idToSearch = Guid.Empty;
-            Guid.TryParse(userId, out idToSearch);
-            var customer = customerRepository?.GetCustomerByUserId(idToSearch);
-            if (customer == null)
+            var customer = customerService.GetCustomerFromUserId(userId);
+            var receivedList = new List<Transaction>();
+            foreach (var account in customer.BankAccounts)
             {
-                throw new CustomerNotFoundException(userId);
+                foreach (var transaction in account.Transactions)
+                {
+                    if (transaction.Amount > 0)
+                    {
+                        receivedList.Add(transaction);
+                    }
+                }
             }
-
-            return customer;
-        }
-        public IEnumerable<Transaction> GetCustomerTransaction(string userId,Customer customer)
-        {
-            Guid guidUserId = Guid.Empty;
-            Guid.TryParse(userId, out guidUserId);
-
-            if (guidUserId == Guid.Empty)
-            {
-                throw new Exception("Wrong guid");
-            }
-            //foreach(var bankAccount in customer.BankAccounts)
-            //{ 
-            //  transactionList.AddRange(
-            //    bankAccount.Transactions.Where(t=>t.Amount < 0)
-            //);  
-            //}
-            //customer.Transactions.Where(t=>t.Amount < 0)
-            var transactionList = transactionRepository.GetReceived(guidUserId)
-                                                        .OrderByDescending(t => t.Time);
-            var received = new List<Transaction>();
-            for(int i=0;i< transactionList.Count();i++)
-            {
-                if (transactionList.ElementAt(i).Amount > 0)
-                    received.Add(transactionList.ElementAt(i));
-            }
-
-            return received.AsEnumerable();
-
+            return receivedList.AsEnumerable();
         }
 
     }

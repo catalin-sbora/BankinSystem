@@ -44,16 +44,9 @@ namespace InternshipProject
 
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
-            
-            services.AddScoped<ICustomerRepository, EFCustomerRepository>();
-            services.AddScoped<IBankAccountMetaDataRepository, EFBankAccountMetaDataRepository>();
 
-            services.AddScoped<ICardRepository, EFCardRepository>();
-            services.AddScoped<ICardColorRepository, EFCardColorRepository>();
-
-            services.AddScoped<ITransactionRepository, EFPaymentsRepository>();
-            services.AddScoped<ICardTransactionRepository, EFCardTransactionRepository>();
-            
+            services.AddScoped<IPersistenceContext, EFPersistenceContext>();            
+            services.AddScoped<CustomerService>();
             services.AddScoped<AccountsService>();
             services.AddScoped<MetaDataService>();
             services.AddScoped<StatisticsServices>();

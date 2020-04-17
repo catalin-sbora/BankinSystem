@@ -9,26 +9,47 @@ namespace InternshipProject.ApplicationLogic.Services
 {
     public class CardServices
     {
-        private readonly ICardRepository cardRepository;
-        private readonly ICardTransactionRepository cardTransactionRepository;
-        private readonly ITransactionRepository transactionRepository;
-        ICustomerRepository customerRepository;
-        public CardServices(ICustomerRepository customer, ICardRepository cardRepository , ICardTransactionRepository cardTransactionRepository,ITransactionRepository transactionRepository)
+        private readonly IPersistenceContext persistenceContext;
+        private readonly ICardRepository cardRepository;              
+        private readonly AccountsService accountsService;
+        private readonly PaymentsService paymentsService;
+        public CardServices(IPersistenceContext persistenceContext,                            
+                            AccountsService accountsService,
+                            PaymentsService paymentsService)
         {
-            this.cardRepository = cardRepository;
-            this.cardTransactionRepository = cardTransactionRepository;
-            this.transactionRepository = transactionRepository;
-            customerRepository = customer;
+            this.cardRepository = persistenceContext.CardRepository;
+            
+            this.accountsService = accountsService;                        
+            this.paymentsService = paymentsService;
+            this.persistenceContext = persistenceContext;
         }
-       public Card GetCardByCardId(Guid CardId)
+        public Card GetCardByCardId(Guid CardId)
         {
             return cardRepository.GetById(CardId);
         }
-        public CardTransaction AddTransaction(CardTransaction cardTransaction)
+        
+
+        public void MakeOnlinePayment(string userId, Guid cardId, decimal amount, string destName, string destIBAN)
         {
-             cardTransactionRepository.Add(cardTransaction);
-             return cardTransaction;
+            var cards = GetCardsForCustomer(userId);
+            var selectedCard = cards.Where(card => card.Id == cardId)
+                                    .Single();
+            
+            var transaction = paymentsService.CreateAccountPayment(userId, 
+                selectedCard.BankAccount.Id, 
+                amount, 
+                destName, 
+                destIBAN, 
+                "Card Payment");
+            
+            var cardTransaction = CardTransaction.Create(transaction, CardTransactionType.Online);
+            selectedCard.CardTransactions.Add(cardTransaction);
+            
+            cardRepository.Update(selectedCard);
+            persistenceContext.SaveChanges();
+
         }
+
         public IEnumerable<CardTransaction> GetAllCardTransactions(Guid cardId)
         {
             var card = GetCardByCardId(cardId);
@@ -57,9 +78,23 @@ namespace InternshipProject.ApplicationLogic.Services
             }
             return transactions.AsEnumerable();
         }
-            public void AddCardTransaction(Card card)
+       
+        public IEnumerable<Card> GetCardsForAccount(string userId, Guid accountId)
+        {            
+            var account = accountsService.GetCustomerBankAccount(userId, accountId);            
+            return cardRepository.GetByAccountId(accountId);                
+        }
+
+        public IEnumerable<Card> GetCardsForCustomer(string userId)
+        {
+            var bankAccounts = accountsService.GetCustomerBankAccounts(userId);
+            var cards = new List<Card>();
+            foreach(var bankAccount in bankAccounts)
             {
-            cardRepository.AddCardTransaction(card);
+                cards.AddRange(cardRepository.GetByAccountId(bankAccount.Id));       
             }
+            return cards;
+        }
+
     }
 }

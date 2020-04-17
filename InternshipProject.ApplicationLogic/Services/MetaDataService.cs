@@ -10,9 +10,11 @@ namespace InternshipProject.ApplicationLogic.Services
     public class MetaDataService
     {
         private readonly IBankAccountMetaDataRepository metaDataRepository;
-        public MetaDataService(IBankAccountMetaDataRepository metaDataRepository)
+        private readonly ICardMetaDataRepository cardMetaDataRepository;
+        public MetaDataService(IPersistenceContext persistenceContext)
         {
-            this.metaDataRepository = metaDataRepository;
+            metaDataRepository = persistenceContext.BankAccountMetaDataRepository;
+            cardMetaDataRepository = persistenceContext.CardMetaDataRepository;
         }
 
         public BankAccountMetaData GetMetaDataForBankAccount(Guid bankAccountId)
@@ -28,6 +30,22 @@ namespace InternshipProject.ApplicationLogic.Services
                     BankAccountId = bankAccountId, 
                     Name = "Account Name"
                 };       
+            }
+
+            return metaData;
+        }
+
+        public CardMetaData GetMetaDataForCard(Guid cardId)
+        {
+            var metaData = cardMetaDataRepository.GetMetaData(cardId);
+
+            if (metaData == null)
+            {
+                //#0094ff
+                metaData = new CardMetaData()
+                {
+                    Color = 0x0094ff
+                };
             }
 
             return metaData;

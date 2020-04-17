@@ -14,9 +14,10 @@ namespace InternshipProject.EFDataAccess
         {
            
         }
-        public IEnumerable<Card> GetByUserId(Guid userId)
+        public IEnumerable<Card> GetByAccountId(Guid accountId)
         {
-            var cardList = dbContext.Cards.Where(user => user.BankAccount.Id == userId);
+            var cardList = dbContext.Cards
+                                    .Where(card => card.BankAccount.Id == accountId);
             return cardList;
         }    
         public void AddCardTransaction(Card card)

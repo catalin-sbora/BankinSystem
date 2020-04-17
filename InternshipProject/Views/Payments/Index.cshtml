@@ -74,7 +74,7 @@
                     break;
                 }
             }
-            filterTable(rows, rate_value);           
+            filterTableRows(rows, rate_value);           
         }
     </script>
 }
@@ -118,7 +118,7 @@
                 <tr>
                     <td>
                         <div class="form-check">
-                            <input type="radio" id="yes" onclick="Button1()" name="account" value="@account.IBAN" checked="checked">
+                            <input type="radio" id="account" onclick="Button1()" name="account" value="@account.IBAN" checked="checked">
                             @*<input onclick="Button1()" name="account" checked="checked" class="form-check-input" type="checkbox" id="defaultCheck1">*@
                             <label class="form-check-label" for="defaultCheck1">
                                 @account.IBAN
@@ -135,7 +135,7 @@
 
 <div class="d-flex flex-column flex-md-row">
     <div class="d-flex flex-column flex-grow-1">
-        <a href="#" class="btn btn-light light-button mr-0 mr-md-auto mb-4"><i class="fas fa-filter"></i> Filter </a>
+        
     </div>
 
     <div class="d-flex flex-column ">
@@ -148,9 +148,6 @@
         </div>
     </div>
 </div>
-
-
-
 <br />
 <form class="searchButtonPayments " asp-controller="Payments" asp-action="Index" method="get" style="margin: auto; width: 300px; margin-right: 0px;">
     <input id="searchString" type="text" placeholder="Search.." name="searchString">
@@ -183,7 +180,7 @@
                             <tr>
                                 <td> @transaction.Amount.ToString("N") </td>
                                 <td> @transaction.Time.ToString("dd/MM/yyyy") </td>
-                                <td> @transaction.ExternalIBAN </td>
+                                <td> @account.IBAN </td>
                                 <td> @transaction.ExternalIBAN </td>
                                 <td> @Html.ActionLink("Details", "Details", "Payments", new { Id = transaction.Id }, null) </td>
                             </tr>
@@ -206,8 +203,7 @@
 
 
         <form id="newPaymentForm" method="post" asp-controller="Payments" asp-action="New"
-              data
-              -ajax="true"
+              data-ajax="true"
               data-ajax-method="POST"
               data-ajax-mode="replace"
               data-ajax-update="#newPaymentBody">

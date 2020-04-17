@@ -15,14 +15,16 @@ namespace InternshipProject.Controllers
     public class StatisticsController : Controller
     {
         private readonly StatisticsServices statisticsService;
-        private readonly AccountsService customerService;
+        private readonly CustomerService customerService;
         private readonly MetaDataService metaDataService;
         private readonly UserManager<IdentityUser> userManager;
         private readonly ILogger<StatisticsController> logger;
 
         public StatisticsController(StatisticsServices statisticsServices, 
-            AccountsService customerServices, MetaDataService metaDataServices, 
-            UserManager<IdentityUser> userManager, ILogger<StatisticsController> logger)
+                                    CustomerService customerServices, 
+                                    MetaDataService metaDataServices, 
+                                    UserManager<IdentityUser> userManager, 
+                                    ILogger<StatisticsController> logger)
         {
             this.statisticsService = statisticsServices;
             this.customerService = customerServices;
@@ -38,7 +40,7 @@ namespace InternshipProject.Controllers
             string userId = userManager.GetUserId(User);
             try
             {
-                var customer = customerService.GetCustomer(userId);
+                var customer = customerService.GetCustomerFromUserId(userId);
                 List<BankAccountStatisticsViewModel> statisticsViewModels = new List<BankAccountStatisticsViewModel>();
 
                 foreach (var bankAccount in customer.BankAccounts)
@@ -76,7 +78,7 @@ namespace InternshipProject.Controllers
             string userId = userManager.GetUserId(User);
             try
             {
-                var customer = customerService.GetCustomer(userId);
+                var customer = customerService.GetCustomerFromUserId(userId);
                 List<BankAccountStatisticsViewModel> statisticsViewModels = new List<BankAccountStatisticsViewModel>();
 
                 foreach (var bankAccount in customer.BankAccounts)

@@ -17,7 +17,7 @@ namespace InternshipProject.ViewModels.Payments
         public string ExternalIBAN { get; set; }
         public string ExternalName { get; set; }
         public decimal Amount { get; set; }
-        public string BankAccountId { get; set; }
+        public Guid? BankAccountId { get; set; }
         public IEnumerable<BankAccount> BanksAccount { get; set; }
         public NewPaymentStatus PaymentStatus { get; set; }
         public string PaymentMessage { get; set; }
