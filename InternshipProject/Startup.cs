@@ -15,6 +15,7 @@ using Microsoft.Extensions.Hosting;
 using InternshipProject.EFDataAccess;
 using InternshipProject.ApplicationLogic.Services;
 using InternshipProject.ApplicationLogic.Abstractions;
+using RazorPagesReporting;
 
 namespace InternshipProject
 {
@@ -37,15 +38,22 @@ namespace InternshipProject
                     Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddDbContext<BankingDbContext>(options =>
-                options.UseSqlServer(
+                options.UseLazyLoadingProxies()
+                .UseSqlServer(
                     Configuration.GetConnectionString("BankingConnection")));
 
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
-            
-            services.AddScoped<ICustomerRepository, EFCustomerRepository>();
-            services.AddScoped<CustomerServices>();
 
+            services.AddScoped<IPersistenceContext, EFPersistenceContext>();            
+            services.AddScoped<CustomerService>();
+            services.AddScoped<AccountsService>();
+            services.AddScoped<MetaDataService>();
+            services.AddScoped<StatisticsServices>();
+            services.AddScoped<PaymentsService>();
+            services.AddScoped<ReceivedService>();
+            services.AddScoped<CardServices>();
+            services.AddScoped<RazorPagesReportingEngine>();
             services.AddControllersWithViews();
             services.AddRazorPages()
                 .AddRazorRuntimeCompilation();
@@ -76,8 +84,13 @@ namespace InternshipProject
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
+                    name: "Accounts",
+                    pattern: "{controller=Accounts}/{accountId?}/{action=Index}");
+
+                endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                
                 endpoints.MapRazorPages();
             });
         }

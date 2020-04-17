@@ -1,0 +1,130 @@
+﻿@model InternshipProject.ViewModels.Statistics.StatisticsViewModel;
+
+@{
+    ViewData["Title"] = "Statistics";
+}
+
+@section Scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.min.js"></script>
+}
+
+<div class="d-flex justify-content-end">
+
+    <div class="customer-details-label">
+        Name
+    </div>
+    <div class="customer-details-value">
+        @Model.CustomerName
+    </div>
+</div>
+<div class="d-flex justify-content-end">
+
+    <div class="customer-details-label">
+        Contact
+    </div>
+    <div class="customer-details-value">
+        @Model.PhoneNo
+    </div>
+</div>
+
+<hr style="height:2px;border:none;background-color:#D4D4D4;" />
+<!--
+<div align="center">
+    <a asp-controller="Statistics" asp-action="Index" asp-route-interval="alltime" class="btn btn-success statistics-button">All-time</a>
+    <a asp-controller="Statistics" asp-action="Index" asp-route-interval="year" class="btn btn-success statistics-button">Year</a>
+    <a asp-controller="Statistics" asp-action="Index" asp-route-interval="month" class="btn btn-success statistics-button">Month</a>
+    <a asp-controller="Statistics" asp-action="Index" asp-route-interval="week" class="btn btn-success statistics-button"> Week</a>
+    <a asp-controller="Statistics" asp-action="Index" asp-route-interval="day" class="btn btn-success statistics-button">Day</a>
+</div> -->
+
+<div align="center">
+    <a href="#" onclick="loadPartialView('alltime')" class="btn btn-light statistics-button">General</a>
+    <a href="#" onclick="loadPartialView('year')" class="btn btn-light statistics-button">Year</a>
+    <a href="#" onclick="loadPartialView('month')" class="btn btn-light statistics-button">Month</a>
+    <a href="#" onclick="loadPartialView('week')" class="btn btn-light statistics-button">Week</a>
+    <a href="#" onclick="loadPartialView('day')" class="btn btn-light statistics-button">Day</a>
+</div>
+
+<br />
+<br />
+
+<div style="width:100%; height:100%;">
+    <div id="lineChartContainer">
+    </div>
+    <script>
+         function loadPartialView(param)
+         {
+             $.get("@Url.Action("LineChart","Statistics")" + "?interval=" + param, function (data) {
+                 $("#lineChartContainer").html(data);
+                 loadChartData();
+             });
+         }
+        loadPartialView("alltime");
+    </script>
+
+    <canvas id="pieChart"></canvas>
+
+    <script>
+        function hexToRgbA(hex) {
+                var c;
+                if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
+                    c= hex.substring(1).split('');
+                    if(c.length== 3){
+                        c= [c[0], c[0], c[1], c[1], c[2], c[2]];
+                    }
+                    c= '0x'+c.join('');
+                    return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+',0.1)';
+                }
+                throw new Error('Bad Hex');
+        }
+
+        function addLineData(chart, label, data, color) {
+            chart.data.datasets.push({
+                label: label,
+                backgroundColor: hexToRgbA(color),
+                borderColor: color,
+                fill: true,
+                data: data
+            });
+            chart.update();
+        }
+
+        $(document).ready(function () {
+
+            var ctx = document.getElementById('pieChart').getContext('2d');
+            var pieChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        data: [],
+                        backgroundColor: [],
+                        borderColor: [],
+                        borderWidth: 1
+                    }]
+                },
+
+                options: {
+                    title: {
+                        display: true,
+                        text: 'Balance of your accounts'
+                    }
+                }
+            });
+
+            function addPieData(chart, label, data, color) {
+                chart.data.labels.push(label);
+                chart.data.datasets.forEach((dataset) => {
+                    dataset.data.push(data);
+                    dataset.backgroundColor.push(color);
+                    dataset.borderColor.push(color);
+                });
+                chart.update();
+            }
+
+            @foreach (var account in Model.BankAccounts) {
+                @Html.Raw($"addPieData(pieChart, '{account.MetaData.Name}', {account.BankAccount.Balance}, '#'+'{account.MetaData.Color.ToString("X6")}');");
+            }
+        });
+    </script>
+</div>

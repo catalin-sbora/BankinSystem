@@ -1,0 +1,32 @@
+﻿@model IEnumerable<InternshipProject.ApplicationLogic.Model.Transaction>
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+    
+    <div class="table-responsive table-shadow">
+        <table class="table table-striped table-light">
+            <thead class="table-header">
+                <tr>
+                    <th>Amount</th>
+                    <th >Date</th>
+                    <th class="d-none d-md-table-cell">Balance</th>
+                    <th>Details</th>
+                    <th class="d-none d-md-table-cell">Name</th>
+                    <th class="d-none d-md-table-cell">External Account</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var transaction in Model)
+                {
+                    <tr>
+                        <td>@transaction.Amount.ToString("N")</td>
+                        <td>@transaction.Time.ToShortDateString()</td>
+                        <td class="d-none d-md-table-cell">10.30</td>
+                        <td>@transaction.Details</td>
+                        <td class="d-none d-md-table-cell">@transaction.ExternalName</td>
+                        <td class="d-none d-md-table-cell">@transaction.ExternalIBAN</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>

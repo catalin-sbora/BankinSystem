@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InternshipProject.EFDataAccess.Migrations
 {
     [DbContext(typeof(BankingDbContext))]
-    [Migration("20200331134501_InitialDataModel")]
-    partial class InitialDataModel
+    [Migration("20200413125432_RenameCardColorCardMetaData")]
+    partial class RenameCardColorCardMetaData
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,17 +24,22 @@ namespace InternshipProject.EFDataAccess.Migrations
             modelBuilder.Entity("InternshipProject.ApplicationLogic.Model.BankAccount", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("Balance")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18, 4)");
+
+                    b.Property<string>("Currency")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("CustomerId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("IBAN")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("LastTransactionDate")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -43,10 +48,30 @@ namespace InternshipProject.EFDataAccess.Migrations
                     b.ToTable("BankAccounts");
                 });
 
+            modelBuilder.Entity("InternshipProject.ApplicationLogic.Model.BankAccountMetaData", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BankAccountId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Color")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BankAccountId");
+
+                    b.ToTable("BankAccountMetaDatas");
+                });
+
             modelBuilder.Entity("InternshipProject.ApplicationLogic.Model.Card", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("BankAccountId")
@@ -72,6 +97,47 @@ namespace InternshipProject.EFDataAccess.Migrations
                     b.HasIndex("BankAccountId");
 
                     b.ToTable("Cards");
+                });
+
+            modelBuilder.Entity("InternshipProject.ApplicationLogic.Model.CardMetaData", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CardId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Color")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CardId");
+
+                    b.ToTable("CardMetaData");
+                });
+
+            modelBuilder.Entity("InternshipProject.ApplicationLogic.Model.CardTransaction", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CardId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("TransactionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("TransactionType")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CardId");
+
+                    b.HasIndex("TransactionId");
+
+                    b.ToTable("CardTransactions");
                 });
 
             modelBuilder.Entity("InternshipProject.ApplicationLogic.Model.ContactDetails", b =>
@@ -106,7 +172,6 @@ namespace InternshipProject.EFDataAccess.Migrations
             modelBuilder.Entity("InternshipProject.ApplicationLogic.Model.Customer", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("ContactDetailsId")
@@ -134,13 +199,12 @@ namespace InternshipProject.EFDataAccess.Migrations
             modelBuilder.Entity("InternshipProject.ApplicationLogic.Model.Transaction", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18, 4)");
 
-                    b.Property<Guid?>("BankAccountId")
+                    b.Property<Guid>("BankAccountId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Details")
@@ -172,11 +236,40 @@ namespace InternshipProject.EFDataAccess.Migrations
                         .HasForeignKey("CustomerId");
                 });
 
-            modelBuilder.Entity("InternshipProject.ApplicationLogic.Model.Card", b =>
+            modelBuilder.Entity("InternshipProject.ApplicationLogic.Model.BankAccountMetaData", b =>
                 {
                     b.HasOne("InternshipProject.ApplicationLogic.Model.BankAccount", null)
-                        .WithMany("Cards")
+                        .WithMany()
+                        .HasForeignKey("BankAccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("InternshipProject.ApplicationLogic.Model.Card", b =>
+                {
+                    b.HasOne("InternshipProject.ApplicationLogic.Model.BankAccount", "BankAccount")
+                        .WithMany()
                         .HasForeignKey("BankAccountId");
+                });
+
+            modelBuilder.Entity("InternshipProject.ApplicationLogic.Model.CardMetaData", b =>
+                {
+                    b.HasOne("InternshipProject.ApplicationLogic.Model.Card", null)
+                        .WithMany()
+                        .HasForeignKey("CardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("InternshipProject.ApplicationLogic.Model.CardTransaction", b =>
+                {
+                    b.HasOne("InternshipProject.ApplicationLogic.Model.Card", null)
+                        .WithMany("CardTransactions")
+                        .HasForeignKey("CardId");
+
+                    b.HasOne("InternshipProject.ApplicationLogic.Model.Transaction", "Transaction")
+                        .WithMany()
+                        .HasForeignKey("TransactionId");
                 });
 
             modelBuilder.Entity("InternshipProject.ApplicationLogic.Model.Customer", b =>
@@ -190,7 +283,9 @@ namespace InternshipProject.EFDataAccess.Migrations
                 {
                     b.HasOne("InternshipProject.ApplicationLogic.Model.BankAccount", null)
                         .WithMany("Transactions")
-                        .HasForeignKey("BankAccountId");
+                        .HasForeignKey("BankAccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

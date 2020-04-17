@@ -8,7 +8,7 @@ namespace InternshipProject.ViewModels.Accounts
 {
     public class AccountsListViewModel
     {
-        public IEnumerable<BankAccount> BankAccounts { get; set; }
+        public IEnumerable<BankAccountViewModel> BankAccounts { get; set; }
         public string CustomerName { get; set; }
         public string PhoneNo { get; set; }
     }

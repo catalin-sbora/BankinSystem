@@ -16,6 +16,47 @@ namespace InternshipProject.EFDataAccess
         public DbSet<Card> Cards { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<ContactDetails> ContactDetails { get; set; }
+        public DbSet<CardTransaction> CardTransactions { get; set; }
+        public DbSet<BankAccountMetaData> BankAccountMetaDatas { get; set; }
+        public DbSet<CardMetaData> CardMetaData { get; set; }
+
+        private void ConfigureEntity<T>(ModelBuilder builder) where T: DataEntity
+        {
+            builder.Entity<T>()
+                   .HasKey(c => c.Id);
+
+            builder.Entity<T>()
+                    .Property(c => c.Id)
+                    .IsRequired()
+                    .ValueGeneratedNever();
+        }
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+
+
+            ConfigureEntity<Customer>(builder);
+            ConfigureEntity<Transaction>(builder);
+            ConfigureEntity<BankAccount>(builder);
+            ConfigureEntity<Card>(builder);
+            ConfigureEntity<BankAccountMetaData>(builder);
+            ConfigureEntity<CardTransaction>(builder);
+            ConfigureEntity<CardMetaData>(builder);
+
+            builder.Entity<BankAccount>()
+                    .Property(ba => ba.Balance)
+                    .HasColumnType("decimal(18, 4)");
+
+            builder.Entity<Transaction>()
+                    .Property(transaction => transaction.Amount)
+                    .HasColumnType("decimal(18, 4)");
+
+            builder.Entity<BankAccountMetaData>()
+                    .HasOne<BankAccount>();
+
+            builder.Entity<CardMetaData>()
+                    .HasOne<Card>();
+        }
+
 
             
     }

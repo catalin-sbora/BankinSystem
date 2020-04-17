@@ -5,23 +5,19 @@ using System.Text;
 
 namespace InternshipProject.ApplicationLogic.Abstractions
 {
-    public interface ICustomerRepository
+    public interface ICustomerRepository: IRepository<Customer>
     {
         /*
          * Get methods
          */
         Customer GetCustomerByUserId(Guid userId);
-        Customer GetCustomerById(Guid customerId);
+        
         IEnumerable<Customer> FindByLastName(string lastName);
-        IEnumerable<Customer> GetAll();
-
         /*
-         * Write Methods
-         */
+         * Write Methods   */      
+        Customer UpdateCustomerDetails(Guid customerId, Customer customerDetails);
+        IEnumerable<Customer> GetCustomerstWithBankAccounts();
 
-        Customer Add(Customer customer);
-        Customer Update(Guid customerId, Customer customerDetails);
-        bool Remove(Guid customerId);
-                
+        Customer GetCustomerThatOwnsIban(string iban);
     }
 }

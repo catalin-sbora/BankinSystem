@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace InternshipProject.EFDataAccess.Migrations
 {
-    public partial class InitialDataModel : Migration
+    public partial class UpdateDataModel : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

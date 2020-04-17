@@ -4,15 +4,61 @@
 
     ViewData["Title"] = "Index";
 }
+<div class="d-flex justify-content-end">
+
+    <div class="customer-details-label">
+        Name
+    </div>
+    <div class="customer-details-value">
+        @Model.CustomerName
+    </div>
+</div>
+<div class="d-flex justify-content-end">
+
+    <div class="customer-details-label">
+        Contact
+    </div>
+    <div class="customer-details-value">   
+        @Model.PhoneNo
+    </div>
+       
+</div>
+
+<br />
+
+<div class="d-flex flex-row flex-wrap justify-content-around">
 @foreach (var account in Model.BankAccounts)
 {
-    <div class="card" style="width: 18rem;">
+    <div class="card details-card" style="width:300px; margin-bottom: 30px;">
 
-        <div class="card-body">
-            <h5 class="card-title">@account.IBAN</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
+        <div class="d-flex justify-content-center">
+            <div class="details-card-colorbox" style="background-color: #@account.MetaData.Color.ToString("X6");"></div>
         </div>
-    </div>
+        <div class="d-flex justify-content-center flex-column">
+            <div class="details-card-amount">@account.BankAccount.Balance.ToString("N")</div>
+            <div class="details-card-currency">@account.BankAccount.Currency</div>
+            <div class="details-card-name">@account.MetaData.Name</div>
+            
+            <div class="d-flex flex-row">
+                <div class="details-card-property-name">IBAN</div>
+                <div class="details-card-property-value">@account.BankAccount.IBAN</div>
+            </div>
+            
+            <div class="d-flex flex-row">
+                <div class="details-card-property-name">Last Transaction On:</div>
+                <div class="details-card-property-value">@account.BankAccount.LastTransactionDate.ToString("dd/M/yyyy")</div>
+            </div>
+            <div class="d-flex flex-row">
+                <div class="details-card-property-name">Paid this month:</div>
+                <div class="details-card-property-value">@account.BankAccount.GetAmountPaidInCurrentMonth().ToString("N") @account.BankAccount.Currency</div>
+            </div>
+        </div>
+        <br>
+        <div class="d-flex justify-content-center">
+            <a asp-controller="Accounts" asp-action="Details" asp-route-id="@account.BankAccount.Id" class="btn btn-light stretched-link details-card-button ">Details</a>
+         </div>
+
+        </div>
 
 }
+</div>

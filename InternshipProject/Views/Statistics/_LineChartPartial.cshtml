@@ -1,0 +1,53 @@
+﻿@model InternshipProject.ViewModels.Statistics.StatisticsViewModel;
+
+<canvas id="lineChart"></canvas>
+
+<script>
+    function loadChartData() {
+
+        var accountBalanceHistory = [];
+        var labelsArray = [];
+
+        @foreach (var transactionLabel in Model.TransactionIndexes)
+        {
+            @Html.Raw($"labelsArray.push({transactionLabel});");
+        }
+
+        var ctx = document.getElementById('lineChart').getContext('2d');
+
+        var lineChart = new Chart(ctx, {
+            type: 'line',
+
+            data: {
+                labels: labelsArray,
+                datasets: []
+            },
+
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                },
+
+                title: {
+                    display: true,
+                    text: 'Balance over time'
+                }
+            }
+        });
+
+        @foreach (var accountDetail in Model.BankAccounts)
+        {
+            @foreach (var balanceValue in accountDetail.BalanceHistory)
+            {
+                @Html.Raw($"accountBalanceHistory.push({balanceValue});");
+            }
+
+            @Html.Raw($"addLineData(lineChart, '{accountDetail.MetaData.Name}', accountBalanceHistory, '#'+'{accountDetail.MetaData.Color.ToString("X6")}');");
+            @Html.Raw($"accountBalanceHistory = [];");
+            }
+        }
+</script>

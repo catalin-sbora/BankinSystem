@@ -1,0 +1,50 @@
+﻿@model InternshipProject.ViewModels.Cards.CompleteCardsViewModel
+@{
+    ViewData["Title"] = "Index";
+}
+
+<p class="text-right font-weight-bold">Name: John Doe</p>
+<p class="text-right font-weight-bold">Contact: 0773820330</p>
+    </br>
+    </br>
+    </br>
+@*
+<div class="container ">
+    <div class="card-deck">
+        @foreach (var card in Model.Cards)
+        {
+            <div class="card text-black border-success mb-3" style="width: 16rem; height: 280px">
+
+                <div class="card-body bg-light">
+                    <div class="  square " style="background-color:#@card.CardColor.Color.ToString("X6"); width:50px;height:50px;margin:auto;margin-bottom:20px"></div>
+                   
+                    <h5 class="card-title">Name:@card.Card.OwnerName</h5>
+                    <p class="card-text">Serial Number:@card.Card.SerialNumber</p>
+                    <p class="card-text">Expiry Date:@card.Card.ExpiryDate.ToShortDateString()</p>
+                    <a class ="btn btn-success" asp-controller="Cards" asp-action="CardPayments" asp-route-id="@card.Card.Id">Go to payments</a>
+                   
+                </div>
+            </div>
+        }
+    </div>
+</div>
+    *@
+<div class="d-flex flex-row flex-wrap justify-content-around">
+    @foreach (var card in Model.Cards)
+    {
+        <div class="card details-card" style="width:300px; margin-bottom: 30px;">
+
+            <div class="d-flex justify-content-center">
+                <div class="details-card-colorbox" style="background-color: #@card.CardColor.Color.ToString("X6");"></div>
+            </div>
+            <div class="d-flex justify-content-center flex-column">
+                <div class="details-card-amount">@card.Card.OwnerName</div><br />
+                <div class="details-card-property-name">Serial Number:@card.Card.SerialNumber</div><br />
+                <div class="details-card-property-name">Expiry Date:@card.Card.ExpiryDate.ToShortDateString()</div><br />
+                <a class="btn btn-light stretched-link" asp-controller="Cards" asp-action="CardPayments" asp-route-id="@card.Card.Id" >Go to payments</a>
+
+                
+                </div>
+            </div>
+    }
+</div>

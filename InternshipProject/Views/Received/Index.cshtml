@@ -1,0 +1,220 @@
+﻿<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/Content/font-awesome/css/font-awesome.min.css" />
+
+<!-- Table HTML Export Js -->
+<script src="js/tableHTMLExport.js"></script>
+@model InternshipProject.ViewModels.Received.ReceivedListViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+<script>
+    function exportToExcel() {
+        var htmls = "";
+        var uri = 'data:application/vnd.ms-excel;base64,';
+        var template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>';
+        var base64 = function (s) {
+            return window.btoa(unescape(encodeURIComponent(s)))
+        };
+
+        var format = function (s, c) {
+            return s.replace(/{(\w+)}/g, function (m, p) {
+                return c[p];
+            })
+        };
+
+        htmls = document.getElementById("exportTable").innerHTML;
+
+        var ctx = {
+            worksheet: 'Worksheet',
+            table: htmls
+        }
+
+
+        var link = document.createElement("a");
+        link.download = "export.xls";
+        link.href = uri + base64(format(template, ctx));
+        link.click();
+    }
+</script>
+
+<script>
+    function Search() {
+        for (i = 1; i < tr.length; i++) {
+            // Hide the row initially.
+            tr[i].style.display = "none";
+
+            td = tr[i].getElementsByTagName("td");
+            for (var j = 0; j < td.length; j++) {
+                cell = tr[i].getElementsByTagName("td")[j];
+                if (cell) {
+                    if (cell.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                        break;
+                    }
+                }
+            }
+        }
+    }
+</script>
+
+<div class="d-flex justify-content-end">
+
+    <div class="customer-details-label">
+        Name:
+    </div>
+    <div class="customer-details-value">
+        @Model.CustomerName
+    </div>
+</div>
+
+<div class="d-flex justify-content-end">
+
+    <div class="customer-details-label">
+        Contact:
+    </div>
+    <div class="customer-details-value">
+        @Model.PhoneNo
+    </div>
+</div>
+
+<h2>Received Transactions</h2>
+
+
+
+
+<div class="table-responsive">
+    <table class="table" style="width: 300px;" background="gray">
+        <thead>
+            <tr>
+                <th style="color: white; background-color: #3a2a5e;">
+                    Select account
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @{ int i = 0;}
+
+            @foreach (var account in Model.BankAccounts)
+            {
+
+
+                <tr>
+                    <td>
+
+                        <input type="radio" id="yes" onclick="Button1()" name="account" value="@Model.BankAccounts.ElementAt(i).IBAN" checked="checked">
+
+                        <label>@Model.BankAccounts.ElementAt(i).IBAN</label><br>
+                        @{ i++;}
+
+                    </td>
+
+                </tr>
+            }
+
+        </tbody>
+    </table>
+</div>
+
+
+<br>
+<div class="d-flex flex-column flex-md-row">
+    <div class="d-flex flex-column flex-grow-1">
+        <div><button class="btn btn-light light-button" id="btnExport" onclick="exportToExcel()"> Export to XLS</button></div>
+    </div>
+    <div class="d-flex flex-column">
+        @using (Html.BeginForm("New", "Payments"))
+        {
+            <button class="btn btn-light light-button">
+                <i class="fas fa-money-bill"></i> New Received
+            </button>
+        }
+    </div>
+</div>
+<br />
+
+<div class="d-flex flex-row-reverse">
+    <div class="d-flex flex-row-reverse">
+
+        <div class="d-flex flex-row-reverse">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-filter"></i></span>
+                </div>
+                <input type="text" id="myInput" onkeyup="Search()" placeholder="Search.." title="Type">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+    function myFunction() {
+        var rows = document.querySelector("#exportTable tbody").rows;
+        for (var i = 0; i < rows.length; i++) {
+            if (rows[i].cells[0].textContent < 0)
+                rows[i].style.display = "none";
+        }
+    }
+</script>
+
+@*Script pentru butoanele de ales IBAN-ul...Nu reseateaza cand schimb butonul asa ca tabelul o sa se goleasca*@
+<script type="text/javascript">
+    function Button1() {
+
+        var rates = document.getElementsByName('account');
+        var rate_value;
+        var rows = document.querySelector("#exportTable tbody").rows;
+        for (var i = 0; i < rates.length; i++) {
+            if (rates[i].checked) {
+                rate_value = rates[i].value;
+                break;
+            }
+        }
+        for (var i = 0; i < rows.length; i++) {
+            if (rows[i].cells[5].textContent != rate_value)
+                rows[i].style.display = "none";
+            else {
+                $(rows[i]).removeAttr("style");
+            }
+        }
+    }
+</script>
+
+<body onload="myFunction();Button1()">
+    <table class="table table-striped" id="exportTable">
+        <thead>
+            <tr style="background-color:#3a2a5e ;color: white">
+
+                <th scope="col">Amount</th>
+                <th scope="col">Date</th>
+                <th scope="col">Status</th>
+                <th scope="col">External Name</th>
+                <th scope="col">External Account</th>
+                <th scope="col">Details</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var account in Model.BankAccounts)
+                @foreach (var transaction in Model.Received)
+                    @if (transaction.BankAccountId == account.Id)
+                    {
+
+                        <tr>
+                            <td>@transaction.Amount</td>
+                            <td>@transaction.Time</td>
+                            <td>@transaction.Status</td>
+                            <td>@transaction.ExternalName</td>
+                            <td>@transaction.ExternalIBAN</td>
+                            <td hidden>@account.IBAN</td>
+                            <td>@Html.ActionLink("Details", "Details", "Payments", new { Id = transaction.Id }, null) </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </body>
