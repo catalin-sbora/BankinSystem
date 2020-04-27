@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InternshipProject.Applicati
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InternshipProject.EFDataAccess", "InternshipProject.DataAccess\InternshipProject.EFDataAccess.csproj", "{9C7E424E-398E-4E97-AC4E-A76BC7908B8C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RazorPagesReportingEngine", "RazorPagesReportingEngine\RazorPagesReportingEngine.csproj", "{D0B47E7F-D53B-499F-8A19-00ACDED87FE6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RazorPagesReportingEngine", "RazorPagesReportingEngine\RazorPagesReportingEngine.csproj", "{D0B47E7F-D53B-499F-8A19-00ACDED87FE6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InternshipProject.UnitTests.AppLogic", "InternshipProject.UnitTests.AppLogic\InternshipProject.UnitTests.AppLogic.csproj", "{E0C69729-DB39-4BD4-96FF-1672020E30C8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{D0B47E7F-D53B-499F-8A19-00ACDED87FE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D0B47E7F-D53B-499F-8A19-00ACDED87FE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D0B47E7F-D53B-499F-8A19-00ACDED87FE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0C69729-DB39-4BD4-96FF-1672020E30C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0C69729-DB39-4BD4-96FF-1672020E30C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0C69729-DB39-4BD4-96FF-1672020E30C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0C69729-DB39-4BD4-96FF-1672020E30C8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
