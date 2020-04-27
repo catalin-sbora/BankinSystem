@@ -112,7 +112,7 @@ namespace InternshipProject.EFDataAccess.Migrations
 
                     b.HasIndex("CardId");
 
-                    b.ToTable("CardMetaData");
+                    b.ToTable("CardColors");
                 });
 
             modelBuilder.Entity("InternshipProject.ApplicationLogic.Model.CardTransaction", b =>

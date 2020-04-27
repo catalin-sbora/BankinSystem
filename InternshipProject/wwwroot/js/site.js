@@ -8,25 +8,48 @@
  //   <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
 function filterTable(event) {
 
-    var filter = event.target.value.toUpperCase();
+    var filter = event.target.value.toLowerCase();
     var rows = document.querySelector("#exportTable tbody").rows;
 
     for (var i = 0; i < rows.length; i++) {
-        var firstCol = rows[i].cells[1].textContent.toUpperCase();
-        var secondCol = rows[i].cells[2].textContent.toUpperCase();
-        var thirdCol = rows[i].cells[3].textContent.toUpperCase();
-        var fourthCol = rows[i].cells[4].textContent.toUpperCase();
-        var fifthCol = rows[i].cells[5].textContent.toUpperCase();
+        for (var j = 0; j < rows[i].cells.length; j++) {
+            if (rows[i].cells[j].textContent.toLowerCase().indexOf(filter) > -1) {
+                displayRow = "";
+            }
+            else {
+                displayRow = "none";
+            }
+        }
+        rows[i].style.display = displayRow;
+    }
+}
 
-        if (firstCol.indexOf(filter) > -1 || secondCol.indexOf(filter) > -1 || thirdCol.indexOf(filter) > -1 || fourthCol.indexOf(filter) > -1 || fifthCol.indexOf(filter) > -1) {
-            rows[i].style.display = "";
-        } else {
-            rows[i].style.display = "none";
+function filterTableRows(rows, filter) {
+
+    filter = filter.toLowerCase();
+    var displayRow = false;
+    for (var i = 0; i < rows.length; i++) {
+        for (var j = 0; j < rows[i].cells.length; j++) {
+            if (rows[i].cells[j].textContent.toLowerCase().indexOf(filter) > -1) {
+                displayRow = true;
+                break;
+            }
+            else {
+                displayRow = false;
+            }
+        }
+        if (displayRow)
+        {
+            $(rows[i]).removeAttr("style");
+        }
+        else
+        {
+            $(rows[i]).attr("style", "display:none");
         }
     }
 }
 
-document.querySelector('#myInput').addEventListener('keyup', filterTable, false);
+//document.querySelector('#myInput').addEventListener('keyup', filterTable, false);
 
 
 
@@ -57,3 +80,4 @@ $(function () {
     });
 
 });
+

@@ -18,7 +18,7 @@ namespace InternshipProject.EFDataAccess
         public T Add(T itemToAdd)
         {
             var entity = dbContext.Add<T>(itemToAdd);
-            dbContext.SaveChanges();
+           // dbContext.SaveChanges();
             return entity.Entity;
         }
       
@@ -43,6 +43,7 @@ namespace InternshipProject.EFDataAccess
             if (entityToRemove != null)
             {
                 dbContext.Remove<T>(entityToRemove);
+                
                 return true;
             }
             return false;
@@ -53,7 +54,7 @@ namespace InternshipProject.EFDataAccess
             var entity = dbContext.Set<T>()
                                   .Update(itemToUpdate);
             //dbContext.Entry(itemToUpdate).State = EntityState.Modified;
-            dbContext.SaveChanges();          
+            //dbContext.SaveChanges();          
             return entity.Entity;
         }
     }

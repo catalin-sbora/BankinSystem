@@ -10,115 +10,29 @@ namespace InternshipProject.ApplicationLogic.Services
 {
     public class AccountsService
     {
-        private readonly ICustomerRepository customerRepository;
-        private readonly ICardRepository cardRepository;
-        private readonly ICardColorRepository cardColorRepository;
-        public AccountsService(ICustomerRepository customerRepository , ICardRepository cardRepository, ICardColorRepository cardColorRepository )
-        {
-            this.customerRepository = customerRepository;
-            this.cardRepository = cardRepository;
-            this.cardColorRepository = cardColorRepository;
-        }
+        private readonly ICustomerRepository customerRepository;     
+        private readonly IPersistenceContext persistenceContext;
+        private readonly CustomerService customerService;
 
-        public Guid GetCustomerIdFromUserId(string userId)
+        public AccountsService(IPersistenceContext persistenceContext, CustomerService customerService)
         {
-            var idToSearch = Guid.Parse(userId);
-            var foundCustomer =  customerRepository?.GetCustomerByUserId(idToSearch);
-            if (foundCustomer == null)
-            {
-                throw new CustomerNotFoundException(userId);
-            }
-            return foundCustomer.Id;
-        }
+            
+            this.persistenceContext = persistenceContext;
+            customerRepository = persistenceContext.CustomerRepository;
+            this.customerService = customerService;
+            
+        }        
         
         public IEnumerable<BankAccount> GetCustomerBankAccounts(string userId)
         {
-            Guid idToSearch = Guid.Empty;            
-            Guid.TryParse(userId, out idToSearch);
-            var customer = customerRepository?.GetCustomerByUserId(idToSearch);
-            
-            if (customer == null)
-            {
-                throw new CustomerNotFoundException(userId);
-            }
-
+            var customer = customerService.GetCustomerFromUserId(userId);
             return customer.BankAccounts
                             .AsEnumerable();
-        }
-
-        public void CreateAccountPayment(string userId, Guid account, decimal amount, string destinationName, string destinationIBAN, string details)
+        }        
+        
+        public BankAccount GetCustomerBankAccount(string userId, Guid accountId)
         {
-            var sendingCustomer = GetCustomer(userId);
-            var sendingAccount = sendingCustomer.GetAccount(account);
-
-            var receiverCustomer = customerRepository.GetCustomerThatOwnsIban(destinationIBAN);
-            if (receiverCustomer != null)
-            {
-                var destAccount = receiverCustomer.GetBankAccountByIBAN(destinationIBAN);
-                if (!destAccount.Currency.Equals(sendingAccount.Currency))
-                {
-                    throw new WrongCurrencyException(sendingAccount.Currency, destAccount.Currency);
-                }
-            }            
-            var transaction = sendingCustomer.MakePayment(account, amount, destinationName, destinationIBAN, details);    
-            
-            customerRepository.Update(sendingCustomer);
-            
-            if (receiverCustomer != null)
-            { 
-                receiverCustomer.NotifyTransaction(transaction, sendingCustomer);
-                customerRepository.Update(receiverCustomer);
-            }
-
-
-        }
-
-        public Customer GetCustomerWithIBAN(string destinationIBAN)
-        {
-            foreach (Customer customer in customerRepository.GetCustomerstWithBankAccounts())
-            {
-                var foundBankAccount = customer.GetBankAccountByIBAN(destinationIBAN);
-                if (foundBankAccount != null)
-                {                   
-                    return customer;
-                }
-            }
-            throw new AccountIBANNotFoundException(destinationIBAN);
-        }
-
-
-        public CardMetaData GetCardColor(Guid cardId)
-        {
-            return cardColorRepository.GetColor(cardId);
-        }
-
-        public Customer GetCustomer(string userId)
-        {
-            Guid idToSearch = Guid.Empty;
-            Guid.TryParse(userId, out idToSearch);
-            var customer = customerRepository?.GetCustomerByUserId(idToSearch);
-            if (customer == null)
-            {
-                throw new CustomerNotFoundException(userId);
-            }
-
-            return customer;
-        }
-
-        public BankAccount GetCustomerBankAccount(string userId, Guid bankAccountId)
-        {
-            var customer = GetCustomer(userId);
-            var bankAccount = customer.BankAccounts.Where(account => account.Id.Equals(bankAccountId))
-                                 .SingleOrDefault();
-            if (bankAccount == null)
-            {
-                throw new AccountNotFoundException(bankAccountId);
-            }
-            return bankAccount;
-        }
-
-        public BankAccount GetCustomerBankAccount(Customer customer, Guid accountId)
-        {            
+            var customer = customerService.GetCustomerFromUserId(userId);
             var account = customer.BankAccounts
                     .Where(ba => accountId.Equals(ba.Id))
                     .SingleOrDefault();
@@ -129,20 +43,11 @@ namespace InternshipProject.ApplicationLogic.Services
 
             return account;
         }       
-        public IEnumerable<Card> GetCardsByUserID(string userID)
+       
+        public IEnumerable<Transaction> GetFilteredAccountTransactions(string userId, Guid accountId, string filter)
         {
-            Guid idToSearch = Guid.Empty;
-            Guid.TryParse(userID, out idToSearch);
-            var cards = cardRepository.GetByUserId(idToSearch);
-            return cards;
-        }
-        public IEnumerable<Transaction> GetTransactionBankAccount(string userId, Guid bankAccountId)
-        {
-            Guid idToSearch = Guid.Empty;
-            Guid.TryParse(userId, out idToSearch);
-
-            var bankAccount = GetCustomerBankAccount(userId, bankAccountId);
-            return bankAccount.Transactions;
+            var customer = customerService.GetCustomerFromUserId(userId);
+            return customer.GetFilteredAccountTransactions(accountId, filter);
         }
     }
 }

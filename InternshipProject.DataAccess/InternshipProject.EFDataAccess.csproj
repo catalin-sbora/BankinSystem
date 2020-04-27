@@ -23,6 +23,8 @@
     <Compile Remove="Migrations\20200409085120_CardColor.Designer.cs" />
     <Compile Remove="Migrations\20200411212305_UpdateDataModelPKs.cs" />
     <Compile Remove="Migrations\20200411212305_UpdateDataModelPKs.Designer.cs" />
+    <Compile Remove="Migrations\20200417145509_RenameCardColor.cs" />
+    <Compile Remove="Migrations\20200417145509_RenameCardColor.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

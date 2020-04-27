@@ -41,7 +41,7 @@
                 <div class="details-card-amount">@card.Card.OwnerName</div><br />
                 <div class="details-card-property-name">Serial Number:@card.Card.SerialNumber</div><br />
                 <div class="details-card-property-name">Expiry Date:@card.Card.ExpiryDate.ToShortDateString()</div><br />
-                <a class="btn btn-light stretched-link" asp-controller="Cards" asp-action="CardPayments" asp-route-id="@card.Card.Id" asp-route-SerialNumber ="@card.Card.SerialNumber" asp-route-OwnerName ="@card.Card.OwnerName">Go to payments</a>
+                <a class="btn btn-light stretched-link" asp-controller="Cards" asp-action="CardPayments" asp-route-id="@card.Card.Id" >Go to payments</a>
 
                 
                 </div>

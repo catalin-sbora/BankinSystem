@@ -15,45 +15,46 @@ namespace InternshipProject.Controllers
     {
         private PaymentsService transactionService;
         private UserManager<IdentityUser> userManager;
-        private AccountsService customerServices;
+        private CustomerService customerService;
+        private AccountsService accountsService;
         private CardServices cardService;
-        private ILogger<CardsController> logger;
-        public CardsController(AccountsService customerServices, 
-                                UserManager<IdentityUser> userManager, 
+        private MetaDataService metaDataService;
+        private ILogger logger;
+        public CardsController(CustomerService customerService,
+                                AccountsService accountsService,
                                 CardServices cardService,
                                 PaymentsService transactionService,
+                                MetaDataService metaDataService,
+                                UserManager<IdentityUser> userManager,                                
                                 ILogger<CardsController> logger)
        
         {
             this.transactionService = transactionService;
             this.userManager = userManager;
             this.cardService = cardService;
-            this.customerServices = customerServices;
+            this.customerService = customerService;
+            this.accountsService = accountsService;
+            this.metaDataService = metaDataService;
             this.logger = logger;
         }
         public IActionResult Index()
         {
             string userId = userManager.GetUserId(User);
+
             try
             {
-                var customer = customerServices.GetCustomer(userId);
-                var bankAccounts = customerServices.GetCustomerBankAccounts(userId);
+                var customer = customerService.GetCustomerFromUserId(userId);
+                var bankAccounts = accountsService.GetCustomerBankAccounts(userId);
 
-                List<Card> cards = new List<Card>();
+                var cards = cardService.GetCardsForCustomer(userId);
                 CompleteCardsViewModel cardList = new CompleteCardsViewModel();
                 cardList.Cards = new List<CardWithColorViewModel>();
-                foreach (var bankAccount in bankAccounts)
-                {
-                    cards.AddRange(customerServices.GetCardsByUserID(bankAccount.Id.ToString()));
-
-                }
-
-
+                
                 foreach (var card in cards)
                 {
                     CardWithColorViewModel temp = new CardWithColorViewModel();
                     temp.Card = card;
-                    temp.CardColor = customerServices.GetCardColor(card.Id);
+                    temp.CardColor = metaDataService.GetMetaDataForCard(card.Id);
                     cardList.Cards.Add(temp);
                 }
                 return View(cardList);
@@ -61,14 +62,14 @@ namespace InternshipProject.Controllers
             catch(Exception e)
             {
                 logger.LogDebug("Failed to retrieve cards list {@Exception}", e);
-                logger.LogError("Failed to retrieve cards list {ExceptionMessage}", e);
+                logger.LogError("Failed to retrieve cards list {ExceptionMessage}", e.Message);
                 return BadRequest("Unable to process your request");
             }
             
         }
        
         
-        public ActionResult CardPayments(Guid Id ,[FromForm] CardTransactionsListViewModel model , string OwnerName , string SerialNumber)
+        public ActionResult CardPayments(Guid Id ,[FromForm] CardTransactionsListViewModel model )
         {
             
             string userId = userManager.GetUserId(User);
@@ -79,9 +80,11 @@ namespace InternshipProject.Controllers
                 {
                     model = new CardTransactionsListViewModel();
                 }
-                var customer = customerServices.GetCustomer(userId);
-                var bankAccounts = customerServices.GetCustomerBankAccounts(userId);
+                var customer = customerService.GetCustomerFromUserId(userId);
+                var bankAccounts = accountsService.GetCustomerBankAccounts(userId);
                 var card = cardService.GetCardByCardId(Id);
+                model.OwnerName = card.OwnerName;
+                model.SerialNumber = card.SerialNumber;
                 model.CardId = Id;
                  
                 
@@ -98,19 +101,16 @@ namespace InternshipProject.Controllers
                     cardTransactionViewModel.Add(temp);
                 }
                 
-                //CardTransactionsListViewModel cardTransactionsListViewModel = new CardTransactionsListViewModel();
-                model.CardTransactions = cardTransactionViewModel;
-                model.OwnerName = OwnerName;
-                model.SerialNumber = SerialNumber;
-                //cardTransactionsListViewModel.BankAccountId = bankAccount.Id;
-               
-                   
+                
+                model.CardTransactions = cardTransactionViewModel;                 
                 
               
                 return View(model);
             }
             catch(Exception e)
             {
+                logger.LogError("Unable to retrieve card payments {ExceptionMessage}", e.Message);
+                logger.LogDebug("Unable to retrieve card payments {@Exception}",e);
                 return BadRequest("Unable to process your request");
                 
             }
@@ -130,22 +130,20 @@ namespace InternshipProject.Controllers
             ModelState.Clear();
             try
             {
-                var sourceAccountId = cardService.GetCardByCardId(viewModel.CardId).BankAccount.Id;
-                var transaction = Transaction.Create(viewModel.Amount, sourceAccountId, viewModel.ExternalName, viewModel.IBan, null);
-                var card = cardService.GetCardByCardId(viewModel.CardId);
-
-                var cardTransaction = CardTransaction.Create(transaction, CardTransactionType.Online);
-                transactionService.AddPayment(sourceAccountId.ToString(), transaction.Amount, transaction.ExternalName, transaction.ExternalIBAN);
-                var getCardTransaction = cardService.AddTransaction(cardTransaction);
-                card.CardTransactions.Add(getCardTransaction);
-                cardService.AddCardTransaction(card);
-                var id = viewModel.CardId;
-                // return RedirectToAction("CardPayments", new {Id=id , SearchBy = ""});
+                var userId = userManager.GetUserId(User);
+                cardService.MakeOnlinePayment(userId, 
+                                                viewModel.CardId, 
+                                                viewModel.Amount, 
+                                                viewModel.ExternalName, 
+                                                viewModel.IBan);
+                
                 model.PaymentMessage = "Done";
                 model.PaymentStatus = NewPaymentStatus.Created;
             }
             catch(Exception e)
             {
+                logger.LogError("Unable to execute payment {ExceptionMessage}", e.Message);
+                logger.LogDebug("Unable to execute payment {@Exception}", e);
                 return BadRequest("Unable to process your request");
             }
             return PartialView("_NewPaymentPartial", model);

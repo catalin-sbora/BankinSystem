@@ -19,15 +19,12 @@ namespace InternshipProject.Controllers
     public class ReceivedController : Controller
     {
         private readonly UserManager<IdentityUser> userManager;
-        private readonly AccountsService customerServices;
-
-        private readonly PaymentsService transactionService;
+        private readonly CustomerService customerService;       
         private readonly ReceivedService receivedService;
         private readonly RazorPagesReportingEngine reportingEngine;
         private readonly ILogger<ReceivedController> logger;
         public ReceivedController(UserManager<IdentityUser> userManager,
-            AccountsService customerServices, 
-            PaymentsService transactionService, 
+            CustomerService customerService,              
             ReceivedService receivedService, 
             RazorPagesReportingEngine reportingEngine,
             ILogger<ReceivedController> logger)       
@@ -36,18 +33,18 @@ namespace InternshipProject.Controllers
             this.reportingEngine = reportingEngine;
             this.receivedService = receivedService;
             this.userManager = userManager;
-            this.customerServices = customerServices;
+            this.customerService = customerService;
             //this.transactionService = transactionService;
         }
       
         public IActionResult IndexAsync()
         {
             var userId = userManager.GetUserId(User);
-            var customer = customerServices.GetCustomer(userId);
+            var customer = customerService.GetCustomerFromUserId(userId);
             try
             {                 
                 
-                var received = receivedService.GetCustomerTransaction(userId, customer);
+                var received = receivedService.GetCustomerTransaction(userId);
                 var viewModel = new ReceivedListViewModel()
                 {
                     //IsSelected = viewModel.IsSelected,
@@ -76,15 +73,13 @@ namespace InternshipProject.Controllers
         }
 
 
-
-
         [HttpPost]
         public IActionResult AddReceived([FromForm]NewPaymentViewModel paymentData)
         {
             var userId = userManager.GetUserId(User);
             try
             {
-                var customer = customerServices.GetCustomer(userId);
+                var customer = customerService.GetCustomerFromUserId(userId);
                 var viewModel = new AddReceivedViewModel()
                 {
                     

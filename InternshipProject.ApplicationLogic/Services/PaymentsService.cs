@@ -1,4 +1,5 @@
 ﻿using InternshipProject.ApplicationLogic.Abstractions;
+using InternshipProject.ApplicationLogic.Exceptions;
 using InternshipProject.ApplicationLogic.Model;
 using System;
 using System.Collections.Generic;
@@ -9,51 +10,65 @@ namespace InternshipProject.ApplicationLogic.Services
 {
     public class PaymentsService
     {
-        private readonly ITransactionRepository transactionRepository;
+        private readonly IPersistenceContext persistenceContext;
         private readonly ICustomerRepository customerRepository;
+        private readonly CustomerService customerService;
 
-        public PaymentsService(ITransactionRepository transactionRepository, ICustomerRepository customerRepository)
+        public PaymentsService(IPersistenceContext persistenceContext, CustomerService customerService)
+        {            
+            this.persistenceContext = persistenceContext;
+            customerRepository = this.persistenceContext.CustomerRepository;
+            this.customerService = customerService;
+        }      
+
+        public Transaction CreateAccountPayment(string userId, Guid account, decimal amount, string destinationName, string destinationIBAN, string details)
         {
-            this.transactionRepository = transactionRepository;
-            this.customerRepository = customerRepository;
-        }
-
-        public Transaction AddPayment(string bankAccountId, decimal amount, string externalName, string externalIBAN)
-        {
-            Guid guidBankAccountId = Guid.Empty;
-            Guid.TryParse(bankAccountId, out guidBankAccountId);
-
-            if (guidBankAccountId == Guid.Empty)
+            var sendingCustomer = customerService.GetCustomerFromUserId(userId);
+            var sendingAccount = sendingCustomer.GetAccount(account);
+            Transaction transaction = null;
+            using (var transactionScope = persistenceContext.BeginTransaction())
             {
-                throw new Exception("Wrong guid");
+                var receiverCustomer = customerRepository.GetCustomerThatOwnsIban(destinationIBAN);
+                if (receiverCustomer != null)
+                {
+                    var destAccount = receiverCustomer.GetBankAccountByIBAN(destinationIBAN);
+                    if (!destAccount.Currency.Equals(sendingAccount.Currency))
+                    {
+                        throw new WrongCurrencyException(sendingAccount.Currency, destAccount.Currency);
+                    }
+                }
+                transaction = sendingCustomer.MakePayment(account, amount, destinationName, destinationIBAN, details);
+
+                customerRepository.Update(sendingCustomer);
+
+                if (receiverCustomer != null)
+                {
+                    receiverCustomer.NotifyTransaction(transaction, sendingCustomer);
+                    customerRepository.Update(receiverCustomer);
+                }
+                persistenceContext.SaveChanges();                
             }
 
-            return transactionRepository.NewTransaction(amount, externalName, externalIBAN, guidBankAccountId);
+            return transaction;
         }
-        public Transaction GetById(string Id)
+        public Transaction GetPaymentById(string userId, Guid id)
         {
-            Guid transactionId = Guid.Empty;
-            Guid.TryParse(Id, out transactionId);
+            var customer = customerService.GetCustomerFromUserId(userId);
+            var bankAccount = customer.BankAccounts.Where(ba => ba.Transactions
+                                                .Where(transaction => transaction.Amount < 0 && transaction.Id == id)
+                                                .Any()
+                            ).Single();
 
-            if (transactionId == Guid.Empty)
-            {
-                throw new Exception("Wrong guid");
-            }
-            return transactionRepository.GetTransactionById(transactionId);
+            var payment = bankAccount.Transactions
+                        .Where(transaction => transaction.Id == id )
+                        .Single();
+
+            return payment;
         }
         public IEnumerable<Transaction> GetFilteredPayments(string userId, string searchedString)
         {
-            Guid guidUserId = Guid.Empty;
-            Guid.TryParse(userId, out guidUserId);
-
-            if (guidUserId == Guid.Empty)
-            {
-                throw new Exception("Wrong guid");
-            }
-
-
+            Guid guidUserId = Guid.Parse(userId);
             var paymentsList = GetCustomerPayments(userId);
-
             var searchedPaymentsList = paymentsList.Where(transaction => (transaction.Amount.ToString().Contains(searchedString)) ||
                                                                            (transaction.ExternalIBAN.ToLower().Contains(searchedString)) ||
                                                                            (transaction.ExternalName.ToLower().Contains(searchedString)) ||
@@ -63,9 +78,8 @@ namespace InternshipProject.ApplicationLogic.Services
 
         public IEnumerable<Transaction> GetCustomerPayments(string userId)
         {
-            var customer = customerRepository?.GetCustomerByUserId(Guid.Parse(userId));
+            var customer = customerService.GetCustomerFromUserId(userId);
             var paymentsList = new List<Transaction>();
-
             foreach (var account in customer.BankAccounts)
             {
                 foreach (var transaction in account.Transactions)
