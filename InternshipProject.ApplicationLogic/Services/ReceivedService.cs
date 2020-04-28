@@ -11,12 +11,15 @@ namespace InternshipProject.ApplicationLogic.Services
     public class ReceivedService
     {        
         private CustomerService customerService;
-
-        public ReceivedService(CustomerService customerService) 
-        {           
+        private readonly IPersistenceContext persistenceContext;
+        private readonly ICustomerRepository customerRepository;
+        public ReceivedService(IPersistenceContext persistenceContext, CustomerService customerService)
+        {
+            this.persistenceContext = persistenceContext;
+            customerRepository = this.persistenceContext.CustomerRepository;
             this.customerService = customerService;
         }
-       
+
         public IEnumerable<Transaction> GetCustomerTransaction(string userId)
         {
             var customer = customerService.GetCustomerFromUserId(userId);
