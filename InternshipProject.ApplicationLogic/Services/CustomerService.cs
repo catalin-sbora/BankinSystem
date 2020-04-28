@@ -10,9 +10,11 @@ namespace InternshipProject.ApplicationLogic.Services
     public class CustomerService
     {
         private ICustomerRepository customerRepository;
+        private IPersistenceContext persistContext;
         public CustomerService(IPersistenceContext persistenceContext)
         {
             customerRepository = persistenceContext.CustomerRepository;
+            persistContext = persistenceContext;
         }
         public Customer GetCustomerFromUserId(string userId)
         {
@@ -24,6 +26,15 @@ namespace InternshipProject.ApplicationLogic.Services
             }
 
             return customer;
+        }
+
+        public Customer RegisterNewCustomer(string userId, string firstName, string lastName, string socialId)
+        {
+           var customer = Customer.Create(Guid.Parse(userId), firstName, lastName, socialId);
+           customer = customerRepository.Add(customer);
+           persistContext.SaveChanges();
+           return customer;
+
         }
     }
 }

@@ -8,6 +8,7 @@ namespace InternshipProject.ViewModels.Accounts
 {
     public class BankAccountViewModel
     {
+        public bool IsAdmin { get; set; }
         public string CustomerName { get; set; }
         public string CustomerContact { get; set; }
         public BankAccount BankAccount { get; set; }

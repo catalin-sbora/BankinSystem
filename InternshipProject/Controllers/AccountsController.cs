@@ -67,15 +67,19 @@ namespace InternshipProject.Controllers
                 return BadRequest("Unable retrieve data for the current user");
             }
         }
-        public IActionResult Details([FromRoute]Guid id)
+        public async Task<IActionResult> Details([FromRoute]Guid id)
         {
             string userId = userManager.GetUserId(User);
+            IdentityUser currentUser = await userManager.GetUserAsync(User);
+
             try
             {
                 var customer = customerService.GetCustomerFromUserId(userId);
                 var bankAccount = accountsService.GetCustomerBankAccount(userId, id);
+
                 var viewModel = new BankAccountViewModel
                 {
+                    IsAdmin = await userManager.IsInRoleAsync(currentUser, "Admin"),
                     CustomerName = $"{customer.FirstName} {customer.LastName}",
                     CustomerContact = customer.ContactDetails?.PhoneNo,
                     BankAccount = bankAccount,

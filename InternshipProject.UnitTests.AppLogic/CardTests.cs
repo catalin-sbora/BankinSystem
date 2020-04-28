@@ -26,5 +26,40 @@ namespace InternshipProject.UnitTests.AppLogic
             Assert.IsNotNull(card.BankAccount);
             Assert.IsInstanceOfType(card.CreateDate, typeof(DateTime));
         }
+
+        [TestMethod]
+        public void WithdrawFromATM_Returns_CardTransaction_AfterCall()
+        {
+            //Arrange
+            var bankAccount = BankAccount.Create("ROIBAN002994564533453245");
+            bankAccount.CreateReceive(20, "asd", "ROIBAN002994564533453245", "");
+            var card = Card.Create("12312312", "333", "ASdasd asdasd", bankAccount);
+            //Act
+
+            var cardTransaction = card.WithdrawFromATM(10, "Atm");
+            //Assert
+            Assert.IsNotNull(cardTransaction.Transaction);
+            Assert.AreEqual(CardTransactionType.ATM, cardTransaction.TransactionType);
+        }
+
+        [TestMethod]
+        public void OnlinePayment_Returns_CardTransaction_AfterCall()
+        {
+            //Arrange
+            var bankAccount = BankAccount.Create("ROIBAN002994564533453245");
+            bankAccount.CreateReceive(20, "asd", "ROIBAN002994564533453245", "");
+
+            var cvv = "333";
+            var card = Card.Create("123123123", cvv, "ASdasd asdasd", bankAccount);
+
+            //Act
+            var cardTransaction = card.OnlinePayment(10, "Magazin", "asdads", cvv);
+
+            //Assert
+            Assert.AreEqual(card.CVV, cvv);
+            Assert.IsNotNull(cardTransaction.Transaction);
+            Assert.AreEqual(CardTransactionType.Online, cardTransaction.TransactionType);
+        }
     }
+   
 }

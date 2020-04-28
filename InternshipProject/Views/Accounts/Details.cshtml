@@ -69,10 +69,14 @@
             <partial name="_AccountBalancePartial" model="Model.BankAccount"/>
         </div>
     </div>
+   
     <div class="d-flex flex-column">
+      @if (Model.IsAdmin)
+      {
         <button class="btn btn-light light-button" data-toggle="modal" data-target="#newPaymentModal">
             <i class="fas fa-money-bill"></i> New Payment
         </button>
+      }
     </div>
 </div>
 <br />
