@@ -94,6 +94,7 @@ namespace InternshipProject.Areas.Identity.Pages.Account
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
+                    await _userManager.AddToRoleAsync(user, "Admin");
                     var newCustomer = customerService.RegisterNewCustomer(user.Id, Input.FirstName, Input.LastName, Input.SocialId);
                     _logger.LogInformation("User created a new account with password.");
 
