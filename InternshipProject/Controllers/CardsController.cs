@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using InternshipProject.ApplicationLogic.Model;
 using InternshipProject.ApplicationLogic.Services;
+using InternshipProject.EFDataAccess;
 using InternshipProject.ViewModels.Cards;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -39,6 +41,7 @@ namespace InternshipProject.Controllers
         }
         public IActionResult Index()
         {
+            BankingDbContext context ;
             string userId = userManager.GetUserId(User);
 
             try
@@ -71,6 +74,7 @@ namespace InternshipProject.Controllers
         
         public ActionResult CardPayments(Guid Id ,[FromForm] CardTransactionsListViewModel model )
         {
+
             
             string userId = userManager.GetUserId(User);
             try

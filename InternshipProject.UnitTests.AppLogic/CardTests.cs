@@ -61,4 +61,5 @@ namespace InternshipProject.UnitTests.AppLogic
             Assert.AreEqual(CardTransactionType.Online, cardTransaction.TransactionType);
         }
     }
+   
 }
