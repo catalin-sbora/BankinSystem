@@ -12,7 +12,7 @@ namespace InternshipProject.UnitTests.AppLogic
     public class CardTransactionTests
     {
         [TestMethod]
-        public void TestCardTransaction()
+        public void CardTransaction_Test()
         {
             
            

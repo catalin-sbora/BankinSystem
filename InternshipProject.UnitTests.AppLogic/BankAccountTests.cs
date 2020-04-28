@@ -27,7 +27,7 @@ namespace InternshipProject.UnitTests.AppLogic
         }
         [TestMethod]
 
-        public void ThrowsExceptionForNullNameorIBAN()
+        public void Create_Receive_ThrowsExceptionForNullNameorIBAN()
         {
             string name="";
             string iban="";
@@ -46,7 +46,7 @@ namespace InternshipProject.UnitTests.AppLogic
                 
         }
         [TestMethod]
-        public void ThrowsExceptionForNegativeAmount()
+        public void Create_Receive_ThrowsExceptionForNegativeAmount()
         {
             string name = "asd";
             string iban = "asd";

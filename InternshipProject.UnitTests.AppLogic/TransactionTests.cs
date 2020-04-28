@@ -11,7 +11,7 @@ namespace InternshipProject.UnitTests.AppLogic
     {
        
         [TestMethod]
-        public void Create_Returns_CompleteObject_AfterCall()
+        public void Transaction_Create_Test()
         {
             //Arrange - define testing context
             
