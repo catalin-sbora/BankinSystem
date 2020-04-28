@@ -15,7 +15,7 @@ namespace InternshipProject.ApplicationLogic.Model
        
         public virtual Transaction Transaction{ get; private set; }
         public CardTransactionType TransactionType { get; private set; }
-
+        
         protected CardTransaction()
         { 
         }

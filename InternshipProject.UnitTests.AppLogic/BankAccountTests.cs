@@ -1,6 +1,7 @@
 ﻿using InternshipProject.ApplicationLogic.Exceptions;
 using InternshipProject.ApplicationLogic.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -24,5 +25,45 @@ namespace InternshipProject.UnitTests.AppLogic
                     var account = BankAccount.Create(accNo);
                 });
         }
+        [TestMethod]
+
+        public void Create_Receive_ThrowsExceptionForNullNameorIBAN()
+        {
+            string name="";
+            string iban="";
+            decimal amount = 1;
+            var accNo = "ROIBAN123421234126870967";
+            
+            var account = BankAccount.Create(accNo);
+            Assert.ThrowsException<Exception>(
+                () =>
+                {
+
+                    account.CreateReceive(amount, name, iban, "asd");
+
+                });
+
+                
+        }
+        [TestMethod]
+        public void Create_Receive_ThrowsExceptionForNegativeAmount()
+        {
+            string name = "asd";
+            string iban = "asd";
+            decimal amount = -1;
+            var accNo = "ROIBAN123421234126870967";
+
+            var account = BankAccount.Create(accNo);
+            Assert.ThrowsException<Exception>(
+                () =>
+                {
+
+                    account.CreateReceive(amount, name, iban, "asd");
+
+                });
+
+        }
+
+
     }
 }

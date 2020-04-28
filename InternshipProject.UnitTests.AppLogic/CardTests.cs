@@ -26,5 +26,20 @@ namespace InternshipProject.UnitTests.AppLogic
             Assert.IsNotNull(card.BankAccount);
             Assert.IsInstanceOfType(card.CreateDate, typeof(DateTime));
         }
+           
+        [TestMethod]
+        public void Create_POS_Payment()
+        {
+            var amount = 50;
+            BankAccount BankAccount = BankAccount.Create("aaaaaaaaaaaaaaaaaaaaaaaa");
+            var destinationName = "Mihnea";
+            var destinationAccount = "David";
+            var transaction = Transaction.Create(amount, Guid.NewGuid(), destinationAccount, destinationAccount, null);
+            var cardTransactionType = CardTransactionType.POS;
+            var cardTransaction = CardTransaction.Create(transaction, cardTransactionType);
+            Assert.AreEqual(transaction, cardTransaction.Transaction);
+            Assert.AreEqual(cardTransactionType, CardTransactionType.POS);
+        }
     }
+   
 }
