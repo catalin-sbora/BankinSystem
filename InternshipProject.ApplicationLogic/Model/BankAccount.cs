@@ -89,7 +89,7 @@ namespace InternshipProject.ApplicationLogic.Model
 
         public Transaction CreateReceive(decimal amount, string sourceName, string sourceIBAN, string description)
         {
-            if (string.IsNullOrEmpty(sourceName) && string.IsNullOrEmpty(sourceIBAN))
+            if (string.IsNullOrEmpty(sourceName) || string.IsNullOrEmpty(sourceIBAN))
                 throw new Exception("");
 
             if (amount <= 0)
