@@ -16,6 +16,7 @@ using InternshipProject.EFDataAccess;
 using InternshipProject.ApplicationLogic.Services;
 using InternshipProject.ApplicationLogic.Abstractions;
 using RazorPagesReporting;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace InternshipProject
 {
@@ -43,7 +44,10 @@ namespace InternshipProject
                     Configuration.GetConnectionString("BankingConnection")));
 
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+                
+                
 
             services.AddScoped<IPersistenceContext, EFPersistenceContext>();            
             services.AddScoped<CustomerService>();

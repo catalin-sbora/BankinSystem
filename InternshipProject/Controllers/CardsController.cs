@@ -7,12 +7,14 @@ using InternshipProject.ApplicationLogic.Model;
 using InternshipProject.ApplicationLogic.Services;
 using InternshipProject.EFDataAccess;
 using InternshipProject.ViewModels.Cards;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace InternshipProject.Controllers
 {
+    [Authorize]
     public class CardsController : Controller
     {
         private PaymentsService transactionService;
