@@ -130,18 +130,20 @@ namespace InternshipProject.UnitTests.AppLogic
 
             var bankAccount = BankAccount.Create("ROIBAN001234567890120000");
             var externalBankAccount = BankAccount.Create("ROIBAN001234567890123456");
-            
+
             receiverCustomer.BankAccounts.Add(bankAccount);
-            
+
             var amount = 100;
             externalBankAccount.Balance = amount;
 
             Transaction sendingTransaction = externalBankAccount.CreatePayment(amount, "Name", bankAccount.IBAN, "Details");
 
             Assert.ThrowsException<AccountNotFoundException>(
-                () => {
+                () =>
+                {
                     receiverCustomer.NotifyTransaction(sendingTransaction, senderCustomer);
                 });
+        }
 
         [TestMethod]
         public void Search_BankAccount_For_Given_ID()

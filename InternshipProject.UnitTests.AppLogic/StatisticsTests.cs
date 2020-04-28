@@ -41,7 +41,7 @@ namespace InternshipProject.UnitTests.AppLogic
             int numberOfTransactions = -1;
             foreach (var transactionAmount in allTimeHistory)
             {
-                Assert.IsTrue(lastAmount >= transactionAmount + amount);
+                Assert.IsTrue(lastAmount >= transactionAmount);
                 lastAmount = transactionAmount;
                 numberOfTransactions++;
             }
