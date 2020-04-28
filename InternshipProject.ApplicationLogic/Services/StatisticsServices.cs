@@ -11,9 +11,10 @@ namespace InternshipProject.ApplicationLogic.Services
     {
 
         private readonly ICustomerRepository customerRepository;
+        
         public StatisticsServices(IPersistenceContext persistenceContext)
         {
-            customerRepository = persistenceContext.CustomerRepository;
+            customerRepository = persistenceContext?.CustomerRepository;
         }
 
         private IEnumerable<decimal> ProcessBalanceHistory(decimal initialBalance, IEnumerable<Transaction> transactions)
@@ -53,7 +54,7 @@ namespace InternshipProject.ApplicationLogic.Services
 
         private BankAccount GetBankAccountWithMostTransactions(string userId)
         {
-            BankAccount maxransactionsBankAccount = null;
+            BankAccount maxTransactionsBankAccount = null;
             int maxTransactions = 0;
 
             foreach (BankAccount account in GetCustomerBankAccounts(userId))
@@ -62,11 +63,11 @@ namespace InternshipProject.ApplicationLogic.Services
                 if (transactionCount > maxTransactions)
                 {
                     maxTransactions = transactionCount;
-                    maxransactionsBankAccount = account;
+                    maxTransactionsBankAccount = account;
                 }
             }
 
-            return maxransactionsBankAccount;
+            return maxTransactionsBankAccount;
         }
 
         public IEnumerable<int> GetIndexListForTransactions(string userId)
