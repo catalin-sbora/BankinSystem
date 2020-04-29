@@ -52,8 +52,7 @@ namespace InternshipProject.UnitTests.AppLogic
            
             customerRepositoryMock.Setup(cr => cr.GetCustomerByUserId(userId))
                                   .Returns(testCustomer);
-            //receivedServiceMock.Setup(cr => cr.GetCustomerTransaction(userId.ToString()))
-                          //  .Returns(testCustomer.BankAccounts.ElementAt(0).Transactions);
+            //verificare tranzactie cu tranzactie
             var result = receivedService.GetCustomerTransaction(userId.ToString());
             Assert.AreEqual(result.ElementAt(0), baOne.Transactions.AsEnumerable().ElementAt(0));
 
