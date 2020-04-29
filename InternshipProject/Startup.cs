@@ -53,7 +53,7 @@ namespace InternshipProject
             services.AddScoped<CustomerService>();
             services.AddScoped<AccountsService>();
             services.AddScoped<MetaDataService>();
-            services.AddScoped<StatisticsServices>();
+            services.AddScoped<StatisticsService>();
             services.AddScoped<PaymentsService>();
             services.AddScoped<ReceivedService>();
             services.AddScoped<CardServices>();

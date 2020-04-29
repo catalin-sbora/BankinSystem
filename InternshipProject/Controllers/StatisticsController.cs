@@ -14,13 +14,13 @@ namespace InternshipProject.Controllers
     [Route("[controller]/{id?}")]
     public class StatisticsController : Controller
     {
-        private readonly StatisticsServices statisticsService;
+        private readonly StatisticsService statisticsService;
         private readonly CustomerService customerService;
         private readonly MetaDataService metaDataService;
         private readonly UserManager<IdentityUser> userManager;
         private readonly ILogger<StatisticsController> logger;
 
-        public StatisticsController(StatisticsServices statisticsServices, 
+        public StatisticsController(StatisticsService statisticsServices, 
                                     CustomerService customerServices, 
                                     MetaDataService metaDataServices, 
                                     UserManager<IdentityUser> userManager, 

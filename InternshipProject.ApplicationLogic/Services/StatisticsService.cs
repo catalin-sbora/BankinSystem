@@ -7,14 +7,14 @@ using System.Linq;
 
 namespace InternshipProject.ApplicationLogic.Services
 {
-    public class StatisticsServices
+    public class StatisticsService
     {
 
         private readonly ICustomerRepository customerRepository;
         
-        public StatisticsServices(IPersistenceContext persistenceContext)
+        public StatisticsService(IPersistenceContext persistenceContext)
         {
-            customerRepository = persistenceContext?.CustomerRepository;
+            customerRepository = persistenceContext.CustomerRepository;
         }
 
         private IEnumerable<decimal> ProcessBalanceHistory(decimal initialBalance, IEnumerable<Transaction> transactions)
