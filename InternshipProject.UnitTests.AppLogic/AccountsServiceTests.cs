@@ -22,6 +22,7 @@ namespace InternshipProject.UnitTests.AppLogic
         private Guid userId;
         private Customer testCustomer;
         private BankAccount baOne;
+
         private BankAccount baTwo;
         private BankAccount baThree;
 

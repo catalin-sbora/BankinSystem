@@ -82,7 +82,8 @@ namespace InternshipProject.UnitTests.AppLogic
             var foreignBankAccount = BankAccount.Create("ROIBAN001234567890120000");
 
             Assert.ThrowsException<AccountNotFoundException>(
-                () => {
+                () =>
+                {
                     var gottenAccount = customer.GetAccount(foreignBankAccount.Id);
                 });
         }
@@ -99,7 +100,7 @@ namespace InternshipProject.UnitTests.AppLogic
 
             var bankAccount = BankAccount.Create("ROIBAN001234567890120000");
             var externalBankAccount = BankAccount.Create("ROIBAN001234567890123456");
-            
+
             customer.BankAccounts.Add(bankAccount);
             decimal initialBalance = 1000;
             bankAccount.Balance = initialBalance;
@@ -160,8 +161,8 @@ namespace InternshipProject.UnitTests.AppLogic
             customer.BankAccounts.Add(bankAccount3);
 
             BankAccount temp = customer.GetBankAccountByIBAN(bankAccountToFind.IBAN);
-                
-            
+
+
             Assert.AreEqual(temp.IBAN, bankAccountToFind.IBAN);
         }
         [TestMethod]
@@ -174,7 +175,7 @@ namespace InternshipProject.UnitTests.AppLogic
             Assert.AreEqual(firstName, customer.FirstName);
             Assert.AreEqual(lastName, customer.LastName);
             Assert.AreEqual(socialId, customer.SocialId);
-            Assert.AreNotEqual(Guid.Empty , customer.Id);
+            Assert.AreNotEqual(Guid.Empty, customer.Id);
         }
     }
 }
